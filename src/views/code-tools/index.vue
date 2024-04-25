@@ -7,9 +7,9 @@
       <n-card title="输出">
         <template #header-extra>
           <n-button-group>
-            <n-button @click="handleApiCall(3)">点击修复</n-button>
-            <n-button @click="handleApiCall(4)">点击解释</n-button>
-            <n-button @click="handleApiCall(2)">风格评估</n-button>
+            <n-button style="margin-right:10px" type="primary" secondary @click="handleApiCall(3)">点击修复</n-button>
+            <n-button style="margin-right:10px" type="info" secondary @click="handleApiCall(4)">点击解释</n-button>
+            <n-button type="error" secondary @click="handleApiCall(2)">风格评估</n-button>
           </n-button-group>
         </template>
         <n-input v-model:value="apiOutput" type="textarea" class="output" placeholder="大模型输出" />
@@ -50,7 +50,11 @@ onMounted(() => {
       );
     } else {
       model.setValue(props.modelValue);
-    }
+		}
+
+
+		monaco.editor.setTheme('hc-black');
+
     instance = monaco.editor.create(dom.value, {
       model: model,
       tabSize: 2,
