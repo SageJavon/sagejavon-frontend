@@ -27,7 +27,7 @@ export function fetchChatAPIProcess<T = any>(
     options?: { conversationId?: string; parentMessageId?: string }
     signal?: GenericAbortSignal
     onDownloadProgress?: (progressEvent: AxiosProgressEvent) => void },
-    
+
 ) {
   const settingStore = useSettingStore()
   const authStore = useAuthStore()

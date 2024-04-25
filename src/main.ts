@@ -5,6 +5,12 @@ import { setupAssets, setupScrollbarStyle } from './plugins'
 import { setupStore } from './store'
 import { setupRouter } from './router'
 
+import { createApp } from 'vue';
+import CKEditor from '@ckeditor/ckeditor5-vue';
+
+createApp( { /* options */ } ).use( CKEditor ).mount( /* DOM element */ );
+
+
 async function bootstrap() {
   const app = createApp(App)
   setupAssets()
