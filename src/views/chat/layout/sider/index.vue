@@ -83,16 +83,16 @@ watch(
       <main class="flex flex-col flex-1 min-h-0">
         <div class="p-4">
           <NButton dashed block @click="handleAdd">
-           知识问答
+           新增知识问答
           </NButton>
         </div>
         <div class="flex-1 min-h-0 pb-4 overflow-hidden">
           <List />
         </div>
         <div class="p-4">
-          <NButton block @click="show = true">
+          <!-- <NButton block @click="show = true">
             {{ $t('store.siderButton') }}
-          </NButton>
+          </NButton> -->
         </div>
       </main>
       <Footer />
