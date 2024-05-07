@@ -1,5 +1,6 @@
-
 ## 前置要求
+
+在src/views/index.vue中添加你的chatGLM api key
 
 ### Node
 
