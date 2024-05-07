@@ -33,7 +33,7 @@ export default defineConfig((env) => {
     plugins: setupPlugins(viteEnv),
     server: {
       host: '0.0.0.0',
-      port: 5335,
+      port: 3002,
       open: false,
       proxy: {
         '^/api': {
@@ -44,16 +44,15 @@ export default defineConfig((env) => {
       },
     },
     build: {
-      chunkSizeWarningLimit:1500,
+      chunkSizeWarningLimit: 1500,
       rollupOptions: {
         // input: 'src/main.js', // 指定入口文件路径
         output: {
           manualChunks(id) {
-            if (id.includes('node_modules')) {
-              return id.toString().split('node_modules/')[1].split('/')[0].toString();
-            }
-          }
-        }
+            if (id.includes('node_modules'))
+              return id.toString().split('node_modules/')[1].split('/')[0].toString()
+          },
+        },
       },
       reportCompressedSize: false,
       sourcemap: false,

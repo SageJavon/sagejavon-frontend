@@ -2,9 +2,10 @@
 import type { Ref } from 'vue'
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { NAutoComplete, NButton, NInput, useDialog, useMessage, NImageGroup, NImage, NSpace } from 'naive-ui'
+import { NAutoComplete, NButton, NImageGroup, NInput, NSpace, useDialog, useMessage } from 'naive-ui'
 import html2canvas from 'html2canvas'
 import { storeToRefs } from 'pinia'
+import axios from 'axios'
 import { Message } from './components'
 import { useScroll } from './hooks/useScroll'
 import { useChat } from './hooks/useChat'
@@ -15,6 +16,9 @@ import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useChatStore, usePromptStore } from '@/store'
 import { fetchChatAPIProcess } from '@/api'
 import { t } from '@/locales'
+
+const api_key = 'your chatglm api key'
+const model_name = 'glm-3-turbo'
 
 let controller = new AbortController()
 
@@ -37,6 +41,8 @@ const dataSources = computed(() => chatStore.getChatByUuid(+uuid))
 const getEnabledNetwork = computed(() => chatStore.getEnabledNetwork)
 // const conversationList = computed(() => dataSources.value.filter(item => (!item.inversion && !!item.conversationOptions)))
 
+// chatStore.clearChatByUuid(+uuid)
+
 const prompt = ref<string>('')
 const loading = ref<boolean>(false)
 const inputRef = ref<Ref | null>(null)
@@ -52,13 +58,105 @@ dataSources.value.forEach((item, index) => {
   if (item.loading)
     updateChatSome(+uuid, index, { loading: false })
 })
+console.log(dataSources.value)
+async function handleSubmit() {
+  // const messages = [
+  //   { role: 'user', content: '你好' },
+  //   { role: 'assistant', content: '我是SageJavon小助手，帮助解答您的Java知识和代码问题' },
+  //   { role: 'user', content: '你叫什么名字' },
+  //   { role: 'assistant', content: '我叫SageJavon' },
+  //   { role: 'user', content: `${prompt.value}请你以老师回答学生问题的语气来回答` },
+  // ]
+  // const response = await callChatGLM(api_key, model_name, messages)
+  // console.log('GLM Response:', response)
+  // console.log(prompt.value)
+  const message = prompt.value
 
-function handleSubmit() {
-  onConversation()
+  if (loading.value)
+    return
+
+  if (!message || message.trim() === '')
+    return
+
+  try {
+    // 添加用户的消息到聊天记录
+    addChat(+uuid, {
+      dateTime: new Date().toLocaleString(),
+      text: message,
+      inversion: true,
+      error: false,
+      conversationOptions: null,
+      requestOptions: { prompt: message, options: null },
+    })
+    scrollToBottom()
+
+    loading.value = true
+    prompt.value = ''
+
+    // 调用 callChatGLM 方法获取对方的回复
+    const response = await callChatGLM(api_key, model_name, [
+      { role: 'user', content: `你叫SageJavon,是一个java课程的AI小助手，希望你可以帮助学生解答java相关的代码和知识点的问题，为其提供学习建议，为其代码纠错，给出任何有助于学生学习java的东西~请你回答的语气像个老师${message}` },
+    ])
+
+    console.log('GLM Response:', response)
+
+    // 添加对方的回复到聊天记录
+    addChat(+uuid, {
+      dateTime: new Date().toLocaleString(),
+      text: response.message.content ?? '',
+      inversion: false,
+      error: false,
+      loading: false,
+      conversationOptions: {},
+      requestOptions: { prompt: message, options: {} },
+    })
+
+    scrollToBottom()
+  }
+  catch (error: any) {
+    console.error('Error calling GLM:', error)
+
+    const errorMessage = error?.text ?? t('common.wrong')
+
+    // 如果调用出错，添加错误消息到聊天记录
+    addChat(+uuid, {
+      dateTime: new Date().toLocaleString(),
+      text: errorMessage,
+      inversion: false,
+      error: true,
+      loading: false,
+      conversationOptions: null,
+      requestOptions: { prompt: message, options: {} },
+    })
+
+    scrollToBottom()
+  }
+  finally {
+    loading.value = false
+  }
+}
+
+async function callChatGLM(apiKey: string, modelName: string, messages: any[]) {
+  try {
+    const response = await axios.post('https://open.bigmodel.cn/api/paas/v4/chat/completions', {
+      model: modelName,
+      messages,
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`,
+      },
+    })
+    return response.data.choices[0]
+  }
+  catch (error) {
+    console.error('Error calling GLM:', error)
+    return null
+  }
 }
 
 async function onConversation() {
-  let message = prompt.value
+  const message = prompt.value
 
   if (loading.value)
     return
@@ -84,7 +182,7 @@ async function onConversation() {
   loading.value = true
   prompt.value = ''
 
-  let options: Chat.ConversationRequest = { conversationId: usingContext.value ? window.location.hash : Math.random().toString() }
+  const options: Chat.ConversationRequest = { conversationId: usingContext.value ? window.location.hash : Math.random().toString() }
   // const lastContext = conversationList.value[conversationList.value.length - 1]?.conversationOptions
 
   // if (lastContext && usingContext.value)
@@ -115,7 +213,7 @@ async function onConversation() {
         const { responseText } = xhr
         // Always process the final line
         // const lastIndex = responseText.lastIndexOf('\n')
-        let chunk = responseText
+        const chunk = responseText
         // if (lastIndex !== -1)
         //   chunk = responseText.substring(lastIndex)
         try {
@@ -139,10 +237,10 @@ async function onConversation() {
           //
         }
       },
-    });
+    })
   }
   catch (error: any) {
-    const errorMessage = error?.text ??  t('common.wrong')
+    const errorMessage = error?.text ?? t('common.wrong')
 
     if (error.text === 'canceled') {
       updateChatSome(
@@ -199,7 +297,7 @@ async function onRegenerate(index: number) {
 
   const { requestOptions } = dataSources.value[index]
 
-  let message = requestOptions?.prompt ?? ''
+  const message = requestOptions?.prompt ?? ''
 
   let options: Chat.ConversationRequest = {}
 
@@ -221,7 +319,7 @@ async function onRegenerate(index: number) {
       requestOptions: { prompt: message, options: { ...options } },
     },
   )
-// debugger;
+  // debugger;
   try {
     await fetchChatAPIProcess<Chat.ConversationResponse>({
       prompt: message,
@@ -233,9 +331,9 @@ async function onRegenerate(index: number) {
         const { responseText = '' } = xhr || {}
         // Always process the final line
         // const lastIndex = responseText.lastIndexOf('\n')
-        let chunk = responseText;
+        const chunk = responseText
         // if (lastIndex !== -1)
-          // chunk = responseText.substring(lastIndex)
+        // chunk = responseText.substring(lastIndex)
         try {
           // const data = JSON.parse(chunk)
           updateChat(
@@ -257,7 +355,7 @@ async function onRegenerate(index: number) {
           //
         }
       },
-    });
+    })
   }
   catch (error: any) {
     if (error.text === 'canceled') {
@@ -351,7 +449,7 @@ function handleDelete(index: number) {
 }
 
 function handleToggleNetwork() {
-  chatStore.toggleNetwork();
+  chatStore.toggleNetwork()
 }
 
 function handleClear() {
@@ -463,36 +561,31 @@ onUnmounted(() => {
         >
           <template v-if="!dataSources.length">
             <div class="flex items-center flex-col justify-center mt-4 text-center ">
-
-              <n-image-group>
-                <n-space align="center" justify="center">
-
-
-                </n-space>
-              </n-image-group>
+              <NImageGroup>
+                <NSpace align="center" justify="center" />
+              </NImageGroup>
             </div>
           </template>
           <template v-else>
-              <Message
-                v-for="(item, index) of dataSources"
-                :key="index"
-                :date-time="item.dateTime"
-                :text="item.text"
-                :inversion="item.inversion"
-                :error="item.error"
-                :loading="item.loading"
-                @regenerate="onRegenerate(index)"
-                @delete="handleDelete(index)"
-              />
-              <div class="sticky bottom-0 left-0 flex justify-center">
-                <NButton v-if="loading" type="warning" @click="handleStop">
-                  <template #icon>
-                    <SvgIcon icon="ri:stop-circle-line" />
-                  </template>
-									{{ t('common.stopResponding') }}
-                </NButton>
-              </div>
-
+            <Message
+              v-for="(item, index) of dataSources"
+              :key="index"
+              :date-time="item.dateTime"
+              :text="item.text"
+              :inversion="item.inversion"
+              :error="item.error"
+              :loading="item.loading"
+              @regenerate="onRegenerate(index)"
+              @delete="handleDelete(index)"
+            />
+            <div class="sticky bottom-0 left-0 flex justify-center">
+              <NButton v-if="loading" type="warning" @click="handleStop">
+                <template #icon>
+                  <SvgIcon icon="ri:stop-circle-line" />
+                </template>
+                {{ t('common.stopResponding') }}
+              </NButton>
+            </div>
           </template>
         </div>
       </div>
@@ -501,20 +594,22 @@ onUnmounted(() => {
       <div class="flex items-center justify-between space-x-2">
         <HoverButton
           :tooltip="
-          getEnabledNetwork ?
-          '点击关闭联网功能，关闭联网能极大加快响应速度' :
-          '点击开启联网功能，开启后会自动从互联网获得信息来回答您'
-          ">
-            <!-- <span class="text-xl text-[#4f555e]" @click="handleClear">
+            getEnabledNetwork
+              ? '点击关闭联网功能，关闭联网能极大加快响应速度'
+              : '点击开启联网功能，开启后会自动从互联网获得信息来回答您'
+          "
+        >
+          <!-- <span class="text-xl text-[#4f555e]" @click="handleClear">
               <span style="color: #2979ff; width: 20px; display: inline-block;" v-if="getEnabledNetwork">联网开启</span>
               <span style="color: red; width: 20px; display: inline-block;" v-if="!getEnabledNetwork">联网关闭</span>
             </span> -->
-            <!-- <n-switch v-model:value="getEnabledNetwork" @update:value="handleToggleNetwork" /> -->
-            <SvgIcon
-              :style="getEnabledNetwork ? { color: '#18a058' } : ''"
-              class="text-lg"
-              icon="zondicons:network"
-              @click="handleToggleNetwork" />
+          <!-- <n-switch v-model:value="getEnabledNetwork" @update:value="handleToggleNetwork" /> -->
+          <SvgIcon
+            :style="getEnabledNetwork ? { color: '#18a058' } : ''"
+            class="text-lg"
+            icon="zondicons:network"
+            @click="handleToggleNetwork"
+          />
         </HoverButton>
         <NAutoComplete v-model:value="prompt" :options="searchOptions" :render-label="renderOption">
           <template #default="{ handleInput, handleBlur, handleFocus }">
