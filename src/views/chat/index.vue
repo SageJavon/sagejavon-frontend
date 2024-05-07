@@ -17,7 +17,7 @@ import { useChatStore, usePromptStore } from '@/store'
 import { fetchChatAPIProcess } from '@/api'
 import { t } from '@/locales'
 
-const api_key = 'f1990e82b76ea9333681c729a8c96a1c.EPSROHz0AvYMfCNo'
+const api_key = 'your chatglm api key'
 const model_name = 'glm-3-turbo'
 
 let controller = new AbortController()
