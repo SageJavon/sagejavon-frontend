@@ -74,6 +74,7 @@ pnpm dev
 
 `src/views/` 目录存放的是视图组件，具体的目录结构如下：
 
+```python
 src/views/
 ├── chat/
 │ ├── components/
@@ -85,6 +86,7 @@ src/views/
 │ ├── hooks/
 │ ├── layout/
 │ └── index.vue
+```
 
 ## 目录说明
 
@@ -106,12 +108,13 @@ src/views/
 
 export { default as Header } from './Header/index.vue';
 export { default as Message } from './Message/index.vue';
+```
 通过这个文件，可以在其他文件中统一引入 Header 和 Message 组件，而不需要分别去指定具体的路径。这有助于简化导入路径，并且当组件结构发生变化时，只需要修改这个入口文件即可。
 
 // 其他文件中的导入示例
-
+```typescript
 import { Header, Message } from '@/views/chat/components';
-
+```
 
 我们在写components时都统一这样写
 
