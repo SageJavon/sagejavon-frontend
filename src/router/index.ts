@@ -1,3 +1,4 @@
+import { defineComponent } from 'vue'
 import type { App } from 'vue'
 import type { RouteRecordRaw } from 'vue-router'
 import { createRouter, createWebHashHistory } from 'vue-router'
@@ -5,6 +6,14 @@ import { setupPageGuard } from './permission'
 import { ChatLayout } from '@/views/chat/layout'
 
 const routes: RouteRecordRaw[] = [
+  {
+    path: '/login',
+    name: 'Login',
+    component: defineComponent(() => import('@/views/login/index.vue')),
+    meta: {
+      requiresAuth: false,
+    },
+  },
   {
     path: '/',
     name: 'Root',
@@ -15,16 +24,16 @@ const routes: RouteRecordRaw[] = [
         path: '/chat/:uuid?',
         name: 'Chat',
         component: () => import('@/views/chat/index.vue'),
-			},
-			{
+      },
+      {
         path: '/knowledge-graph',
         name: 'KnowledgeGraph',
-        component: () => import('@/views/knowledge-graph/index.vue'),  // 确保路径正确
+        component: () => import('@/views/knowledge-graph/index.vue'), // 确保路径正确
       },
       {
         path: '/code-tools',
         name: 'CodeTools',
-        component: () => import('@/views/code-tools/index.vue'),  // 确保路径正确
+        component: () => import('@/views/code-tools/index.vue'), // 确保路径正确
       },
     ],
   },
