@@ -1,14 +1,15 @@
 <script setup lang='ts'>
 import type { CSSProperties } from 'vue'
 import { computed, ref, watch } from 'vue'
-import { NButton, NLayoutSider } from 'naive-ui'
+import { NAvatar, NButton, NImage, NLayoutSider, NText } from 'naive-ui'
+import { useRouter } from 'vue-router'
 import List from './List.vue'
 import Footer from './Footer.vue'
 import { useAppStore, useChatStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
-import { PromptStore } from '@/components/common'
-import {useRouter} from 'vue-router'
-const router = useRouter();  // 使用 useRouter
+import defaultModel from '@/assets/sagejavon.png'
+import knowledgeSide from '@/assets/knowledge.png'
+const router = useRouter() // 使用 useRouter
 const appStore = useAppStore()
 const chatStore = useChatStore()
 
@@ -18,10 +19,10 @@ const show = ref(false)
 const collapsed = computed(() => appStore.siderCollapsed)
 
 function goToKnowledgeGraph() {
-	 router.push('/knowledge-graph');  // 跳转到知识图谱页面
+	 router.push('/knowledge-graph') // 跳转到知识图谱页面
 }
 function goToCodeTools() {
-  router.push('/code-tools');  // 跳转到代码工具页面
+  router.push('/code-tools') // 跳转到代码工具页面
 }
 
 function handleAdd() {
@@ -66,74 +67,148 @@ watch(
 </script>
 
 <template>
-<NLayout has-sider>
-	 <NLayoutSider
-    :collapsed="collapsed"
-    :collapsed-width="0"
-    :width="260"
-		position="absolute"
-    :show-trigger="isMobile ? false : 'arrow-circle'"
-    collapse-mode="transform"
+  <NLayout has-sider>
+    <NLayoutSider
+      :collapsed="false"
+      :width="100"
+      position="absolute"
+      :show-trigger="isMobile ? false : 'arrow-circle'"
 
-    bordered
-    :style="getMobileClass"
-    @update-collapsed="handleUpdateCollapsed"
-  >
-    <div class="flex flex-col h-full" :style="mobileSafeArea">
-      <main class="flex flex-col flex-1 min-h-0">
-        <div class="p-4">
-          <NButton dashed block @click="handleAdd">
-           新增知识问答
-          </NButton>
-        </div>
-        <div class="flex-1 min-h-0 pb-4 overflow-hidden">
-          <List />
-        </div>
-        <div class="p-4">
-          <!-- <NButton block @click="show = true">
-            {{ $t('store.siderButton') }}
-          </NButton> -->
-        </div>
-      </main>
-      <Footer />
-    </div>
-  </NLayoutSider>
-  <template v-if="isMobile">
-    <div v-show="!collapsed" class="fixed inset-0 z-40 w-full h-full bg-black/40" @click="handleUpdateCollapsed" />
-  </template>
-  <!-- <PromptStore v-model:visible="show" /> -->
+      bordered
+      :style="getMobileClass"
+      @update-collapsed="handleUpdateCollapsed"
+    >
+      <div class="flex flex-col h-full" :style="mobileSafeArea">
+        <main class="flex flex-col flex-1 min-h-0">
+          <div class="p-4">
+            <div class="flex flex-col h-full">
+              <!-- 侧边栏内容 -->
+              <div class="side-container">
+                <div class="side-item">
+                  <NAvatar size="100" round :src="defaultModel" />
+                </div>
 
-	 <!-- 新增的左侧侧边栏 -->
-  <NLayoutSider
-    :collapsed="newSidebarCollapsed"
-    :collapsed-width="0"
-    :width="200"
-    :show-trigger="isMobile ? false : 'arrow-circle'"
-    collapse-mode="transform"
-    bordered
-    :style="getMobileClass"
-    @update-collapsed="handleNewSidebarCollapsed"
-  >
-    <!-- 在这里添加侧边栏的内容 -->
-    <div class="flex flex-col h-full">
-      <!-- 侧边栏内容 -->
-      <div class="p-4">
-        <NButton dashed block  @click="goToKnowledgeGraph">
-          知识图谱
-        </NButton>
-				<NButton dashed block  @click="goToCodeTools">
-          代码工具
-        </NButton>
-				<!-- <NButton dashed block>
-          资源推荐
-        </NButton>
-				<NButton dashed block>
-          出题
-        </NButton> -->
+                <div class="side-item" @click="goToKnowledgeGraph">
+                  <div>
+                    <div class="side-item2">
+                      <NImage
+                        width="35"
+                        :src="knowledgeSide"
+                        preview-disabled
+                      />
+                    </div>
+
+                    <NText dashed block @click="goToKnowledgeGraph">
+                      知识图谱
+                    </NText>
+                  </div>
+                </div>
+
+                <div class="side-item">
+                  <div>
+                    <div class="side-item2">
+                      <NImage
+                        width="35"
+                        :src="knowledgeSide"
+                      />
+                    </div>
+
+                    <NText dashed block @click="goToKnowledgeGraph">
+                      资源推荐
+                    </NText>
+                  </div>
+                </div>
+                <div class="side-item">
+                  <div>
+                    <div class="side-item2">
+                      <NImage
+                        width="35"
+                        :src="knowledgeSide"
+                      />
+                    </div>
+
+                    <NText dashed block @click="goToKnowledgeGraph">
+                      个性学习
+                    </NText>
+                  </div>
+                </div>
+                <div class="side-item">
+                  <div>
+                    <div class="side-item2">
+                      <NImage
+                        width="35"
+                        :src="knowledgeSide"
+                      />
+                    </div>
+
+                    <NText dashed block @click="goToKnowledgeGraph">
+                      老师出题
+                    </NText>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+        <Footer />
       </div>
-    </div>
-  </NLayoutSider>
+    </NLayoutSider>
+    <template v-if="isMobile">
+      <div v-show="!collapsed" class="fixed inset-0 z-40 w-full h-full bg-black/40" @click="handleUpdateCollapsed" />
+    </template>
+    <!-- <PromptStore v-model:visible="show" /> -->
 
-</NLayout>
-
+    <!-- 新增的左侧侧边栏 -->
+    <NLayoutSider
+      :collapsed="newSidebarCollapsed"
+      :collapsed-width="0"
+      :width="200"
+      position="absolute"
+      style="left:100px"
+      :show-trigger="isMobile ? false : 'arrow-circle'"
+      collapse-mode="width"
+      bordered
+      :style="getMobileClass"
+      @update-collapsed="handleNewSidebarCollapsed"
+    >
+      <div class="flex flex-col h-full" :style="mobileSafeArea">
+        <main class="flex flex-1">
+          <div class="flex flex-col h-full">
+            <div class="p-4">
+              <NButton dashed block @click="handleAdd">
+                新增知识问答
+              </NButton>
+            </div>
+            <div class="flex-1 min-h-0 pb-4 overflow-hidden">
+              <List />
+            </div>
+          </div>
+        </main>
+      </div>
+    <!-- 在这里添加侧边栏的内容 -->
+    </NLayoutSider>
+  </NLayout>
 </template>
+
+<style>
+.side-container {
+  height: 100%;
+  overflow-y: auto;
+
+}
+
+.side-item{
+	display:flex;
+	width:100%;
+	justify-content: center;
+	justify-items: center;
+	margin-bottom:20px;
+}
+
+.side-item2{
+	display:flex;
+	width:100%;
+	justify-content: center;
+	justify-items: center;
+}
+</style>
