@@ -1,15 +1,13 @@
-import { defineComponent } from 'vue'
 import type { App } from 'vue'
 import type { RouteRecordRaw } from 'vue-router'
 import { createRouter, createWebHashHistory } from 'vue-router'
-import { setupPageGuard } from './permission'
 import { ChatLayout } from '@/views/chat/layout'
 
 const routes: RouteRecordRaw[] = [
   {
     path: '/login',
     name: 'Login',
-    component: defineComponent(() => import('@/views/login/index.vue')),
+    component: () => import('@/views/login/index.vue'),
     meta: {
       requiresAuth: false,
     },
@@ -19,6 +17,9 @@ const routes: RouteRecordRaw[] = [
     name: 'Root',
     component: ChatLayout,
     redirect: '/chat',
+    meta: {
+      requiresAuth: true,
+    },
     children: [
       {
         path: '/chat/:uuid?',
@@ -28,28 +29,25 @@ const routes: RouteRecordRaw[] = [
       {
         path: '/knowledge-graph',
         name: 'KnowledgeGraph',
-        component: () => import('@/views/knowledge-graph/index.vue'), // 确保路径正确
+        component: () => import('@/views/knowledge-graph/index.vue'),
       },
       {
         path: '/code-tools',
         name: 'CodeTools',
-        component: () => import('@/views/code-tools/index.vue'), // 确保路径正确
+        component: () => import('@/views/code-tools/index.vue'),
       },
     ],
   },
-
   {
     path: '/404',
     name: '404',
     component: () => import('@/views/exception/404/index.vue'),
   },
-
   {
     path: '/500',
     name: '500',
     component: () => import('@/views/exception/500/index.vue'),
   },
-
   {
     path: '/:pathMatch(.*)*',
     name: 'notFound',
@@ -63,9 +61,31 @@ export const router = createRouter({
   scrollBehavior: () => ({ left: 0, top: 0 }),
 })
 
-setupPageGuard(router)
+router.beforeEach((to, from, next) => {
+  // 检查路由是否需要身份验证
+  if (to.meta.requiresAuth) {
+    // 如果需要验证身份，则检查用户是否已登录
+    if (isLoggedIn()) {
+      // 用户已登录，继续导航
+      next()
+    }
+    else {
+      // 用户未登录，重定向到登录页面
+      next('/login')
+    }
+  }
+  else {
+    // 路由不需要验证身份，继续导航
+    next()
+  }
+})
 
 export async function setupRouter(app: App) {
   app.use(router)
   await router.isReady()
+}
+
+// 假设你有一个用于检查用户是否已登录的工具函数
+export function isLoggedIn(): boolean {
+  return localStorage.getItem('user') !== null // 假设你将用户登录的 token 存储在 localStorage 中
 }
