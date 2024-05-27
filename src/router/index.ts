@@ -21,15 +21,15 @@ const routes: RouteRecordRaw[] = [
       requiresAuth: true,
     },
     children: [
+		 {
+        path: '/knowledge-graph',
+        name: 'KnowledgeGraph',
+        component: () => import('@/views/knowledge-graph/index.vue'),
+      },
       {
         path: '/chat/:uuid?',
         name: 'Chat',
         component: () => import('@/views/chat/index.vue'),
-      },
-      {
-        path: '/knowledge-graph',
-        name: 'KnowledgeGraph',
-        component: () => import('@/views/knowledge-graph/index.vue'),
       },
       {
         path: '/code-tools',
@@ -87,5 +87,5 @@ export async function setupRouter(app: App) {
 
 // 假设你有一个用于检查用户是否已登录的工具函数
 export function isLoggedIn(): boolean {
-  return localStorage.getItem('user') !== null // 假设你将用户登录的 token 存储在 localStorage 中
+  return localStorage.getItem('user-token') !== null // 假设你将用户登录的 token 存储在 localStorage 中
 }

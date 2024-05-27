@@ -5,7 +5,7 @@ import { ref, watch } from 'vue'
 import { signInByVerifyCode } from './api/signIn/sign_in_by_verifyCode'
 import { signInByPassword } from './api/signIn/sign_in_by_password'
 import { sendVerifyCode } from './api/signIn/send_verify_code'
-
+import { getUserInfo } from './api/info/get_user_info'
 const themeOverrides = {
   common: {
     primaryColor: '#000',
@@ -19,7 +19,7 @@ const verifyCode = ref('')
 const showVerifyCode = ref(false)
 const signInType = ref('verifyCode')
 const user = ref(null)
-
+console.log(localStorage.getItem('userInfo'))
 // 验证码倒计时
 // 在setup中定义一个ref用于存储倒计时剩余时间
 const countdown = ref(0)
@@ -165,8 +165,19 @@ async function signIn(type) {
     console.log(res)
     if (res.userId) {
       user.value = res
-      localStorage.setItem('user', JSON.stringify(res))
-      // console.log(localStorage.getItem('user'))
+      localStorage.setItem('user-token', res.accessToken)
+      localStorage.setItem('user-id', res.userId)
+      getUserInfo().then((userInfoRes) => {
+        console.log(userInfoRes)
+        if (userInfoRes.status === 200) {
+          console.log(userInfoRes.data.data)
+          // 在这里处理获取到的用户信息
+          localStorage.setItem('userInfo', JSON.stringify(userInfoRes.data.data))
+        }
+      }).catch(() => {
+        // 在这里处理获取用户信息失败的情况
+      })
+      // 调用 getUserInfo 获取用户信息
       // 登录成功，返回首页
       window.location.href = '/'
     }

@@ -10,7 +10,6 @@ import { Message } from './components'
 import { useScroll } from './hooks/useScroll'
 import { useChat } from './hooks/useChat'
 import { useUsingContext } from './hooks/useUsingContext'
-import HeaderComponent from './components/Header/index.vue'
 import { HoverButton, SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useChatStore, usePromptStore } from '@/store'
@@ -545,7 +544,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="flex flex-col w-full h-full">
+  <div style="background-color:#f8f8f8" class="flex flex-col w-full h-full">
     <HeaderComponent
       v-if="isMobile"
       :using-context="usingContext"
@@ -605,7 +604,7 @@ onUnmounted(() => {
             </span> -->
           <!-- <n-switch v-model:value="getEnabledNetwork" @update:value="handleToggleNetwork" /> -->
           <SvgIcon
-            :style="getEnabledNetwork ? { color: '#18a058' } : ''"
+            :style="getEnabledNetwork ? { color: '#E44446FF' } : ''"
             class="text-lg"
             icon="zondicons:network"
             @click="handleToggleNetwork"
@@ -633,14 +632,17 @@ onUnmounted(() => {
         </HoverButton>
 
         <HoverButton v-if="!isMobile" @click="toggleUsingContext">
-          <span class="text-xl" :class="{ 'text-[#4b9e5f]': usingContext, 'text-[#a8071a]': !usingContext }">
+          <span class="text-xl" :class="{ 'text-[#4f555e]': usingContext, 'text-[#E44446FF]': !usingContext }">
             <SvgIcon icon="ri:chat-history-line" />
           </span>
         </HoverButton>
 
-        <NButton type="primary" :disabled="buttonDisabled" @click="handleSubmit">
+        <NButton
+          style="background:#E44446FF"
+          :disabled="buttonDisabled" @click="handleSubmit"
+        >
           <template #icon>
-            <span class="dark:text-black">
+            <span style="color:#ffffff">
               <SvgIcon icon="ri:send-plane-fill" />
             </span>
           </template>

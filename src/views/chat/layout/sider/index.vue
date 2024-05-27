@@ -1,7 +1,7 @@
 <script setup lang='ts'>
 import type { CSSProperties } from 'vue'
 import { computed, ref, watch } from 'vue'
-import { NAvatar, NButton, NImage, NLayoutSider, NText } from 'naive-ui'
+import { NAvatar, NButton, NDivider, NImage, NLayoutSider, NText } from 'naive-ui'
 import { useRouter } from 'vue-router'
 import List from './List.vue'
 import Footer from './Footer.vue'
@@ -9,6 +9,9 @@ import { useAppStore, useChatStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import defaultModel from '@/assets/sagejavon.png'
 import knowledgeSide from '@/assets/knowledge.png'
+import source from '@/assets/source.png'
+import study from '@/assets/study.png'
+import teacher from '@/assets/teacher.png'
 const router = useRouter() // 使用 useRouter
 const appStore = useAppStore()
 const chatStore = useChatStore()
@@ -67,15 +70,14 @@ watch(
 </script>
 
 <template>
-  <NLayout has-sider>
+  <NLayout has-sider sider-placement="left">
     <NLayoutSider
       :collapsed="false"
       :width="100"
       position="absolute"
-      :show-trigger="isMobile ? false : 'arrow-circle'"
-
       bordered
       :style="getMobileClass"
+			style="background-color:#e7e7e7"
       @update-collapsed="handleUpdateCollapsed"
     >
       <div class="flex flex-col h-full" :style="mobileSafeArea">
@@ -87,6 +89,7 @@ watch(
                 <div class="side-item">
                   <NAvatar size="100" round :src="defaultModel" />
                 </div>
+                <NDivider />
 
                 <div class="side-item" @click="goToKnowledgeGraph">
                   <div>
@@ -109,7 +112,7 @@ watch(
                     <div class="side-item2">
                       <NImage
                         width="35"
-                        :src="knowledgeSide"
+                        :src="source"
                       />
                     </div>
 
@@ -123,7 +126,7 @@ watch(
                     <div class="side-item2">
                       <NImage
                         width="35"
-                        :src="knowledgeSide"
+                        :src="study"
                       />
                     </div>
 
@@ -137,7 +140,7 @@ watch(
                     <div class="side-item2">
                       <NImage
                         width="35"
-                        :src="knowledgeSide"
+                        :src="teacher"
                       />
                     </div>
 
@@ -153,33 +156,32 @@ watch(
         <Footer />
       </div>
     </NLayoutSider>
+
     <template v-if="isMobile">
       <div v-show="!collapsed" class="fixed inset-0 z-40 w-full h-full bg-black/40" @click="handleUpdateCollapsed" />
     </template>
     <!-- <PromptStore v-model:visible="show" /> -->
-
-    <!-- 新增的左侧侧边栏 -->
     <NLayoutSider
+
       :collapsed="newSidebarCollapsed"
       :collapsed-width="0"
-      :width="200"
-      position="absolute"
-      style="left:100px"
+      :width="180"
+      collapse-mode="transform"
       :show-trigger="isMobile ? false : 'arrow-circle'"
-      collapse-mode="width"
+      style="height:100%;background-color:#eeeeee"
       bordered
       :style="getMobileClass"
       @update-collapsed="handleNewSidebarCollapsed"
     >
-      <div class="flex flex-col h-full" :style="mobileSafeArea">
-        <main class="flex flex-1">
-          <div class="flex flex-col h-full">
+      <div class="flex flex-col h-full w-full" :style="mobileSafeArea">
+        <main class="flex flex-1 h-full w-full">
+          <div class="flex flex-col h-full w-full">
             <div class="p-4">
               <NButton dashed block @click="handleAdd">
-                新增知识问答
+                新增提问
               </NButton>
             </div>
-            <div class="flex-1 min-h-0 pb-4 overflow-hidden">
+            <div class="flex-1 min-h-0 pb-4 overflow-hidden h-full">
               <List />
             </div>
           </div>
@@ -187,6 +189,8 @@ watch(
       </div>
     <!-- 在这里添加侧边栏的内容 -->
     </NLayoutSider>
+
+    <!-- 新增的左侧侧边栏 -->
   </NLayout>
 </template>
 

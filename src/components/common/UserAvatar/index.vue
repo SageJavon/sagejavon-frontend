@@ -1,21 +1,21 @@
 <script setup lang='ts'>
 import { NAvatar } from 'naive-ui'
-
-import defaultAvatar from '@/assets/avatar.jpg'
+import { ref } from 'vue'
 
 // 调用后端接口获取个人信息
+const user = ref(JSON.parse(localStorage.getItem('userInfo')))
+console.log(user.value.portrait)
 </script>
 
 <template>
-  <div class="items-center">
+  <div v-if="user.nickname" class="items-center">
     <div class="h-10 items-center-item">
-      <NAvatar size="large" round :src="defaultAvatar" />
+      <NAvatar size="large" round :src="user.portrait" />
     </div>
     <div class="flex-1 min-w-0 items-center-item">
       <h2 class="overflow-hidden font-bold text-md text-ellipsis whitespace-nowrap">
-        name
+        {{ user.nickname }}
       </h2>
-      <p class="overflow-hidden text-xs text-gray-500 text-ellipsis whitespace-nowrap" />
     </div>
   </div>
 </template>
