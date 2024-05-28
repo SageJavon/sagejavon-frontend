@@ -22,8 +22,8 @@ const routes: RouteRecordRaw[] = [
     },
     children: [
 		 {
-        path: '/knowledge-graph',
-        name: 'KnowledgeGraph',
+        path: '/knowledge/graph',
+        name: 'knowledgeGraph',
         component: () => import('@/views/knowledge-graph/index.vue'),
       },
       {
