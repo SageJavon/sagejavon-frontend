@@ -4,11 +4,10 @@ import { ref } from 'vue'
 
 // 调用后端接口获取个人信息
 const user = ref(JSON.parse(localStorage.getItem('userInfo')))
-console.log(user.value.portrait)
 </script>
 
 <template>
-  <div v-if="user.nickname" class="items-center">
+  <div v-if="user" class="items-center">
     <div class="h-10 items-center-item">
       <NAvatar size="large" round :src="user.portrait" />
     </div>
