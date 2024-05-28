@@ -265,7 +265,7 @@ function cancel() {
           <NTabPane name="signin" tab="登录">
             <NForm>
               <NFormItemRow label="1.输入账号">
-                <NInput v-model:value="account" type="text" maxlength="20" />
+                <NInput v-model:value="account" type="text" maxlength="40" />
               </NFormItemRow>
               <NFormItemRow label="2.验证您的身份">
                 <div class="password-container">
@@ -323,7 +323,7 @@ function cancel() {
           <NTabPane v-else name="signup" tab="注册">
             <NForm>
               <NFormItemRow label="1.输入账号">
-                <NInput v-model:value="account" type="text" maxlength="30" />
+                <NInput v-model:value="account" type="text" maxlength="40" />
               </NFormItemRow>
               <!-- <n-form-item-row label="2.输入密码">
                                 <n-input show-password-on="click" v-model:value="password" type="password"
