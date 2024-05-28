@@ -91,7 +91,7 @@ async function registerVerify() {
       console.log(res)
       if (res.status === 200) {
         user.value = res
-        localStorage.setItem('user', JSON.stringify(res))
+        localStorage.setItem('userInfo', JSON.stringify(res))
         // 登录成功，返回首页
         window.location.href = '/'
       }
@@ -174,8 +174,9 @@ async function signIn(type) {
           // 在这里处理获取到的用户信息
           localStorage.setItem('userInfo', JSON.stringify(userInfoRes.data.data))
         }
-      }).catch(() => {
+      }).catch((err) => {
         // 在这里处理获取用户信息失败的情况
+        console.log(err)
       })
       // 调用 getUserInfo 获取用户信息
       // 登录成功，返回首页

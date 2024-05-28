@@ -31,11 +31,6 @@ const routes: RouteRecordRaw[] = [
         name: 'Chat',
         component: () => import('@/views/chat/index.vue'),
       },
-      {
-        path: '/code-tools',
-        name: 'CodeTools',
-        component: () => import('@/views/code-tools/index.vue'),
-      },
     ],
   },
   {

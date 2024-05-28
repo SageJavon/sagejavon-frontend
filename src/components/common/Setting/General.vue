@@ -5,15 +5,12 @@ import { updateUserInfoAPI } from '@/views/chat/api/update_user_info'
 
 const userInfoString = localStorage.getItem('userInfo')
 const userInfo = ref(userInfoString ? JSON.parse(userInfoString) : null)
-console.log(userInfo.value)
+
 const avatar = ref(userInfo.value.portrait ?? '')
 const name = ref(userInfo.value.nickname ?? '')
 const gender = ref(userInfo.value.gender ?? '')
 const message = useMessage()
 function updateUserInfo(field, value) {
-  console.log(avatar.value)
-  console.log(name.value)
-  console.log(gender.value)
   const userInfo = {
     nickname: name.value,
     portrait: avatar.value,
@@ -22,10 +19,8 @@ function updateUserInfo(field, value) {
   updateUserInfoAPI(userInfo)
     .then((res) => {
       if (res.status === 200) {
-        console.log(res)
         // 更新成功，更新本地存储中的用户信息
         localStorage.setItem('userInfo', JSON.stringify(userInfo))
-        console.log(localStorage.getItem('userInfo'))
         message.info('修改成功', { duration: 2000 })
       }
       else {
