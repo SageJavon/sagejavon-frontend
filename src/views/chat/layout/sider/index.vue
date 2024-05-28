@@ -22,7 +22,7 @@ const show = ref(false)
 const collapsed = computed(() => appStore.siderCollapsed)
 
 function goToKnowledgeGraph() {
-	 router.push('/knowledge-graph') // 跳转到知识图谱页面
+	 router.push('/knowledge/graph') // 跳转到知识图谱页面
 }
 function goToCodeTools() {
   router.push('/code-tools') // 跳转到代码工具页面
@@ -77,7 +77,7 @@ watch(
       position="absolute"
       bordered
       :style="getMobileClass"
-			style="background-color:#e7e7e7"
+      style="background-color:#e7e7e7"
       @update-collapsed="handleUpdateCollapsed"
     >
       <div class="flex flex-col h-full" :style="mobileSafeArea">
