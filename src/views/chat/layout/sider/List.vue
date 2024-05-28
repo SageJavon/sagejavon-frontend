@@ -32,10 +32,10 @@ function handleEdit({ uuid }: Chat.History, isEdit: boolean, event?: MouseEvent)
 
 function handleDelete(index: number, event?: MouseEvent | TouchEvent) {
   event?.stopPropagation()
-  chatStore.deleteHistory(index);
-  if (chatStore.history.length === 0) {
+  chatStore.deleteHistory(index)
+  if (chatStore.history.length === 0)
     chatStore.addHistory({ title: 'New Chat', uuid: Date.now(), isEdit: false })
-  }
+
   if (isMobile.value)
     appStore.setSiderCollapsed(true)
 }
@@ -65,8 +65,8 @@ function isActive(uuid: number) {
       <template v-else>
         <div v-for="(item, index) of dataSources" :key="index">
           <a
-            class="relative flex items-center gap-3 px-3 py-3 break-all border rounded-md cursor-pointer hover:bg-neutral-100 group dark:border-neutral-800 dark:hover:bg-[#24272e]"
-            :class="isActive(item.uuid) && ['border-[#4b9e5f]', 'bg-neutral-100', 'text-[#4b9e5f]', 'dark:bg-[#24272e]', 'dark:border-[#4b9e5f]', 'pr-14']"
+            class="relative flex items-center gap-3 px-3 py-3 break-all border rounded-md cursor-pointer hover:bg-neutral-100 group dark:border-neutral-800 dark:hover:bg-[#E44446FF]"
+            :class="isActive(item.uuid) && ['border-[#E44446FF]', 'bg-neutral-100', 'text-[#E44446FF]', 'dark:bg-[#E44446FF]', 'dark:border-[#E44446FF]', 'pr-14']"
             @click="handleSelect(item)"
           >
             <span>

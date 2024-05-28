@@ -1,9 +1,39 @@
+<script setup>
+import { computed } from 'vue'
+import { useStore } from 'vuex'
+const store = useStore()
+
+const isMobile = computed(() => {
+  return store.getters['setting/isMobile']
+})
+
+const fixedHead = computed(() => {
+  return store.getters['setting/fixedHead']
+})
+
+const tag = computed(() => {
+  return store.getters['setting/tag']
+})
+
+const isCollapse = computed(() => {
+  return store.getters.collapse
+})
+
+const mode = computed(() => {
+  return store.getters['setting/mode']
+})
+
+const handleCollapse = () => {
+  store.dispatch('setting/changeCollapse')
+}
+</script>
+
 <template>
   <div class="admin-container">
     <Mobile v-if="isMobile" />
     <template v-else>
       <el-container v-if="mode === 'vertical'">
-        <Menu :isCollapse="isCollapse" class="hidden-xs-only" />
+        <Menu :is-collapse="isCollapse" class="hidden-xs-only" />
         <el-container class="container" :style="{ left: isCollapse ? '65px' : '240px' }">
           <el-header
             class="header"
@@ -26,36 +56,6 @@
     </template>
   </div>
 </template>
-
-<script setup>
-  import { computed } from 'vue';
-  import { useStore } from 'vuex';
-  const store = useStore();
-
-  const isMobile = computed(() => {
-    return store.getters['setting/isMobile'];
-  });
-
-  const fixedHead = computed(() => {
-    return store.getters['setting/fixedHead'];
-  });
-
-  const tag = computed(() => {
-    return store.getters['setting/tag'];
-  });
-
-  const isCollapse = computed(() => {
-    return store.getters.collapse;
-  });
-
-  const mode = computed(() => {
-    return store.getters['setting/mode'];
-  });
-
-  const handleCollapse = () => {
-    store.dispatch('setting/changeCollapse');
-  };
-</script>
 
 <style lang="scss" scoped>
   .admin-container {

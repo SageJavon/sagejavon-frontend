@@ -42,13 +42,13 @@ const show = computed({
         <NTabPane name="General" tab="General">
           <template #tab>
             <SvgIcon class="text-lg" icon="ri:file-user-line" />
-            <span class="ml-2">{{ $t('setting.general') }}</span>
+            <span class="ml-2">修改个人资料</span>
           </template>
           <div class="min-h-[100px]">
             <General />
           </div>
         </NTabPane>
-        <NTabPane v-if="isChatGPTAPI" name="Advanced" tab="Advanced">
+        <!-- <NTabPane v-if="isChatGPTAPI" name="Advanced" tab="Advanced">
           <template #tab>
             <SvgIcon class="text-lg" icon="ri:equalizer-line" />
             <span class="ml-2">{{ $t('setting.advanced') }}</span>
@@ -56,11 +56,11 @@ const show = computed({
           <div class="min-h-[100px]">
             <Advanced />
           </div>
-        </NTabPane>
+        </NTabPane> -->
         <NTabPane name="Config" tab="Config">
           <template #tab>
             <SvgIcon class="text-lg" icon="ri:list-settings-line" />
-            <span class="ml-2">{{ $t('setting.config') }}</span>
+            <span class="ml-2">其他配置</span>
           </template>
           <About />
         </NTabPane>

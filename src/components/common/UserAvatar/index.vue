@@ -1,40 +1,30 @@
 <script setup lang='ts'>
-import { computed } from 'vue'
 import { NAvatar } from 'naive-ui'
-import { useUserStore } from '@/store'
-import defaultAvatar from '@/assets/avatar.jpg'
-import { isString } from '@/utils/is'
+import { ref } from 'vue'
 
-const userStore = useUserStore()
-
-const userInfo = computed(() => userStore.userInfo)
+// 调用后端接口获取个人信息
+const user = ref(JSON.parse(localStorage.getItem('userInfo')))
+console.log(user.value.portrait)
 </script>
 
 <template>
-  <div class="flex items-center overflow-hidden">
-    <div class="w-10 h-10 overflow-hidden rounded-full shrink-0">
-      <template v-if="isString(userInfo.avatar) && userInfo.avatar.length > 0">
-        <NAvatar
-          size="large"
-          round
-          :src="userInfo.avatar"
-          :fallback-src="defaultAvatar"
-        />
-      </template>
-      <template v-else>
-        <NAvatar size="large" round :src="defaultAvatar" />
-      </template>
+  <div v-if="user.nickname" class="items-center">
+    <div class="h-10 items-center-item">
+      <NAvatar size="large" round :src="user.portrait" />
     </div>
-    <div class="flex-1 min-w-0 ml-2">
+    <div class="flex-1 min-w-0 items-center-item">
       <h2 class="overflow-hidden font-bold text-md text-ellipsis whitespace-nowrap">
-        {{ userInfo.name ?? 'ChenZhaoYu' }}
+        {{ user.nickname }}
       </h2>
-      <p class="overflow-hidden text-xs text-gray-500 text-ellipsis whitespace-nowrap">
-        <span
-          v-if="isString(userInfo.description) && userInfo.description !== ''"
-          v-html="userInfo.description"
-        />
-      </p>
     </div>
   </div>
 </template>
+
+<style>
+.items-center-item{
+  display: flex;
+  align-items: center;
+	justify-content: center;
+	width:100%
+}
+</style>

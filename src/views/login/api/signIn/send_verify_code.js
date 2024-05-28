@@ -19,7 +19,7 @@ function sendVerifyCode(account) {
 
   return axios(config)
     .then((response) => {
-      return response.data
+      return response
     })
     .catch((error) => {
       throw error

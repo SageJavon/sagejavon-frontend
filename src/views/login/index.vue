@@ -1,11 +1,11 @@
 <script setup>
 import { NButton, NConfigProvider, NForm, NFormItemRow, NInput, NTabPane, NTabs, useMessage } from 'naive-ui'
 
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { signInByVerifyCode } from './api/signIn/sign_in_by_verifyCode'
 import { signInByPassword } from './api/signIn/sign_in_by_password'
 import { sendVerifyCode } from './api/signIn/send_verify_code'
-
+import { getUserInfo } from './api/info/get_user_info'
 const themeOverrides = {
   common: {
     primaryColor: '#000',
@@ -17,8 +17,27 @@ const account = ref('')
 const password = ref('')
 const verifyCode = ref('')
 const showVerifyCode = ref(false)
-const signInType = ref('password')
+const signInType = ref('verifyCode')
 const user = ref(null)
+console.log(localStorage.getItem('userInfo'))
+// 验证码倒计时
+// 在setup中定义一个ref用于存储倒计时剩余时间
+const countdown = ref(0)
+
+// 定义一个函数用于启动倒计时
+function startCountdown() {
+  countdown.value = 60 // 设置倒计时初始值为60秒
+  const timer = setInterval(() => {
+    countdown.value-- // 每秒减少一秒
+    if (countdown.value <= 0)
+      clearInterval(timer) // 当倒计时结束时清除定时器
+  }, 1000)
+}
+// 监听countdown的变化，当倒计时结束时将showVerifyCode设置为true
+watch(countdown, (val) => {
+  if (val === 0)
+    showVerifyCode.value = true
+})
 
 function warning(content) {
   message.warning(content, { closabale: true, duration: 3e3 })
@@ -46,7 +65,7 @@ async function register() {
 
   sendVerifyCode(account.value).then((res) => {
     // console.log(res)
-    if (res.code === 200)
+    if (res.status === 200)
       showVerifyCode.value = true
     else
     //   alert('验证码发送失败，请稍后再试')
@@ -69,8 +88,8 @@ async function registerVerify() {
   }
   signInByVerifyCode(account.value, verifyCode.value)
     .then((res) => {
-    //   console.log(res)
-      if (res.code === 200) {
+      console.log(res)
+      if (res.status === 200) {
         user.value = res
         localStorage.setItem('user', JSON.stringify(res))
         // 登录成功，返回首页
@@ -89,30 +108,27 @@ async function registerVerify() {
     })
 }
 
-// 登录时请求验证码：验证账号正确性，再请求验证码
+// 修改发送验证码的函数，使其在发送验证码时启动倒计时
 async function verifyCode_signIn() {
   const validateResult = __validateAccount(account.value)
   if (validateResult !== '合法') {
-    // alert(validateResult)
     warning(validateResult)
     return
   }
-  //   console.log(account.value)
+
   sendVerifyCode(account.value).then((res) => {
-    // console.log(res)
-    if (res.code === 200)
-    //   alert('验证码发送成功，请注意查收')
+    console.log(res)
+    if (res.status === 200) {
       success('验证码发送成功，请注意查收')
-    else
-    //   alert('验证码发送失败，请稍后再试')
-      error('验证码发送失败，请稍后再试')
+      startCountdown() // 发送验证码成功后启动倒计时
+    }
+    else {
+      error('您发送的太过频繁，请稍候再试')
+    }
   }).catch(() => {
-    // console.log(err)
-    // alert('验证码发送失败，请稍后再试')
     error('验证码发送失败，请稍后再试')
   })
 }
-
 // 登录事件：根据登录方式，调用相应的登录函数
 async function signIn(type) {
   const validateResult = __validateAccount(account.value)
@@ -146,10 +162,22 @@ async function signIn(type) {
   }
 
   res.then((res) => {
-    // console.log(res)
-    if (res.code === 200) {
+    console.log(res)
+    if (res.userId) {
       user.value = res
-      localStorage.setItem('user', JSON.stringify(res))
+      localStorage.setItem('user-token', res.accessToken)
+      localStorage.setItem('user-id', res.userId)
+      getUserInfo().then((userInfoRes) => {
+        console.log(userInfoRes)
+        if (userInfoRes.status === 200) {
+          console.log(userInfoRes.data.data)
+          // 在这里处理获取到的用户信息
+          localStorage.setItem('userInfo', JSON.stringify(userInfoRes.data.data))
+        }
+      }).catch(() => {
+        // 在这里处理获取用户信息失败的情况
+      })
+      // 调用 getUserInfo 获取用户信息
       // 登录成功，返回首页
       window.location.href = '/'
     }
@@ -246,9 +274,10 @@ function cancel() {
                   />
                   <div v-else style="display: flex; flex-direction: row;">
                     <NInput v-model:value="verifyCode" type="text" maxlength="6" />
-                    <button @click="verifyCode_signIn()">
-                      获取验证码
-                    </button>
+                    <!-- 在按钮旁边显示倒计时信息 -->
+                    <NButton :disabled="countdown > 0" @click="verifyCode_signIn()">
+                      {{ countdown > 0 ? `${countdown} 秒后重新获取` : '获取验证码' }}
+                    </NButton>
                   </div>
                   <div class="help-container">
                     <a href="#">忘记密码?</a>
@@ -276,8 +305,8 @@ function cancel() {
             <NForm>
               <NFormItemRow label="输入验证码">
                 <NInput v-model:value="verifyCode" type="text" maxlength="6" />
-                <button @click="verifyCode_signIn()">
-                  获取验证码
+                <button :disabled="countdown > 0" @click="verifyCode_signIn()">
+                  {{ countdown > 0 ? `${countdown} 秒后重新获取` : '获取验证码' }}
                 </button>
               </NFormItemRow>
             </NForm>

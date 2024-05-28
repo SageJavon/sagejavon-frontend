@@ -4,8 +4,15 @@ import { NaiveProvider } from '@/components/common'
 import { useTheme } from '@/hooks/useTheme'
 import { useLanguage } from '@/hooks/useLanguage'
 
-const { theme, themeOverrides } = useTheme()
+const { theme } = useTheme()
 const { language } = useLanguage()
+
+const themeOverrides = {
+  common: {
+    primaryColor: '#FC6868FF',
+  },
+  // ...
+}
 </script>
 
 <template>
