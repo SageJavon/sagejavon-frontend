@@ -1,17 +1,70 @@
 <script setup lang='ts'>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { NInput, NPopconfirm, NScrollbar } from 'naive-ui'
 import { SvgIcon } from '@/components/common'
 import { useAppStore, useChatStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { debounce } from '@/utils/functions/debounce'
+import { chatList } from '@/views/chat/api/chat_list'
 
 const { isMobile } = useBasicLayout()
 
 const appStore = useAppStore()
 const chatStore = useChatStore()
 
-const dataSources = computed(() => chatStore.history)
+interface OriginalData {
+  chatId: number
+  title: string | null
+  longTerm: number
+  updateTime: string
+}
+
+interface TransformedData {
+  title: string
+  uuid: number
+  isEdit: boolean
+}
+
+function transformData(originalData: OriginalData[]): TransformedData[] {
+  return originalData.map((item, index) => ({
+    title: item.title || '111',
+    uuid: item.chatId,
+    isEdit: false,
+  }))
+}
+
+const originalData = ref<OriginalData[]>([])
+
+const transformedData = ref<TransformedData[]>([])
+
+const getChatList = async () => {
+  try {
+    const res = await chatList() // 假设 chatList 是一个异步请求函数
+    if (res.status === 200) {
+      originalData.value = res.data.data
+      transformedData.value = transformData(originalData.value)
+      // chatStore.addHistory({ title: '新增提问', uuid: res.data.data, isEdit: false })
+			 transformedData.value.forEach((item) => {
+        // if (!chatStore.history.some(chat => chat.uuid === item.uuid))
+          // chatStore.addHistory(item)
+      })
+      console.log(transformedData.value)
+    }
+    else {
+      // 更新失败
+    }
+  }
+  catch (err) {
+    console.error('获取聊天列表失败:', err)
+  }
+}
+// console.log(chatStore.history)
+// 在组件初始化时调用获取聊天列表方法
+getChatList()
+const dataSources = computed(() => {
+  const transformedUuids = transformedData.value.map(item => item.uuid)
+  return chatStore.history.filter(chat => transformedUuids.includes(chat.uuid))
+})
 
 async function handleSelect({ uuid }: Chat.History) {
   if (isActive(uuid))

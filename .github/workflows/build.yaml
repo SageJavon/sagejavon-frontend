@@ -1,0 +1,33 @@
+name: build
+
+on:
+  push:
+    branches: [master]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Allow one concurrent deployment
+concurrency:
+  group: build
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+      - name: Build Pages
+        run: pnpm install && pnpm build
+      - name: Upload artifact
+        uses: TencentCloud/cos-action@v1
+        with:
+          secret_id: ${{ secrets.SECRET_ID }}
+          secret_key: ${{ secrets.SECRET_KEY }}
+          cos_bucket: sagejavon-1308722423
+          cos_region: ap-shanghai
+          local_path: dist
+          clean: true

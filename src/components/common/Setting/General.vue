@@ -1,14 +1,24 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { NButton, NInput, useMessage } from 'naive-ui'
+import { getUserInfo } from './api/info/get_user_info'
 import { updateUserInfoAPI } from '@/views/chat/api/update_user_info'
+const avatar = ref('')
+const name = ref('')
+const gender = ref('')
+function getUserInfoF() {
+  getUserInfo().then((userInfoRes) => {
+    if (userInfoRes.status === 200)
+      avatar.value = userInfoRes.data.data.portrait
+    name.value = userInfoRes.data.data.nickname
+    gender.value = userInfoRes.data.data.gender
+  }).catch((err) => {
+    // 在这里处理获取用户信息失败的情况
+    console.log(err)
+  })
+}
 
-const userInfoString = localStorage.getItem('userInfo')
-const userInfo = ref(userInfoString ? JSON.parse(userInfoString) : null)
-
-const avatar = ref(userInfo.value.portrait ?? '')
-const name = ref(userInfo.value.nickname ?? '')
-const gender = ref(userInfo.value.gender ?? '')
+getUserInfoF() // 页面onShow时调用接口获取用户信息
 const message = useMessage()
 function updateUserInfo(field, value) {
   const userInfo = {

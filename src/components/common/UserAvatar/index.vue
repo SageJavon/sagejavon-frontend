@@ -1,9 +1,21 @@
 <script setup lang='ts'>
 import { NAvatar } from 'naive-ui'
 import { ref } from 'vue'
+import { getUserInfo } from './api/info/get_user_info'
 
-// 调用后端接口获取个人信息
-const user = ref(JSON.parse(localStorage.getItem('userInfo')))
+const user = ref<any>(null) // 假设用户信息是任意类型
+
+function getUserInfoF() {
+  getUserInfo().then((userInfoRes) => {
+    if (userInfoRes.status === 200)
+      user.value = userInfoRes.data.data
+  }).catch((err) => {
+    // 在这里处理获取用户信息失败的情况
+    console.log(err)
+  })
+}
+
+getUserInfoF() // 页面onShow时调用接口获取用户信息
 </script>
 
 <template>

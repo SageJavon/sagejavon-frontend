@@ -1,7 +1,7 @@
 <script setup lang='ts'>
 import type { CSSProperties } from 'vue'
 import { computed, ref, watch } from 'vue'
-import { NAvatar, NButton, NDivider, NImage, NLayoutSider, NText } from 'naive-ui'
+import { NAvatar, NButton, NDivider, NImage, NLayoutSider, NText, useMessage } from 'naive-ui'
 import { useRouter } from 'vue-router'
 import List from './List.vue'
 import Footer from './Footer.vue'
@@ -12,24 +12,36 @@ import knowledgeSide from '@/assets/knowledge.png'
 import source from '@/assets/source.png'
 import study from '@/assets/study.png'
 import teacher from '@/assets/teacher.png'
+import { newChat } from '@/views/chat/api/new_chat'
 const router = useRouter() // 使用 useRouter
 const appStore = useAppStore()
 const chatStore = useChatStore()
 
 const { isMobile } = useBasicLayout()
 const show = ref(false)
+const message = useMessage()
 
 const collapsed = computed(() => appStore.siderCollapsed)
 
 function goToKnowledgeGraph() {
 	 router.push('/knowledge/graph') // 跳转到知识图谱页面
 }
-function goToCodeTools() {
-  router.push('/code-tools') // 跳转到代码工具页面
-}
 
 function handleAdd() {
-  chatStore.addHistory({ title: 'New Chat', uuid: Date.now(), isEdit: false })
+  newChat()
+    .then((res) => {
+      if (res.status === 200) {
+        message.info('新增成功', { duration: 5000 })
+				  chatStore.addHistory({ title: '新增提问', uuid: res.data.data, isEdit: false })
+      }
+      else {
+        // 更新失败
+
+      }
+    })
+    .catch((err) => {
+      console.error('新增失败:', err)
+    })
   if (isMobile.value)
     appStore.setSiderCollapsed(true)
 }

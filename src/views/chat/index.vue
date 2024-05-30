@@ -5,20 +5,16 @@ import { useRoute } from 'vue-router'
 import { NAutoComplete, NButton, NImageGroup, NInput, NSpace, useDialog, useMessage } from 'naive-ui'
 import html2canvas from 'html2canvas'
 import { storeToRefs } from 'pinia'
-import axios from 'axios'
 import { Message } from './components'
 import { useScroll } from './hooks/useScroll'
 import { useChat } from './hooks/useChat'
 import { useUsingContext } from './hooks/useUsingContext'
+import { smartQueryStream } from './api/smart_query_stream'
 import { HoverButton, SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useChatStore, usePromptStore } from '@/store'
 import { fetchChatAPIProcess } from '@/api'
 import { t } from '@/locales'
-
-const api_key = 'your chatglm api key'
-const model_name = 'glm-3-turbo'
-
 let controller = new AbortController()
 
 // const openLongReply = import.meta.env.VITE_GLOB_OPEN_LONG_REPLY === 'true'
@@ -93,16 +89,14 @@ async function handleSubmit() {
     prompt.value = ''
 
     // 调用 callChatGLM 方法获取对方的回复
-    const response = await callChatGLM(api_key, model_name, [
-      { role: 'user', content: `你叫SageJavon,是一个java课程的AI小助手，希望你可以帮助学生解答java相关的代码和知识点的问题，为其提供学习建议，为其代码纠错，给出任何有助于学生学习java的东西~请你回答的语气像个老师${message}` },
-    ])
+    const response = await callChatGLM(message)
 
     console.log('GLM Response:', response)
 
     // 添加对方的回复到聊天记录
     addChat(+uuid, {
       dateTime: new Date().toLocaleString(),
-      text: response.message.content ?? '',
+      text: response ?? '',
       inversion: false,
       error: false,
       loading: false,
@@ -135,22 +129,16 @@ async function handleSubmit() {
   }
 }
 
-async function callChatGLM(apiKey: string, modelName: string, messages: any[]) {
+async function callChatGLM(message: string) {
   try {
-    const response = await axios.post('https://open.bigmodel.cn/api/paas/v4/chat/completions', {
-      model: modelName,
-      messages,
-    }, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
-      },
-    })
-    return response.data.choices[0]
+    const res = await smartQueryStream(message)
+    console.log(res.data)
+    return res.data
   }
-  catch (error) {
-    console.error('Error calling GLM:', error)
-    return null
+  catch (err) {
+    // 在这里处理获取用户信息失败的情况
+    console.error(err)
+    throw err // 这里抛出错误以便在调用处捕获
   }
 }
 
