@@ -53,80 +53,8 @@ dataSources.value.forEach((item, index) => {
   if (item.loading)
     updateChatSome(+uuid, index, { loading: false })
 })
-console.log(dataSources.value)
-async function handleSubmit() {
-  // const messages = [
-  //   { role: 'user', content: '你好' },
-  //   { role: 'assistant', content: '我是SageJavon小助手，帮助解答您的Java知识和代码问题' },
-  //   { role: 'user', content: '你叫什么名字' },
-  //   { role: 'assistant', content: '我叫SageJavon' },
-  //   { role: 'user', content: `${prompt.value}请你以老师回答学生问题的语气来回答` },
-  // ]
-  // const response = await callChatGLM(api_key, model_name, messages)
-  // console.log('GLM Response:', response)
-  // console.log(prompt.value)
-  const message = prompt.value
-
-  if (loading.value)
-    return
-
-  if (!message || message.trim() === '')
-    return
-
-  try {
-    // 添加用户的消息到聊天记录
-    addChat(+uuid, {
-      dateTime: new Date().toLocaleString(),
-      text: message,
-      inversion: true,
-      error: false,
-      conversationOptions: null,
-      requestOptions: { prompt: message, options: null },
-    })
-    scrollToBottom()
-
-    loading.value = true
-    prompt.value = ''
-
-    // 调用 callChatGLM 方法获取对方的回复
-    const response = await callChatGLM(message)
-
-    console.log('GLM Response:', response)
-
-    // 添加对方的回复到聊天记录
-    addChat(+uuid, {
-      dateTime: new Date().toLocaleString(),
-      text: response ?? '',
-      inversion: false,
-      error: false,
-      loading: false,
-      conversationOptions: {},
-      requestOptions: { prompt: message, options: {} },
-    })
-
-    scrollToBottom()
-  }
-  catch (error: any) {
-    console.error('Error calling GLM:', error)
-
-    const errorMessage = error?.text ?? t('common.wrong')
-
-    // 如果调用出错，添加错误消息到聊天记录
-    addChat(+uuid, {
-      dateTime: new Date().toLocaleString(),
-      text: errorMessage,
-      inversion: false,
-      error: true,
-      loading: false,
-      conversationOptions: null,
-      requestOptions: { prompt: message, options: {} },
-    })
-
-    scrollToBottom()
-  }
-  finally {
-    loading.value = false
-  }
+function handleSubmit() {
+  onConversation()
 }
 
 async function callChatGLM(message: string) {
@@ -152,7 +80,6 @@ async function onConversation() {
     return
 
   controller = new AbortController()
-
   addChat(
     +uuid,
     {
@@ -165,21 +92,14 @@ async function onConversation() {
     },
   )
   scrollToBottom()
-
   loading.value = true
   prompt.value = ''
-
   const options: Chat.ConversationRequest = { conversationId: usingContext.value ? window.location.hash : Math.random().toString() }
-  // const lastContext = conversationList.value[conversationList.value.length - 1]?.conversationOptions
-
-  // if (lastContext && usingContext.value)
-  //   options = { ...lastContext }
-
   addChat(
     +uuid,
     {
       dateTime: new Date().toLocaleString(),
-      text: '',
+      text: 'SageJavon思考中....',
       loading: true,
       inversion: false,
       error: false,
@@ -188,88 +108,63 @@ async function onConversation() {
     },
   )
   scrollToBottom()
-
   try {
-    await fetchChatAPIProcess<Chat.ConversationResponse>({
-      prompt: message,
-      options,
-      signal: controller.signal,
-      network: !!chatStore.getEnabledNetwork,
-      onDownloadProgress: ({ event }) => {
-        const xhr = event.target
-        const { responseText } = xhr
-        // Always process the final line
-        // const lastIndex = responseText.lastIndexOf('\n')
-        const chunk = responseText
-        // if (lastIndex !== -1)
-        //   chunk = responseText.substring(lastIndex)
-        try {
-          // const data = JSON.parse(chunk)
-          updateChat(
-            +uuid,
-            dataSources.value.length - 1,
-            {
-              dateTime: new Date().toLocaleString(),
-              text: chunk ?? '',
-              inversion: false,
-              error: false,
-              loading: false,
-              conversationOptions: { },
-              requestOptions: { prompt: message, options: { ...options } },
-            },
-          )
-          scrollToBottom()
-        }
-        catch (error) {
-          //
-        }
+    // 发起后端请求获取模型响应
+    const response = await fetch('https://rag.xhpolaris.com/open_kf_api/queries/smart_query_stream', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiYWRtaW4iLCJleHAiOjE3MTc3Mzg0Mjl9.o7fh59s5cUZQONB_tSylMWqDIsrc3YJDbzOb0nSjt2g',
       },
+      body: JSON.stringify({
+        query: message,
+        user_id: 'a9578288-05d4-4335-8f7e-eb214e9c1efa',
+      }),
     })
+
+    if (!response.body)
+      return
+
+    const reader = response.body.pipeThrough(new TextDecoderStream()).getReader()
+    let finalResponse = ''
+    while (true) {
+      const { value, done } = await reader.read()
+      if (done)
+        break
+
+      console.log(finalResponse)
+      updateChat(+uuid, dataSources.value.length - 1, {
+        dateTime: new Date().toLocaleString(),
+        text: finalResponse,
+        inversion: false,
+        error: false,
+        loading: false,
+        conversationOptions: {},
+        requestOptions: { prompt: message, options: { } },
+      })
+      // 累加接收到的数据块
+      finalResponse += value
+    }
+
+    scrollToBottom()
   }
   catch (error: any) {
+    console.error('Error calling GLM:', error)
+
     const errorMessage = error?.text ?? t('common.wrong')
 
-    if (error.text === 'canceled') {
-      updateChatSome(
-        +uuid,
-        dataSources.value.length - 1,
-        {
-          loading: false,
-        },
-      )
-      scrollToBottomIfAtBottom()
-      return
-    }
+    // 如果调用出错，添加错误消息到聊天记录
+    addChat(+uuid, {
+      dateTime: new Date().toLocaleString(),
+      text: errorMessage,
+      inversion: false,
+      error: true,
+      loading: false,
+      conversationOptions: null,
+      requestOptions: { prompt: message, options: {} },
+    })
 
-    const currentChat = getChatByUuidAndIndex(+uuid, dataSources.value.length - 1)
-
-    if (currentChat?.text && currentChat.text !== '') {
-      updateChatSome(
-        +uuid,
-        dataSources.value.length - 1,
-        {
-          text: `${currentChat.text}\n[${errorMessage}]`,
-          error: false,
-          loading: false,
-        },
-      )
-      return
-    }
-
-    updateChat(
-      +uuid,
-      dataSources.value.length - 1,
-      {
-        dateTime: new Date().toLocaleString(),
-        text: errorMessage,
-        inversion: false,
-        error: true,
-        loading: false,
-        conversationOptions: null,
-        requestOptions: { prompt: message, options: { ...options } },
-      },
-    )
-    scrollToBottomIfAtBottom()
+    scrollToBottom()
   }
   finally {
     loading.value = false
@@ -627,7 +522,7 @@ onUnmounted(() => {
 
         <NButton
           style="background:#E44446FF"
-          :disabled="buttonDisabled" @click="handleSubmit"
+          :disabled="buttonDisabled" @click="handleSubmit()"
         >
           <template #icon>
             <span style="color:#ffffff">

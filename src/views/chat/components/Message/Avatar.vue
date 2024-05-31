@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { NImage } from 'naive-ui'
 
 import defaultAvatar from '@/assets/avatar.jpg'
-import defaultModel from '@/assets/sagejavonchat.png'
+import defaultModel from '@/assets/sagejavon.png'
 
 interface Props {
   image?: boolean
