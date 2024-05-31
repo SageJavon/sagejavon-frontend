@@ -114,7 +114,7 @@ const jumpClient = () => {
       .logo {
         width: 22px;
         height: 22px;
-        background-image: url('../../../assets/img/logo2.png');
+        background-image: url('../../../assets/sagejavon.png');
         background-size: cover;
         margin-right: 5px;
       }
