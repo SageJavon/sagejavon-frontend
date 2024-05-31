@@ -5,26 +5,6 @@ import { ChatLayout } from '@/views/chat/layout'
 
 const routes: RouteRecordRaw[] = [
   {
-    path: '/forces',
-    name: 'Forces',
-    component: (): unknown => import('@/views/Forces.vue'),
-  },
-  {
-    path: '/hierarchy',
-    name: 'Hierarchy',
-    component: (): unknown => import('@/views/Hierarchy.vue'),
-  },
-  {
-    path: '/fires',
-    name: 'Fires',
-    component: (): unknown => import('@/views/Fires.vue'),
-  },
-  {
-    path: '/knowledge/graph',
-    name: 'knowledgeGraph',
-    component: (): unknown => import('@/views/XMind/index.vue'),
-  },
-  {
     path: '/login',
     name: 'Login',
     component: () => import('@/views/login/index.vue'),
@@ -32,9 +12,17 @@ const routes: RouteRecordRaw[] = [
       requiresAuth: false,
     },
   },
-  {
+    {
     path: '/',
     name: 'Root',
+    component: () => import('@/views/welcome/index.vue'),
+    meta: {
+      requiresAuth: false,
+    },
+  },
+  {
+    path: '/chat',
+    name: 'Chat',
     component: ChatLayout,
     redirect: '/chat',
     meta: {
@@ -62,6 +50,11 @@ const routes: RouteRecordRaw[] = [
     path: '/:pathMatch(.*)*',
     name: 'notFound',
     redirect: '/404',
+  },
+  {
+    path: '/knowledge/graph',
+    name: 'knowledgeGraph',
+    component: () => import('@/views/knowledge-graph/Edit/index.vue'),
   },
 ]
 

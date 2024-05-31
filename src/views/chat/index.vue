@@ -13,7 +13,6 @@ import { smartQueryStream } from './api/smart_query_stream'
 import { HoverButton, SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useChatStore, usePromptStore } from '@/store'
-import { fetchChatAPIProcess } from '@/api'
 import { t } from '@/locales'
 let controller = new AbortController()
 
@@ -171,106 +170,106 @@ async function onConversation() {
   }
 }
 
-async function onRegenerate(index: number) {
-  if (loading.value)
-    return
+// async function onRegenerate(index: number) {
+//   if (loading.value)
+//     return
 
-  controller = new AbortController()
+//   controller = new AbortController()
 
-  const { requestOptions } = dataSources.value[index]
+//   const { requestOptions } = dataSources.value[index]
 
-  const message = requestOptions?.prompt ?? ''
+//   const message = requestOptions?.prompt ?? ''
 
-  let options: Chat.ConversationRequest = {}
+//   let options: Chat.ConversationRequest = {}
 
-  if (requestOptions.options)
-    options = { ...requestOptions.options }
+//   if (requestOptions.options)
+//     options = { ...requestOptions.options }
 
-  loading.value = true
+//   loading.value = true
 
-  updateChat(
-    +uuid,
-    index,
-    {
-      dateTime: new Date().toLocaleString(),
-      text: '',
-      inversion: false,
-      error: false,
-      loading: true,
-      conversationOptions: null,
-      requestOptions: { prompt: message, options: { ...options } },
-    },
-  )
-  // debugger;
-  try {
-    await fetchChatAPIProcess<Chat.ConversationResponse>({
-      prompt: message,
-      options,
-      network: !!chatStore.getEnabledNetwork,
-      signal: controller.signal,
-      onDownloadProgress: ({ event }) => {
-        const xhr = event.target
-        const { responseText = '' } = xhr || {}
-        // Always process the final line
-        // const lastIndex = responseText.lastIndexOf('\n')
-        const chunk = responseText
-        // if (lastIndex !== -1)
-        // chunk = responseText.substring(lastIndex)
-        try {
-          // const data = JSON.parse(chunk)
-          updateChat(
-            +uuid,
-            dataSources.value.length - 1,
-            {
-              dateTime: new Date().toLocaleString(),
-              text: chunk ?? '',
-              inversion: false,
-              error: false,
-              loading: false,
-              conversationOptions: { },
-              requestOptions: { prompt: message, options: { ...options } },
-            },
-          )
-          scrollToBottom()
-        }
-        catch (error) {
-          //
-        }
-      },
-    })
-  }
-  catch (error: any) {
-    if (error.text === 'canceled') {
-      updateChatSome(
-        +uuid,
-        index,
-        {
-          loading: false,
-        },
-      )
-      return
-    }
+//   updateChat(
+//     +uuid,
+//     index,
+//     {
+//       dateTime: new Date().toLocaleString(),
+//       text: '',
+//       inversion: false,
+//       error: false,
+//       loading: true,
+//       conversationOptions: null,
+//       requestOptions: { prompt: message, options: { ...options } },
+//     },
+//   )
+//   // debugger;
+//   try {
+//     await fetchChatAPIProcess<Chat.ConversationResponse>({
+//       prompt: message,
+//       options,
+//       network: !!chatStore.getEnabledNetwork,
+//       signal: controller.signal,
+//       onDownloadProgress: ({ event }) => {
+//         const xhr = event.target
+//         const { responseText = '' } = xhr || {}
+//         // Always process the final line
+//         // const lastIndex = responseText.lastIndexOf('\n')
+//         const chunk = responseText
+//         // if (lastIndex !== -1)
+//         // chunk = responseText.substring(lastIndex)
+//         try {
+//           // const data = JSON.parse(chunk)
+//           updateChat(
+//             +uuid,
+//             dataSources.value.length - 1,
+//             {
+//               dateTime: new Date().toLocaleString(),
+//               text: chunk ?? '',
+//               inversion: false,
+//               error: false,
+//               loading: false,
+//               conversationOptions: { },
+//               requestOptions: { prompt: message, options: { ...options } },
+//             },
+//           )
+//           scrollToBottom()
+//         }
+//         catch (error) {
+//           //
+//         }
+//       },
+//     })
+//   }
+//   catch (error: any) {
+//     if (error.text === 'canceled') {
+//       updateChatSome(
+//         +uuid,
+//         index,
+//         {
+//           loading: false,
+//         },
+//       )
+//       return
+//     }
 
-    const errorMessage = error?.text ?? t('common.wrong')
+//     const errorMessage = error?.text ?? t('common.wrong')
 
-    updateChat(
-      +uuid,
-      index,
-      {
-        dateTime: new Date().toLocaleString(),
-        text: errorMessage,
-        inversion: false,
-        error: true,
-        loading: false,
-        conversationOptions: null,
-        requestOptions: { prompt: message, options: { ...options } },
-      },
-    )
-  }
-  finally {
-    loading.value = false
-  }
-}
+//     updateChat(
+//       +uuid,
+//       index,
+//       {
+//         dateTime: new Date().toLocaleString(),
+//         text: errorMessage,
+//         inversion: false,
+//         error: true,
+//         loading: false,
+//         conversationOptions: null,
+//         requestOptions: { prompt: message, options: { ...options } },
+//       },
+//     )
+//   }
+//   finally {
+//     loading.value = false
+//   }
+// }
 
 function handleExport() {
   if (loading.value)

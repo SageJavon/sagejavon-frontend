@@ -31,3 +31,15 @@ package-lock.json
 
 # Environment variables files
 /service/.env
+/serverlog
+node_modules/
+/dist/
+.idea
+.vscode
+
+
+/server/uploads
+/server/trash.conf
+/x-mind-map/*.zip
+/auto-imports.d.ts
+/components.d.ts
