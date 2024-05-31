@@ -8,7 +8,7 @@
           <p class="infoRow">同时也是得力的编程助手</p>
           <p class="infoRow">帮你回答知识</p>
         </div>
-        <div class="desc">无论你是开发者，还是使用者，只要喜欢思维导图，都能在这个项目里找到你需要的。</div>
+        <div class="desc">为高等教育赋能</div>
         <div class="btnBox">
           <div class="btn" @click="useOnline">在线使用</div>
           <div class="btn btn2" @click="jumpDoc">使用文档</div>
