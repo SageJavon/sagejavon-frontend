@@ -4,17 +4,17 @@ import axios from 'axios'
 function smartQueryStream(query: string): Promise<AxiosResponse> {
   const data = {
     query,
-    user_id: 'afcbbca8-a62c-4809-930c-4e1962047af0',
+    user_id: 'a9578288-05d4-4335-8f7e-eb214e9c1efa',
   }
 
   console.log(data)
 
   const config = {
     method: 'post',
-    url: 'http://59.78.194.84:7001/open_kf_api/queries/smart_query_stream',
+    url: 'https://rag.xhpolaris.com/open_kf_api/queries/smart_query_stream',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiYWZjYmJjYTgtYTYyYy00ODA5LTkzMGMtNGUxOTYyMDQ3YWYwIiwiZXhwIjoxNzE3NjQ5OTIxfQ.DN9iUp0OCBJJoD-e68PqDXfSya3cLQSDDtFHmGQH70o',
+      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiYWRtaW4iLCJleHAiOjE3MTc3Mzg0Mjl9.o7fh59s5cUZQONB_tSylMWqDIsrc3YJDbzOb0nSjt2g',
     },
     data,
   }
