@@ -1,5 +1,5 @@
 <template>
-  <Sidebar ref="sidebar" :title="$t('theme.title')">
+  <Sidebar ref="sidebar" title="主题">
     <div class="themeList" :class="{ isDark: isDark }">
       <el-tabs v-model="activeName">
         <el-tab-pane v-for="group in groupList" :key="group.name" :label="group.name" :name="group.name"></el-tab-pane>

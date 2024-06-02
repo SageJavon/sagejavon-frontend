@@ -1,11 +1,11 @@
 <template>
   <div class="countContainer" :class="{ isDark: isDark }">
     <div class="item">
-      <span class="name">{{ $t('count.words') }}</span>
+      <span class="name">总字数</span>
       <span class="value">{{ words }}</span>
     </div>
     <div class="item">
-      <span class="name">{{ $t('count.nodes') }}</span>
+      <span class="name">总节点数</span>
       <span class="value">{{ num }}</span>
     </div>
   </div>

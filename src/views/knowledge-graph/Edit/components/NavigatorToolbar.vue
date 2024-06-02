@@ -14,7 +14,7 @@
     <div class="item">
       <el-tooltip
         effect="dark"
-        :content="openMiniMap ? $t('navigatorToolbar.closeMiniMap') : $t('navigatorToolbar.openMiniMap')"
+        :content="openMiniMap ? '关闭缩略图' :'打开缩略图'"
         placement="top"
       >
         <div class="btn iconfont icondaohang1" @click="toggleMiniMap"></div>
@@ -28,7 +28,7 @@
         @change="readonlyChange"
       >
       </el-switch> -->
-      <el-tooltip effect="dark" :content="isReadonly ? $t('navigatorToolbar.edit') : $t('navigatorToolbar.readonly')" placement="top">
+      <el-tooltip effect="dark" :content="isReadonly ? '切换为编辑模式' :'切换为只读模式'" placement="top">
         <div class="btn iconfont" :class="[isReadonly ? 'iconyanjing' : 'iconbianji1']" @click="readonlyChange"></div>
       </el-tooltip>
     </div>
@@ -73,7 +73,12 @@ const isReadonly = computed(() => store.state.isReadonly)
 
 const readonlyChange = () => {
   store.commit('setIsReadonly', !isReadonly.value)
-  props.mindMap.setMode(isReadonly.value ? 'readonly' : 'edit')
+
+  // 设为只读
+  // 学生应该是只读
+  // 老师是编辑状态
+  props.mindMap.setMode( 'readonly' )
+  // props.mindMap.setMode(isReadonly.value ? 'readonly' : 'edit')
 }
 
 const toggleMiniMap = () => {

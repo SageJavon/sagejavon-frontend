@@ -8,7 +8,7 @@
     <div class="searchInputBox">
       <el-input
         ref="searchInputRef"
-        :placeholder="$t('search.searchPlaceholder')"
+        placeholder="请输入搜索内容"
         v-model="searchText"
         @keyup.enter.stop="onSearchNext"
         @keydown.native.stop

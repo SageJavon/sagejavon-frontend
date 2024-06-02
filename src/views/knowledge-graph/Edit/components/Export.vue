@@ -2,7 +2,7 @@
   <el-dialog
     custom-class="nodeExportDialog"
     v-model="dialogVisible"
-    :title="$t('export.title')"
+    title="导出"
     width="700px"
     v-loading.fullscreen.lock="loading"
     :element-loading-text="loadingText"
@@ -11,10 +11,10 @@
   >
     <div class="exportContainer" :class="{ isDark: isDark }">
       <div class="nameInputBox">
-        <span class="name">{{ $t('export.filename') }}</span>
+        <span class="name">导出文件名</span>
         <el-input style="width: 300px" v-model="fileName" size="small" @keydown.native.stop></el-input>
         <el-checkbox v-show="['smm', 'json'].includes(exportType)" v-model="widthConfig" style="margin-left: 12px">
-          {{ $t('export.include') }}
+          是否包含主题、结构等配置数据
         </el-checkbox>
       </div>
       <div class="paddingInputBox" v-show="['svg', 'png', 'pdf'].includes(exportType)">
@@ -44,13 +44,13 @@
           </div>
         </div>
       </div>
-      <div class="tip">{{ $t('export.tips') }}</div>
+      <div class="tip">tips：.smm和.json文件可用于导入</div>
       <!-- <div class="tip warning" v-if="openNodeRichText && exportType === 'svg' && domToImage">{{ $t('export.svgTips') }}</div> -->
     </div>
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="cancel">{{ $t('dialog.cancel') }}</el-button>
-        <el-button type="primary" @click="confirm">{{ $t('dialog.confirm') }}</el-button>
+        <el-button @click="cancel">取消</el-button>
+        <el-button type="primary" @click="confirm">确认</el-button>
       </span>
     </template>
   </el-dialog>

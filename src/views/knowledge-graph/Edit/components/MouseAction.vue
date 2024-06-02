@@ -3,7 +3,7 @@
     <el-tooltip
       class="item"
       effect="dark"
-      :content="useLeftKeySelectionRightKeyDrag ? $t('mouseAction.tip2') : $t('mouseAction.tip1')"
+      :content="useLeftKeySelectionRightKeyDrag ?'当前：左键框选节点，右键拖动画布' : '当前：左键拖动画布，右键框选节点'"
       placement="top"
     >
       <div class="btn iconfont" :class="[useLeftKeySelectionRightKeyDrag ? 'iconmouseR' : 'iconmouseL']" @click="toggleAction"></div>
@@ -28,7 +28,10 @@ export default {
     }
   },
   data() {
-    return {}
+    return {
+      tip1:"当前：左键框选节点，右键拖动画布",
+      tip2:"当前：左键拖动画布，右键框选节点"
+    }
   },
   computed: {
     ...mapState({

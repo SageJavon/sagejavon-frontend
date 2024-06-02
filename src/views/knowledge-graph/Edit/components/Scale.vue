@@ -1,12 +1,12 @@
 <template>
   <div class="scaleContainer" :class="{ isDark: isDark }">
-    <el-tooltip class="item" effect="dark" :content="$t('scale.zoomOut')" placement="top">
+    <el-tooltip class="item" effect="dark" content="缩小" placement="top">
       <el-icon class="btn" @click="narrow">
         <Minus />
       </el-icon>
     </el-tooltip>
     <div class="scaleInfo"><input type="text" v-model="scaleNum" @change="onScaleNumChange" @focus="onScaleNumInputFocus" />%</div>
-    <el-tooltip class="item" effect="dark" :content="$t('scale.zoomIn')" placement="top">
+    <el-tooltip class="item" effect="dark" content="放大" placement="top">
       <el-icon class="btn" @click="enlarge">
         <Plus />
       </el-icon>

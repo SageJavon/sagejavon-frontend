@@ -1,9 +1,9 @@
 <template>
   <div class="fullscreenContainer" :class="{ isDark: isDark }">
-    <el-tooltip class="item" effect="dark" :content="$t('fullscreen.fullscreenShow')" placement="top">
+    <el-tooltip class="item" effect="dark" content="全屏观看" placement="top">
       <div class="btn iconfont iconquanping" @click="toFullscreenShow"></div>
     </el-tooltip>
-    <el-tooltip class="item" effect="dark" :content="$t('fullscreen.fullscreenEdit')" placement="top">
+    <el-tooltip class="item" effect="dark" content="全屏编辑" placement="top">
       <div class="btn iconfont iconquanping1" @click="toFullscreenEdit"></div>
     </el-tooltip>
   </div>

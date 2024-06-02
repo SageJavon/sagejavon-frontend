@@ -80,6 +80,8 @@ import handleClipboardText from '@/utils/handleClipboardText'
 import Scrollbar from './Scrollbar.vue'
 import exampleData from 'simple-mind-map/example/exampleData'
 import FormulaSidebar from './FormulaSidebar.vue'
+import { getKnowledge } from './apis/get_knowledge'
+import {revertJson} from './apis/treeReverter'
 
 // 注册插件
 MindMap.usePlugin(MiniMap)
@@ -158,7 +160,15 @@ export default {
       }
     }
   },
-  mounted() {
+  mounted () {
+    // 获取知识图谱
+    getKnowledge().then(res => {
+      console.log(res.data.data)
+      console.log(revertJson(res.data.data))
+      bus.emit('setData', revertJson(res.data.data));
+    }).catch(err => {
+
+    })
     showLoading()
     // this.showNewFeatureInfo()
     this.getData()
@@ -415,7 +425,7 @@ export default {
      */
     setData(data) {
       this.handleShowLoading()
-      // this.mindMap.setData(data)
+      this.mindMap.setData(data)
       if (data.root) {
         this.getMindMap().setFullData(data)
       } else {

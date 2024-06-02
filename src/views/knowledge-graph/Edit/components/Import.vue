@@ -1,5 +1,5 @@
 <template>
-  <el-dialog custom-class="nodeImportDialog" v-model="dialogVisible" :title="$t('import.title')" width="600px">
+  <el-dialog custom-class="importNodeDialog" v-model="dialogVisible" title="导入" width="600px">
     <el-upload
       ref="upload"
       action="x"
@@ -10,13 +10,13 @@
       :limit="1"
       :on-exceed="onExceed"
     >
-      <el-button slot="trigger" size="default" type="primary">{{ $t('import.selectFile') }}</el-button>
-      <div slot="tip" class="el-upload__tip">{{ $t('import.supportFile') }}</div>
+      <el-button slot="trigger" size="default" type="primary">选择文件</el-button>
+      <div slot="tip" class="el-upload__tip">支持.smm、.json、.xmind、.xlsx、.md文件</div>
     </el-upload>
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="cancel">{{ $t('dialog.cancel') }}</el-button>
-        <el-button type="primary" @click="confirm">{{ $t('dialog.confirm') }}</el-button>
+        <el-button @click="cancel">取消</el-button>
+        <el-button type="primary" @click="confirm">确认</el-button>
       </span>
     </template>
   </el-dialog>
@@ -27,8 +27,7 @@
  * @Author: 黄原寅
  * @Desc: 导入功能
  */
-import { onBeforeMount, onMounted, ref, watch } from 'vue'
-// import { route } from 'vue-router'
+import { onMounted, ref, watch } from 'vue'
 import bus from '@/utils/bus.js'
 import { ElMessage } from 'element-plus'
 // import MindMap from 'simple-mind-map'
@@ -37,6 +36,8 @@ import markdown from 'simple-mind-map/src/parse/markdown.js'
 import { useStore } from 'vuex'
 import { fileToBuffer } from '@/utils'
 import { read, utils } from 'xlsx'
+import { convertJson } from './apis/treeConverter'
+import {postKnowledge } from './apis/post_knowledge'
 
 const dialogVisible = ref(false)
 const fileList = ref([])
@@ -52,47 +53,10 @@ watch(
 )
 
 onMounted(() => {
-  bus.on('showImport', handleShowImport)
-  bus.on('handle_file_url', handleFileURL)
+  bus.on('showImport', () => {
+    dialogVisible.value = true
+  })
 })
-
-onBeforeMount(() => {
-  bus.off('showImport', handleShowImport)
-  bus.off('handle_file_url', handleFileURL)
-})
-
-const handleShowImport = () => {
-  dialogVisible.value = true
-}
-
-// 检查url中是否操作需要打开的文件
-const handleFileURL = async () => {
-  // try {
-  //   const fileURL = route.query.fileURL
-  //   if (!fileURL) return
-  //   const macth = /\.(smm|json|xmind|md|xlsx)$/.exec(fileURL)
-  //   if (!macth) {
-  //     return
-  //   }
-  //   const type = macth[1]
-  //   const res = await fetch(fileURL)
-  //   const file = await res.blob()
-  //   const data = {
-  //     raw: file
-  //   }
-  //   if (type === 'smm' || type === 'json') {
-  //     handleSmm(data)
-  //   } else if (type === 'xmind') {
-  //     handleXmind(data)
-  //   } else if (type === 'xlsx') {
-  //     handleExcel(data)
-  //   } else if (type === 'md') {
-  //     handleMd(data)
-  //   }
-  // } catch (error) {
-  //   console.log(error)
-  // }
-}
 
 /**
  * @Author: 黄原寅
@@ -154,34 +118,52 @@ const confirm = () => {
   }
   cancel()
 }
-/**
- * @Author: 黄原寅
- * @Desc: 处理.smm文件
- */
-const handleSmm = file => {
-  let fileReader = new FileReader()
-  fileReader.readAsText(file.raw)
-  fileReader.onload = evt => {
-    try {
-      let data = JSON.parse(evt.target.result)
-      if (typeof data !== 'object') {
-        throw new Error('文件内容有误')
-      }
-      bus.emit('setData', data)
-      ElMessage({
-        message: '导入成功',
-        type: 'success'
-      })
-    } catch (error) {
-      console.log(error)
-      ElMessage({
-        message: '文件解析失败',
-        type: 'error'
-      })
+
+async function handleFileLoad(event) {
+  try {
+    let data = JSON.parse(event.target.result);
+    console.log(data);
+
+    if (typeof data !== 'object') {
+      throw new Error('文件内容有误');
     }
+
+    // 调用转换函数
+    const result = convertJson(data);
+    console.log(result);
+
+    // 上传知识图谱到后端数据库
+    try {
+      const res = await postKnowledge(result);
+      console.log(res);
+      if (res.status === 200) {
+        console.log(res.data);
+      }
+    } catch (err) {
+      // 在这里处理获取用户信息失败的情况
+      console.log(err);
+    }
+
+    bus.emit('setData', data);
+    ElMessage({
+      message: '导入成功',
+      type: 'success'
+    });
+  } catch (error) {
+    console.log(error);
+    ElMessage({
+      message: '文件解析失败',
+      type: 'error'
+    });
   }
-  cancel()
 }
+
+const handleSmm = (file) => {
+  let fileReader = new FileReader();
+  fileReader.readAsText(file.raw);
+  fileReader.onload = handleFileLoad;
+  cancel();
+};
 /**
  * @Author: 黄原寅
  * @Desc: 处理.xmind文件
