@@ -27,6 +27,11 @@ function goToKnowledgeGraph() {
 	 router.push('/knowledge/graph') // 跳转到知识图谱页面
 }
 
+function goTopersonStudy() {
+  console.log('person')
+	 router.push('/person/study')
+}
+
 function handleAdd() {
   newChat()
     .then((res) => {
@@ -133,16 +138,17 @@ watch(
                     </NText>
                   </div>
                 </div>
-                <div class="side-item">
+                <div class="side-item"  @click="goTopersonStudy">
                   <div>
                     <div class="side-item2">
                       <NImage
                         width="35"
                         :src="study"
+                        preview-disabled
                       />
                     </div>
 
-                    <NText dashed block @click="goToKnowledgeGraph">
+                    <NText dashed block>
                       个性学习
                     </NText>
                   </div>

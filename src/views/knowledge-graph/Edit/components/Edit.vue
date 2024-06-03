@@ -162,13 +162,39 @@ export default {
   },
   mounted () {
     // 获取知识图谱
+    // 获取知识图谱
     getKnowledge().then(res => {
-      console.log(res.data.data)
-      console.log(revertJson(res.data.data))
-      bus.emit('setData', revertJson(res.data.data));
-    }).catch(err => {
+      console.log(res.data.data);
+      const dataArray = res.data.data;
 
-    })
+      // 遍历数组中的各个对象
+      for (let i = 0; i < dataArray.length; i++) {
+        // 跳过第一个节点
+        if (i === 0) continue;
+
+        const obj = dataArray[i];
+        const queryCount = obj.query; // 获取 query 的值
+        const color = this.getColor(queryCount); // 根据 query 的值计算颜色
+
+        // 在 name 中查找最后一个分号的位置
+        const lastSemicolonIndex = obj.name.lastIndexOf(';');
+        if (lastSemicolonIndex !== -1) {
+          // 在最后一个分号的位置之前插入背景颜色
+          obj.name = obj.name.slice(0, lastSemicolonIndex) + `; background-color: ${color};` + obj.name.slice(lastSemicolonIndex);
+        } else {
+          // 如果没有分号，则直接添加背景颜色
+          obj.name += `background-color: ${color};`;
+        }
+      }
+
+      // 将修改后的数据传递给 bus.emit
+      bus.emit('setData', revertJson(dataArray));
+    }).catch(err => {
+      console.error(err);
+    });
+
+
+
     showLoading()
     // this.showNewFeatureInfo()
     this.getData()
@@ -199,6 +225,26 @@ export default {
     window.removeEventListener('resize', this.handleResize)
   },
   methods: {
+
+  // 根据 query 的值计算颜色
+  getColor(queryCount) {
+      // 假设最大查询次数为 10
+      const maxQueryCount = 10;
+      // 最小颜色值
+      const minColorValue = 100;
+      // 最大颜色值
+      const maxColorValue = 255;
+
+      // 计算颜色值
+      const colorStep = (maxColorValue - minColorValue) / maxQueryCount;
+      // 根据查询次数计算颜色值
+      const colorValue = Math.round(maxColorValue - queryCount * colorStep);
+
+      // 返回 rgba 格式的颜色值
+      return `rgba(${colorValue}, ${colorValue}, ${colorValue}, 0.7)`;
+  },
+
+
     handleStartTextEdit() {
       this.mindMap.renderer.startTextEdit()
     },
@@ -304,8 +350,8 @@ export default {
         el: this.$refs.mindMapContainer,
         data: root,
         fit: false,
-        layout: layout,
-        theme: theme.template,
+        layout: 'mindMap',
+        theme: 'rose',
         themeConfig: theme.config,
         viewData: view,
         nodeTextEditZIndex: 1000,

@@ -344,7 +344,7 @@ export default {
 
     /**
      * @Author: 黄原寅
-     * @Desc: 初始节点样式
+     * @Desc: 初始
      */
     initNodeStyle() {
       if (this.activeNodes.length <= 0) {

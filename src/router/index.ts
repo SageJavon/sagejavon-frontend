@@ -56,6 +56,11 @@ const routes: RouteRecordRaw[] = [
     name: 'knowledgeGraph',
     component: () => import('@/views/knowledge-graph/Edit/index.vue'),
   },
+  {
+    path: '/person/study',
+    name: 'personStudy',
+    component: () => import('@/views/person-study/index.vue'),
+  },
 ]
 
 export const router = createRouter({
