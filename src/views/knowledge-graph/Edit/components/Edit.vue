@@ -2,25 +2,25 @@
   <div class="editContainer">
     <div class="mindMapContainer" ref="mindMapContainer"></div>
     <Count :mindMap="mindMap" v-if="!isZenMode"></Count>
-    <Navigator :mindMap="mindMap"></Navigator>
-    <NavigatorToolbar :mindMap="mindMap" v-if="!isZenMode"></NavigatorToolbar>
-    <OutlineSidebar :mindMap="mindMap"></OutlineSidebar>
+    <!-- <Navigator :mindMap="mindMap"></Navigator> -->
+    <!-- <NavigatorToolbar :mindMap="mindMap" v-if="!isZenMode"></NavigatorToolbar> -->
+    <!-- <OutlineSidebar :mindMap="mindMap"></OutlineSidebar> -->
     <Style v-if="!isZenMode"></Style>
     <BaseStyle :data="mindMapData" :mindMap="mindMap"></BaseStyle>
     <Theme v-if="mindMap" :mindMap="mindMap"></Theme>
-    <Structure :mindMap="mindMap"></Structure>
-    <ShortcutKey></ShortcutKey>
-    <Contextmenu v-if="mindMap" :mindMap="mindMap"></Contextmenu>
-    <RichTextToolbar v-if="mindMap" :mindMap="mindMap"></RichTextToolbar>
-    <NodeNoteContentShow v-if="mindMap" :mindMap="mindMap"></NodeNoteContentShow>
-    <NodeImgPreview v-if="mindMap" :mindMap="mindMap"></NodeImgPreview>
-    <SidebarTrigger v-if="!isZenMode"></SidebarTrigger>
-    <Search v-if="mindMap" :mindMap="mindMap"></Search>
-    <NodeIconSidebar v-if="mindMap" :mindMap="mindMap"></NodeIconSidebar>
-    <NodeIconToolbar v-if="mindMap" :mindMap="mindMap"></NodeIconToolbar>
-    <OutlineEdit v-if="mindMap" :mindMap="mindMap"></OutlineEdit>
-    <Scrollbar v-if="isShowScrollbar && mindMap" :mindMap="mindMap"></Scrollbar>
-    <FormulaSidebar v-if="mindMap" :mindMap="mindMap"></FormulaSidebar>
+    <!-- <Structure :mindMap="mindMap"></Structure> -->
+    <!-- <ShortcutKey></ShortcutKey> -->
+    <!-- <Contextmenu v-if="mindMap" :mindMap="mindMap"></Contextmenu> -->
+    <!-- <RichTextToolbar v-if="mindMap" :mindMap="mindMap"></RichTextToolbar> -->
+    <!-- <NodeNoteContentShow v-if="mindMap" :mindMap="mindMap"></NodeNoteContentShow> -->
+    <!-- <NodeImgPreview v-if="mindMap" :mindMap="mindMap"></NodeImgPreview> -->
+    <!-- <SidebarTrigger v-if="!isZenMode"></SidebarTrigger> -->
+    <!-- <Search v-if="mindMap" :mindMap="mindMap"></Search> -->
+    <!-- <NodeIconSidebar v-if="mindMap" :mindMap="mindMap"></NodeIconSidebar> -->
+    <!-- <NodeIconToolbar v-if="mindMap" :mindMap="mindMap"></NodeIconToolbar> -->
+    <!-- <OutlineEdit v-if="mindMap" :mindMap="mindMap"></OutlineEdit> -->
+    <!-- <Scrollbar v-if="isShowScrollbar && mindMap" :mindMap="mindMap"></Scrollbar> -->
+    <!-- <FormulaSidebar v-if="mindMap" :mindMap="mindMap"></FormulaSidebar> -->
   </div>
 </template>
 

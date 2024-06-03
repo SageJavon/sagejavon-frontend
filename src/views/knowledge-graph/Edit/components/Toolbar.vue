@@ -3,15 +3,16 @@
     <div class="toolbar" ref="toolbarRef">
       <!-- 节点操作 -->
       <div class="toolbarBlock">
-        <ToolbarNodeBtnList :list="horizontalList"></ToolbarNodeBtnList>
+        这是课程的思维导图，其中颜色越深表示你向大模型提问的次数越多，我们会为你推荐相关的题目
+        <!-- <ToolbarNodeBtnList :list="horizontalList"></ToolbarNodeBtnList> -->
         <!-- 更多 -->
-        <el-popover v-model="popoverShow" placement="bottom-end" width="120" trigger="hover" v-if="showMoreBtn" style="margin-left: 20px">
+        <!-- <el-popover v-model="popoverShow" placement="bottom-end" width="120" trigger="hover" v-if="showMoreBtn" style="margin-left: 20px">
           <ToolbarNodeBtnList dir="v" :list="verticalList" @click.native="popoverShow = false"></ToolbarNodeBtnList>
           <div slot="reference" class="toolbarBtn">
             <span class="icon iconfont icongongshi"></span>
             <span class="text">{{ $t('toolbar.more') }}</span>
           </div>
-        </el-popover>
+        </el-popover> -->
       </div>
       <!-- 通用操作 -->
       <!-- <div class="toolbarBlock">
@@ -34,18 +35,18 @@
       </div> -->
       <!-- 导出 -->
       <div class="toolbarBlock">
-        <div class="toolbarBtn" @click="createNewLocalFile">
+        <!-- <div class="toolbarBtn" @click="createNewLocalFile">
           <span class="icon iconfont iconxinjian"></span>
           <span class="text">新建</span>
         </div>
         <div class="toolbarBtn" @click="openLocalFile">
           <span class="icon iconfont icondakai"></span>
           <span class="text">打开</span>
-        </div>
-        <div class="toolbarBtn" @click="saveLocalFile">
+        </div> -->
+        <!-- <div class="toolbarBtn" @click="saveLocalFile">
           <span class="icon iconfont iconlingcunwei"></span>
           <span class="text">保存</span>
-        </div>
+        </div> -->
         <div class="toolbarBtn" @click="emit('showImport')">
           <span class="icon iconfont icondaoru"></span>
           <span class="text">导入</span>
