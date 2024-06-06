@@ -4,14 +4,6 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import { ChatLayout } from '@/views/chat/layout'
 
 const routes: RouteRecordRaw[] = [
-  {
-    path: '/login',
-    name: 'Login',
-    component: () => import('@/views/login/index.vue'),
-    meta: {
-      requiresAuth: false,
-    },
-  },
     {
     path: '/',
     name: 'Root',

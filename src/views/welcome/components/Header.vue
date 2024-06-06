@@ -141,11 +141,11 @@ const jumpClient = () => {
         }
 
         &.active {
-          color: #1ea59a;
+          color: #FC6868;
         }
 
         &:hover {
-          color: #1ea59a;
+          color: #FC6868;
         }
 
         a {
@@ -153,7 +153,7 @@ const jumpClient = () => {
           color: #828f99;
 
           &:hover {
-            color: #1ea59a;
+            color: #FC6868;
           }
         }
       }
