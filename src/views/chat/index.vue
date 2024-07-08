@@ -472,7 +472,7 @@ onUnmounted(() => {
         </HoverButton>
         <NAutoComplete v-model:value="prompt" :options="searchOptions" :render-label="renderOption">
           <template #default="{ handleInput, handleBlur, handleFocus }">
-            <NInput ref="inputRef" v-model:value="prompt" type="textarea" :placeholder="placeholder"
+            <NInput style="border-radius:20px" ref="inputRef" v-model:value="prompt" type="textarea" :placeholder="placeholder"
               :autosize="{ minRows: 1, maxRows: isMobile ? 4 : 8 }" @input="handleInput" @focus="handleFocus"
               @blur="handleBlur" @keypress="handleEnter" />
           </template>

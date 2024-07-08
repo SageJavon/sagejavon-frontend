@@ -105,10 +105,10 @@ watch(
                 <div class="side-item" @click="goToKnowledgeGraph">
                   <div>
                     <div class="side-item2">
-                      <NImage width="35" :src="knowledgeSide" preview-disabled />
+                      <NImage class="hover-hand" width="35" :src="knowledgeSide" preview-disabled />
                     </div>
 
-                    <NText style="color:#9cacc0" dashed block @click="goToKnowledgeGraph">
+                    <NText style="color: #9cacc0" dashed block @click="goToKnowledgeGraph">
                       知识图谱
                     </NText>
                   </div>
@@ -117,7 +117,7 @@ watch(
                 <div class="side-item">
                   <div>
                     <div class="side-item2">
-                      <NImage width="35" :src="source" />
+                      <NImage class="hover-hand" preview-disabled width="35" :src="source" />
                     </div>
 
                     <NText style="color:#9cacc0" dashed block @click="goToKnowledgeGraph">
@@ -128,7 +128,7 @@ watch(
                 <div class="side-item" @click="goTopersonStudy">
                   <div>
                     <div class="side-item2">
-                      <NImage width="35" :src="study" preview-disabled />
+                      <NImage class="hover-hand" width="35" :src="study" preview-disabled />
                     </div>
 
                     <NText style="color:#9cacc0" dashed block>
@@ -139,7 +139,7 @@ watch(
                 <div class="side-item">
                   <div>
                     <div class="side-item2">
-                      <NImage width="35" :src="teacher" />
+                      <NImage class="hover-hand" preview-disabled width="35" :src="teacher" />
                     </div>
 
                     <NText style="color:#9cacc0" dashed block @click="goToKnowledgeGraph">
@@ -166,10 +166,11 @@ watch(
         <main class="flex flex-1 h-full w-full">
           <div class="flex flex-col h-full w-full">
             <div class="p-4">
-              <button style="border-radius:20px;background-color: rgba(3, 34, 81, 0.9);color:#ffffff;width:100%;padding-top:8px;padding-bottom:8px"  block
-                @click="handleAdd">
+              <button
+                style="border-radius:20px;background-color: rgba(3, 34, 81, 0.9);color:#ffffff;width:100%;padding-top:8px;padding-bottom:8px"
+                block @click="handleAdd">
                 新增提问
-            </button>
+              </button>
             </div>
             <div class="flex-1 min-h-0 pb-4 overflow-hidden h-full">
               <List />
@@ -204,5 +205,14 @@ watch(
   width: 100%;
   justify-content: center;
   justify-items: center;
+}
+.hover-hand {
+  cursor: pointer;
+  /* 默认鼠标样式为小手掌 */
+}
+
+.hover-hand:hover {
+  cursor: pointer;
+  /* 鼠标悬停时仍然显示小手掌 */
 }
 </style>
