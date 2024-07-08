@@ -10,15 +10,16 @@ interface Props {
 }
 defineProps<Props>()
 const user = ref(JSON.parse(localStorage.getItem('userInfo')))
-console.log(user)
+const defaultPortrait = ref("https://tse4-mm.cn.bing.net/th/id/OIP-C.IJqR74BwudERFnq5R-h92AAAAA?rs=1&pid=ImgDetMain")
 </script>
 
 <template>
   <template v-if="image">
-    <NImage v-if="user" :src="user.portrait" :fallback-src="defaultAvatar" />
-    <Image v-else round :src="defaultAvatar" />
+    <img v-if="user&&user.portrait" :src="user.portrait" :fallback-src="defaultAvatar" />
+    <img v-if="user.portrait==''" :src="defaultPortrait" :fallback-src="defaultAvatar" />
+    <img v-else round :src="defaultAvatar" />
   </template>
   <div v-else>
-    <NImage :src="defaultModel" />
+    <img :src="defaultModel" />
   </div>
 </template>

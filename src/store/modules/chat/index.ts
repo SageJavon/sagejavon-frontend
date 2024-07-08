@@ -18,6 +18,7 @@ export const useChatStore = defineStore('chat-store', {
 
     getChatByUuid(state: Chat.ChatState) {
       return (uuid?: number) => {
+        console.log(uuid)
         if (uuid)
           return state.chat.find(item => item.uuid === uuid)?.data ?? []
         return state.chat.find(item => item.uuid === state.active)?.data ?? []

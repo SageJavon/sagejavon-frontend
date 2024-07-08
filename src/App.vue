@@ -9,7 +9,7 @@ const { language } = useLanguage()
 
 const themeOverrides = {
   common: {
-    primaryColor: '#FC6868FF',
+    primaryColor: 'rgba(3, 34, 81, 1)',
   },
   // ...
 }

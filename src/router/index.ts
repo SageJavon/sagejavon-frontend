@@ -26,6 +26,11 @@ const routes: RouteRecordRaw[] = [
         name: 'Chat',
         component: () => import('@/views/chat/index.vue'),
       },
+      {
+        path: '/person/study',
+        name: 'personStudy',
+        component: () => import('@/views/person-study/index.vue'),
+      }
     ],
   },
   {
@@ -47,12 +52,7 @@ const routes: RouteRecordRaw[] = [
     path: '/knowledge/graph',
     name: 'knowledgeGraph',
     component: () => import('@/views/knowledge-graph/Edit/index.vue'),
-  },
-  {
-    path: '/person/study',
-    name: 'personStudy',
-    component: () => import('@/views/person-study/index.vue'),
-  },
+  }
 ]
 
 export const router = createRouter({

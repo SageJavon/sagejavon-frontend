@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { NButton, NInput, useMessage,NModal } from 'naive-ui'
+import { NButton, NInput, useMessage, NModal } from 'naive-ui'
 import { getUserInfo } from './api/info/get_user_info'
 import { updateUserInfoAPI } from '@/views/chat/api/update_user_info'
 const avatar = ref('')
@@ -44,11 +44,11 @@ function updateUserInfo(field, value) {
     })
 }
 
-function onNegativeClick () {
+function onNegativeClick() {
   showModal.value = false
 }
 
-function onPositiveClick () {
+function onPositiveClick() {
   localStorage.removeItem('user-token')
   localStorage.removeItem('user-id')
   window.location.href = '/'
@@ -58,17 +58,8 @@ function onPositiveClick () {
 
 <template>
   <div class="p-4 space-y-5 min-h-[200px]">
-    <n-modal
-      v-model:show="showModal"
-      :mask-closable="false"
-      preset="dialog"
-      title="退出登录"
-      content="是否确认退出登录？"
-      positive-text="确认"
-      negative-text="取消"
-      @positive-click="onPositiveClick"
-      @negative-click="onNegativeClick"
-    />
+    <n-modal v-model:show="showModal" :mask-closable="false" preset="dialog" title="退出登录" content="是否确认退出登录？"
+      positive-text="确认" negative-text="取消" @positive-click="onPositiveClick" @negative-click="onNegativeClick" />
     <div class="space-y-6">
       <div class="flex items-center space-x-4">
         <span class="flex-shrink-0 w-[100px]">头像链接</span>
@@ -101,8 +92,8 @@ function onPositiveClick () {
         </NButton>
       </div>
       <n-button type="primary" @click="showModal = true">
-      退出登录
-    </n-button>
+        退出登录
+      </n-button>
     </div>
   </div>
 </template>

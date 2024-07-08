@@ -24,12 +24,12 @@ const message = useMessage()
 const collapsed = computed(() => appStore.siderCollapsed)
 
 function goToKnowledgeGraph() {
-	 router.push('/knowledge/graph') // 跳转到知识图谱页面
+  router.push('/knowledge/graph') // 跳转到知识图谱页面
 }
 
 function goTopersonStudy() {
   console.log('person')
-	 router.push('/person/study')
+  router.push('/person/study')
 }
 
 function handleAdd() {
@@ -37,7 +37,8 @@ function handleAdd() {
     .then((res) => {
       if (res.status === 200) {
         message.info('新增成功', { duration: 5000 })
-				  chatStore.addHistory({ title: '新增提问', uuid: res.data.data, isEdit: false })
+        chatStore.addHistory({ title: '新增提问', uuid: res.data.data, isEdit: false })
+        localStorage.setItem('active-uuid', res.data.data)
       }
       else {
         // 更新失败
@@ -88,15 +89,8 @@ watch(
 
 <template>
   <NLayout has-sider sider-placement="left">
-    <NLayoutSider
-      :collapsed="false"
-      :width="100"
-      position="absolute"
-      bordered
-      :style="getMobileClass"
-      style="background-color:#e7e7e7"
-      @update-collapsed="handleUpdateCollapsed"
-    >
+    <NLayoutSider :collapsed="false" :width="100" position="absolute" bordered :style="getMobileClass"
+      style="background-color:rgba(3, 34, 81, 0.9)" @update-collapsed="handleUpdateCollapsed">
       <div class="flex flex-col h-full" :style="mobileSafeArea">
         <main class="flex flex-col flex-1 min-h-0">
           <div class="p-4">
@@ -104,21 +98,17 @@ watch(
               <!-- 侧边栏内容 -->
               <div class="side-container">
                 <div class="side-item">
-                  <NAvatar size="100" round :src="defaultModel" />
+                  <img size="100" round :src="defaultModel" />
                 </div>
                 <NDivider />
 
                 <div class="side-item" @click="goToKnowledgeGraph">
                   <div>
                     <div class="side-item2">
-                      <NImage
-                        width="35"
-                        :src="knowledgeSide"
-                        preview-disabled
-                      />
+                      <NImage width="35" :src="knowledgeSide" preview-disabled />
                     </div>
 
-                    <NText dashed block @click="goToKnowledgeGraph">
+                    <NText style="color:#9cacc0" dashed block @click="goToKnowledgeGraph">
                       知识图谱
                     </NText>
                   </div>
@@ -127,28 +117,21 @@ watch(
                 <div class="side-item">
                   <div>
                     <div class="side-item2">
-                      <NImage
-                        width="35"
-                        :src="source"
-                      />
+                      <NImage width="35" :src="source" />
                     </div>
 
-                    <NText dashed block @click="goToKnowledgeGraph">
+                    <NText style="color:#9cacc0" dashed block @click="goToKnowledgeGraph">
                       资源推荐
                     </NText>
                   </div>
                 </div>
-                <div class="side-item"  @click="goTopersonStudy">
+                <div class="side-item" @click="goTopersonStudy">
                   <div>
                     <div class="side-item2">
-                      <NImage
-                        width="35"
-                        :src="study"
-                        preview-disabled
-                      />
+                      <NImage width="35" :src="study" preview-disabled />
                     </div>
 
-                    <NText dashed block>
+                    <NText style="color:#9cacc0" dashed block>
                       个性学习
                     </NText>
                   </div>
@@ -156,13 +139,10 @@ watch(
                 <div class="side-item">
                   <div>
                     <div class="side-item2">
-                      <NImage
-                        width="35"
-                        :src="teacher"
-                      />
+                      <NImage width="35" :src="teacher" />
                     </div>
 
-                    <NText dashed block @click="goToKnowledgeGraph">
+                    <NText style="color:#9cacc0" dashed block @click="goToKnowledgeGraph">
                       老师出题
                     </NText>
                   </div>
@@ -179,25 +159,17 @@ watch(
       <div v-show="!collapsed" class="fixed inset-0 z-40 w-full h-full bg-black/40" @click="handleUpdateCollapsed" />
     </template>
     <!-- <PromptStore v-model:visible="show" /> -->
-    <NLayoutSider
-
-      :collapsed="newSidebarCollapsed"
-      :collapsed-width="0"
-      :width="180"
-      collapse-mode="transform"
-      :show-trigger="isMobile ? false : 'arrow-circle'"
-      style="height:100%;background-color:#eeeeee"
-      bordered
-      :style="getMobileClass"
-      @update-collapsed="handleNewSidebarCollapsed"
-    >
+    <NLayoutSider :collapsed="newSidebarCollapsed" :collapsed-width="0" :width="180" collapse-mode="transform"
+      :show-trigger="isMobile ? false : 'arrow-circle'" style="height:100%;background-color:rgba(3, 34, 81, 0.2)"
+      bordered :style="getMobileClass" @update-collapsed="handleNewSidebarCollapsed">
       <div class="flex flex-col h-full w-full" :style="mobileSafeArea">
         <main class="flex flex-1 h-full w-full">
           <div class="flex flex-col h-full w-full">
             <div class="p-4">
-              <NButton dashed block @click="handleAdd">
+              <button style="border-radius:20px;background-color: rgba(3, 34, 81, 0.9);color:#ffffff;width:100%;padding-top:8px;padding-bottom:8px"  block
+                @click="handleAdd">
                 新增提问
-              </NButton>
+            </button>
             </div>
             <div class="flex-1 min-h-0 pb-4 overflow-hidden h-full">
               <List />
@@ -205,7 +177,7 @@ watch(
           </div>
         </main>
       </div>
-    <!-- 在这里添加侧边栏的内容 -->
+      <!-- 在这里添加侧边栏的内容 -->
     </NLayoutSider>
 
     <!-- 新增的左侧侧边栏 -->
@@ -219,18 +191,18 @@ watch(
 
 }
 
-.side-item{
-	display:flex;
-	width:100%;
-	justify-content: center;
-	justify-items: center;
-	margin-bottom:20px;
+.side-item {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  justify-items: center;
+  margin-bottom: 20px;
 }
 
-.side-item2{
-	display:flex;
-	width:100%;
-	justify-content: center;
-	justify-items: center;
+.side-item2 {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  justify-items: center;
 }
 </style>
