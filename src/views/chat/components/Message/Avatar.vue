@@ -15,9 +15,8 @@ const defaultPortrait = ref("https://tse4-mm.cn.bing.net/th/id/OIP-C.IJqR74BwudE
 
 <template>
   <template v-if="image">
-    <img v-if="user&&user.portrait" :src="user.portrait" :fallback-src="defaultAvatar" />
-    <img v-if="user.portrait==''" :src="defaultPortrait" :fallback-src="defaultAvatar" />
-    <img v-else round :src="defaultAvatar" />
+    <img style="border-radius: 100%" v-if="user&&user.portrait" :src="user.portrait" :fallback-src="defaultAvatar" />
+    <img style="border-radius: 100%" v-if="user.portrait==''" :src="defaultPortrait" :fallback-src="defaultAvatar" />
   </template>
   <div v-else>
     <img :src="defaultModel" />

@@ -12,6 +12,7 @@ function getUserInfoF() {
       avatar.value = userInfoRes.data.data.portrait
     name.value = userInfoRes.data.data.nickname
     gender.value = userInfoRes.data.data.gender
+    console.log(gender.value)
   }).catch((err) => {
     // 在这里处理获取用户信息失败的情况
     console.log(err)
@@ -25,7 +26,7 @@ function updateUserInfo(field, value) {
   const userInfo = {
     nickname: name.value,
     portrait: avatar.value,
-    gender: gender.value,
+    gender: Number(gender.value),
   }
   updateUserInfoAPI(userInfo)
     .then((res) => {
@@ -33,6 +34,8 @@ function updateUserInfo(field, value) {
         // 更新成功，更新本地存储中的用户信息
         localStorage.setItem('userInfo', JSON.stringify(userInfo))
         message.info('修改成功', { duration: 2000 })
+        // window.location.reload()
+        console.log(res)
       }
       else {
         // 更新失败
@@ -82,10 +85,12 @@ function onPositiveClick() {
       <div class="flex items-center space-x-4">
         <span class="flex-shrink-0 w-[100px]">性别</span>
         <div class="flex items-center space-x-2">
-          <input id="male" v-model="gender" type="radio" value="male">
+          <input id="male" v-model="gender" type="radio" value="1" @click="gender = '1'">
           <label for="male">男</label>
-          <input id="female" v-model="gender" type="radio" value="female">
+
+          <input id="female" v-model="gender" type="radio" value="0" @click="gender = '0'">
           <label for="female">女</label>
+
         </div>
         <NButton size="tiny" text type="primary" @click="updateUserInfo('gender', gender)">
           保存

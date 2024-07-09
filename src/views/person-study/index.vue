@@ -4,7 +4,7 @@
       <MainCard :image="iconSelect" title="选择题"></MainCard>
     </div>
     <div class="card code-question">
-      <MainCard :image="iconCode" title="代码题"></MainCard>
+      <MainCard :image="iconCode" title="代码题" @click="navigateProgram"></MainCard>
     </div>
     <div class="card history">
       <MainCard :image="iconHistory" title="历史记录"></MainCard>
@@ -22,6 +22,11 @@ import MainCard from "@/views/person-study/components/MainCard.vue";
 import iconSelect from "./images/select-question.png"
 import iconCode from "./images/code-question.png"
 import iconHistory from "./images/history.png"
+import { useRouter } from 'vue-router'
+const router = useRouter()
+function navigateProgram () {
+  router.push('/program/list')
+}
 
 </script>
 
