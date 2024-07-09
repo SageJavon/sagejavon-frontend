@@ -29,9 +29,10 @@ const { addChat, updateChat, updateChatSome, getChatByUuidAndIndex } = useChat()
 const { scrollRef, scrollToBottom, scrollToBottomIfAtBottom } = useScroll()
 const { usingContext, toggleUsingContext } = useUsingContext()
 
-const { uuid } = route.params as { uuid: string }
+const uuid = localStorage.getItem('active-uuid')
 
-const dataSources = computed(() => chatStore.getChatByUuid(+uuid))
+const dataSources = computed(() => chatStore.getChatByUuid(+localStorage.getItem('active-uuid')))
+console.log(dataSources)
 const getEnabledNetwork = computed(() => chatStore.getEnabledNetwork)
 // const conversationList = computed(() => dataSources.value.filter(item => (!item.inversion && !!item.conversationOptions)))
 
@@ -50,7 +51,7 @@ const { promptList: promptTemplate } = storeToRefs<any>(promptStore)
 // 未知原因刷新页面，loading 状态不会重置，手动重置
 dataSources.value.forEach((item, index) => {
   if (item.loading)
-    updateChatSome(+uuid, index, { loading: false })
+    updateChatSome(+localStorage.getItem('active-uuid'), index, { loading: false })
 })
 function handleSubmit() {
   onConversation()
@@ -79,8 +80,9 @@ async function onConversation() {
     return
 
   controller = new AbortController()
+
   addChat(
-    +uuid,
+    +localStorage.getItem('active-uuid'),
     {
       dateTime: new Date().toLocaleString(),
       text: message,
@@ -95,7 +97,7 @@ async function onConversation() {
   prompt.value = ''
   const options: Chat.ConversationRequest = { conversationId: usingContext.value ? window.location.hash : Math.random().toString() }
   addChat(
-    +uuid,
+    +localStorage.getItem('active-uuid'),
     {
       dateTime: new Date().toLocaleString(),
       text: 'SageJavon思考中....',
@@ -109,15 +111,14 @@ async function onConversation() {
   scrollToBottom()
   try {
     // 发起后端请求获取模型响应
-    const response = await fetch('https://rag.xhpolaris.com/open_kf_api/queries/smart_query_stream', {
+    const response = await fetch('http://59.78.194.84:7000/open_kf_api/queries/smart_query_stream', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiYWRtaW4iLCJleHAiOjE3MTc3Mzg0Mjl9.o7fh59s5cUZQONB_tSylMWqDIsrc3YJDbzOb0nSjt2g',
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         query: message,
-        user_id: 'a9578288-05d4-4335-8f7e-eb214e9c1efa',
+        user_id: '9ddc73e1-4992-4618-9e58-5bdf57bf3b91',
       }),
     })
 
@@ -132,14 +133,14 @@ async function onConversation() {
         break
 
       console.log(finalResponse)
-      updateChat(+uuid, dataSources.value.length - 1, {
+      updateChat(+localStorage.getItem('active-uuid'), dataSources.value.length - 1, {
         dateTime: new Date().toLocaleString(),
         text: finalResponse,
         inversion: false,
         error: false,
         loading: false,
         conversationOptions: {},
-        requestOptions: { prompt: message, options: { } },
+        requestOptions: { prompt: message, options: {} },
       })
       // 累加接收到的数据块
       finalResponse += value
@@ -153,7 +154,7 @@ async function onConversation() {
     const errorMessage = error?.text ?? t('common.wrong')
 
     // 如果调用出错，添加错误消息到聊天记录
-    addChat(+uuid, {
+    addChat(+localStorage.getItem('active-uuid'), {
       dateTime: new Date().toLocaleString(),
       text: errorMessage,
       inversion: false,
@@ -324,7 +325,7 @@ function handleDelete(index: number) {
     positiveText: t('common.yes'),
     negativeText: t('common.no'),
     onPositiveClick: () => {
-      chatStore.deleteChatByUuid(+uuid, index)
+      chatStore.deleteChatByUuid(+localStorage.getItem('active-uuid'), index)
     },
   })
 }
@@ -343,7 +344,7 @@ function handleClear() {
     positiveText: t('common.yes'),
     negativeText: t('common.no'),
     onPositiveClick: () => {
-      chatStore.clearChatByUuid(+uuid)
+      chatStore.clearChatByUuid(+localStorage.getItem('active-uuid'))
     },
   })
 }
@@ -426,20 +427,12 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div style="background-color:#f8f8f8" class="flex flex-col w-full h-full">
-    <HeaderComponent
-      v-if="isMobile"
-      :using-context="usingContext"
-      @export="handleExport"
-      @handle-clear="handleClear"
-    />
+  <div style="background-color:rgba(3, 34, 81, 0.1)" class="flex flex-col w-full h-full">
+    <HeaderComponent v-if="isMobile" :using-context="usingContext" @export="handleExport" @handle-clear="handleClear" />
     <main class="flex-1 overflow-hidden">
       <div id="scrollRef" ref="scrollRef" class="h-full overflow-hidden overflow-y-auto">
-        <div
-          id="image-wrapper"
-          class="w-full max-w-screen-xl m-auto dark:bg-[#101014]"
-          :class="[isMobile ? 'p-2' : 'p-4']"
-        >
+        <div id="image-wrapper" class="w-full max-w-screen-xl m-auto dark:bg-[#101014]"
+          :class="[isMobile ? 'p-2' : 'p-4']">
           <template v-if="!dataSources.length">
             <div class="flex items-center flex-col justify-center mt-4 text-center ">
               <NImageGroup>
@@ -448,17 +441,9 @@ onUnmounted(() => {
             </div>
           </template>
           <template v-else>
-            <Message
-              v-for="(item, index) of dataSources"
-              :key="index"
-              :date-time="item.dateTime"
-              :text="item.text"
-              :inversion="item.inversion"
-              :error="item.error"
-              :loading="item.loading"
-              @regenerate="onRegenerate(index)"
-              @delete="handleDelete(index)"
-            />
+            <Message v-for="(item, index) of dataSources" :key="index" :date-time="item.dateTime" :text="item.text"
+              :inversion="item.inversion" :error="item.error" :loading="item.loading" @regenerate="onRegenerate(index)"
+              @delete="handleDelete(index)" />
             <div class="sticky bottom-0 left-0 flex justify-center">
               <NButton v-if="loading" type="warning" @click="handleStop">
                 <template #icon>
@@ -473,38 +458,23 @@ onUnmounted(() => {
     </main>
     <footer :class="footerClass">
       <div class="flex items-center justify-between space-x-2">
-        <HoverButton
-          :tooltip="
-            getEnabledNetwork
-              ? '点击关闭联网功能，关闭联网能极大加快响应速度'
-              : '点击开启联网功能，开启后会自动从互联网获得信息来回答您'
-          "
-        >
+        <HoverButton :tooltip="getEnabledNetwork
+          ? '点击关闭联网功能，关闭联网能极大加快响应速度'
+          : '点击开启联网功能，开启后会自动从互联网获得信息来回答您'
+          ">
           <!-- <span class="text-xl text-[#4f555e]" @click="handleClear">
               <span style="color: #2979ff; width: 20px; display: inline-block;" v-if="getEnabledNetwork">联网开启</span>
               <span style="color: red; width: 20px; display: inline-block;" v-if="!getEnabledNetwork">联网关闭</span>
             </span> -->
           <!-- <n-switch v-model:value="getEnabledNetwork" @update:value="handleToggleNetwork" /> -->
-          <SvgIcon
-            :style="getEnabledNetwork ? { color: '#E44446FF' } : ''"
-            class="text-lg"
-            icon="zondicons:network"
-            @click="handleToggleNetwork"
-          />
+          <SvgIcon :style="getEnabledNetwork ? { color: 'rgba(3, 34, 81, 1)' } : ''" class="text-lg"
+            icon="zondicons:network" @click="handleToggleNetwork" />
         </HoverButton>
         <NAutoComplete v-model:value="prompt" :options="searchOptions" :render-label="renderOption">
           <template #default="{ handleInput, handleBlur, handleFocus }">
-            <NInput
-              ref="inputRef"
-              v-model:value="prompt"
-              type="textarea"
-              :placeholder="placeholder"
-              :autosize="{ minRows: 1, maxRows: isMobile ? 4 : 8 }"
-              @input="handleInput"
-              @focus="handleFocus"
-              @blur="handleBlur"
-              @keypress="handleEnter"
-            />
+            <NInput style="border-radius:20px" ref="inputRef" v-model:value="prompt" type="textarea" :placeholder="placeholder"
+              :autosize="{ minRows: 1, maxRows: isMobile ? 4 : 8 }" @input="handleInput" @focus="handleFocus"
+              @blur="handleBlur" @keypress="handleEnter" />
           </template>
         </NAutoComplete>
         <HoverButton v-if="!isMobile" @click="handleExport">
@@ -519,10 +489,7 @@ onUnmounted(() => {
           </span>
         </HoverButton>
 
-        <NButton
-          style="background:#E44446FF"
-          :disabled="buttonDisabled" @click="handleSubmit()"
-        >
+        <NButton style="background:rgba(3, 34, 81, 1)" :disabled="buttonDisabled" @click="handleSubmit()">
           <template #icon>
             <span style="color:#ffffff">
               <SvgIcon icon="ri:send-plane-fill" />

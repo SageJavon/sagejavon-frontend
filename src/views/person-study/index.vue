@@ -1,23 +1,3 @@
-<template>
-  <div class="person-study-page">
-    <div style="width: 120px; height: 100vh; background-color: var(--theme-blue);"></div>
-    <div class="person-study-container">
-      <div class="card choice-question"></div>
-      <div class="card code-question"></div>
-      <div class="card history"></div>
-      <div class="card hot-question"></div>
-      <div class="card recent-record"></div>
-      <div class="card daily-recommendation"></div>
-      <div class="card statistics"></div>
-      <div class="card line-chart"></div>
-    </div>
-  </div>
-</template>
-
-<script setup>
-
-</script>
-
 <style>
 * {
   --theme-blue: #052350;
@@ -79,3 +59,24 @@
   grid-column: span 15;
 }
 </style>
+
+<template>
+  <div class="person-study-page">
+    <div style="width: 120px; height: 100vh; background-color: var(--theme-blue);"></div>
+    <div class="person-study-container">
+      <div class="card choice-question"></div>
+      <div class="card code-question"></div>
+      <div class="card history"></div>
+      <div class="card hot-question"></div>
+      <div class="card recent-record"></div>
+      <div class="card daily-recommendation"></div>
+      <div class="card statistics"></div>
+      <div class="card line-chart"></div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+
+</script>
+
