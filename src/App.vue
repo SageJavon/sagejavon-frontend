@@ -11,8 +11,7 @@ const { language } = useLanguage()
 const themeOverrides = {
   common: {
     primaryColor: 'rgba(3, 34, 81, 1)',
-  },
-  // ...
+  }
 }
 </script>
 
