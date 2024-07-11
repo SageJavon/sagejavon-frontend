@@ -16,12 +16,7 @@ const themeOverrides = {
 </script>
 
 <template>
-  <NConfigProvider
-    class="h-full"
-    :theme="theme"
-    :theme-overrides="themeOverrides"
-    :locale="language"
-  >
+  <NConfigProvider class="h-full" :theme="theme" :theme-overrides="themeOverrides" :locale="language">
     <NaiveProvider>
       <RouterView />
     </NaiveProvider>
