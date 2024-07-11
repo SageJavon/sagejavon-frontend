@@ -111,7 +111,7 @@ async function onConversation() {
   scrollToBottom()
   try {
     // 发起后端请求获取模型响应
-    const response = await fetch('http://59.78.194.84:7000/open_kf_api/queries/smart_query_stream', {
+    const response = await fetch('https://api.xhpolaris.com/sagejavon/smart_query_stream', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -472,9 +472,9 @@ onUnmounted(() => {
         </HoverButton>
         <NAutoComplete v-model:value="prompt" :options="searchOptions" :render-label="renderOption">
           <template #default="{ handleInput, handleBlur, handleFocus }">
-            <NInput style="border-radius:20px" ref="inputRef" v-model:value="prompt" type="textarea" :placeholder="placeholder"
-              :autosize="{ minRows: 1, maxRows: isMobile ? 4 : 8 }" @input="handleInput" @focus="handleFocus"
-              @blur="handleBlur" @keypress="handleEnter" />
+            <NInput style="border-radius:20px" ref="inputRef" v-model:value="prompt" type="textarea"
+              :placeholder="placeholder" :autosize="{ minRows: 1, maxRows: isMobile ? 4 : 8 }" @input="handleInput"
+              @focus="handleFocus" @blur="handleBlur" @keypress="handleEnter" />
           </template>
         </NAutoComplete>
         <HoverButton v-if="!isMobile" @click="handleExport">
