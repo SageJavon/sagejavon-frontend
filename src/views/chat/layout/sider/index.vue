@@ -23,6 +23,10 @@ const message = useMessage()
 
 const collapsed = computed(() => appStore.siderCollapsed)
 
+function goToKnowledgeSkills() {
+  router.push('/knowledge/skills')
+}
+
 function goToKnowledgeGraph() {
   router.push('/knowledge/graph') // 跳转到知识图谱页面
 }
@@ -147,6 +151,17 @@ watch(
                     </NText>
                   </div>
                 </div>
+                <div class="side-item">
+                  <div>
+                    <div class="side-item2" @click="goToKnowledgeSkills">
+                      <NImage class="hover-hand" preview-disabled width="35" :src="teacher" />
+                    </div>
+
+                    <NText style="color:#9cacc0" dashed block @click="goToKnowledgeSkills">
+                      知识图谱测试
+                    </NText>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -206,6 +221,7 @@ watch(
   justify-content: center;
   justify-items: center;
 }
+
 .hover-hand {
   cursor: pointer;
   /* 默认鼠标样式为小手掌 */

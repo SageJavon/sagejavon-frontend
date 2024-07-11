@@ -89,6 +89,9 @@ importers:
       d3-zoom:
         specifier: ^3.0.0
         version: 3.0.0
+      echarts:
+        specifier: ^5.5.1
+        version: 5.5.1
       element-plus:
         specifier: ^2.2.6
         version: 2.7.3(vue@3.4.25(typescript@4.9.5))
@@ -4558,6 +4561,9 @@ packages:
   ecdsa-sig-formatter@1.0.11:
     resolution: {integrity: sha512-nagl3RYrbNv6kQkeJIpt6NJZy8twLB/2vtz6yN9Z4vRKHN4/QZJIEbqohALSgwKdnksuY3k5Addp5lg8sVoVcQ==}
 
+  echarts@5.5.1:
+    resolution: {integrity: sha512-Fce8upazaAXUVUVsjgV6mBnGuqgO+JNDlcgF79Dksy4+wgGpQB2lmYoO4TSweFg/mZITdpGHomw/cNBJZj1icA==}
+
   ee-first@1.1.1:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
 
@@ -8856,6 +8862,9 @@ packages:
   tslib@1.14.1:
     resolution: {integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==}
 
+  tslib@2.3.0:
+    resolution: {integrity: sha512-N82ooyxVNm6h1riLCoyS9e3fuJ3AMG2zIZs2Gd1ATcSFjSA23Q0fzjjZeh0jbJvWVDZ0cJT8yaNNaaXHzueNjg==}
+
   tslib@2.5.0:
     resolution: {integrity: sha512-336iVw3rtn2BUK7ORdIAHTyxHGRIHVReokCR3XjbckJMK7ms8FysBfhLR8IXnAgy7T0PTPNBWKiH514FOW/WSg==}
 
@@ -9753,6 +9762,9 @@ packages:
 
   zhipuai@2.0.0:
     resolution: {integrity: sha512-X2hLv/8iYhb53dEbUsVOMEdJGkfp6hfPryH0fhgc87Jbm0QYiCm+hDR0Cim692A1or98uXf2gM1JtRzpWIGQSA==}
+
+  zrender@5.6.0:
+    resolution: {integrity: sha512-uzgraf4njmmHAbEUxMJ8Oxg+P3fT04O+9p7gY+wJRVxo8Ge+KmYv0WJev945EH4wFuc4OY2NLXz46FZrWS9xJg==}
 
 snapshots:
 
@@ -15438,6 +15450,11 @@ snapshots:
     dependencies:
       safe-buffer: 5.2.1
 
+  echarts@5.5.1:
+    dependencies:
+      tslib: 2.3.0
+      zrender: 5.6.0
+
   ee-first@1.1.1: {}
 
   ejs@2.7.4: {}
@@ -20558,6 +20575,8 @@ snapshots:
 
   tslib@1.14.1: {}
 
+  tslib@2.3.0: {}
+
   tslib@2.5.0: {}
 
   tslint@5.20.1(typescript@4.9.5):
@@ -21688,3 +21707,7 @@ snapshots:
       agentkeepalive: 4.5.0
       jsonwebtoken: 9.0.2
       node-fetch: 3.3.2
+
+  zrender@5.6.0:
+    dependencies:
+      tslib: 2.3.0
