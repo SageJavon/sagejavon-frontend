@@ -9,23 +9,28 @@
 						<th>知识点</th>
 						<th>状态</th>
 						<th>难度</th>
+						<th>类型</th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr v-for="(question, index) in questions" :key="question.id">
+					<tr v-for="(question, index) in questions" :key="question.id"
+						@click="exerciseDetail(question.id, question.type)">
 						<td class="text-ellipsis">{{ question.id }}</td>
-						<td class="text-ellipsis">{{ question.name }}</td>
+						<td class="text-ellipsis">{{ question.questionText }}</td>
 						<td class="knowledge-container">
-							<div v-for="point in question.knowledgePoints" :key="point"
+							<div v-for="point in question.knowledgeConcept" :key="point"
 								class="knowledge-point text-ellipsis">
-								{{ point }}
+								{{ point.knowledge }}
 							</div>
 						</td>
 						<td>
-							<span :class="statusClass(question.status)"></span>
+							<span :class="statusClass(question.done)"></span>
 						</td>
 						<td :class="difficultyClass(question.difficulty)" class="difficulty text-ellipsis">
 							{{ question.difficulty }}
+						</td>
+						<td>
+							{{ question.type === 0 ? '代码题' : '选择题' }}
 						</td>
 					</tr>
 				</tbody>
@@ -36,6 +41,9 @@
 
 <script lang="ts" setup>
 import { defineProps } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router=useRouter()
 
 interface Question {
 	id: string;
@@ -65,6 +73,24 @@ const difficultyClass = (difficulty: string) => {
 			return '';
 	}
 };
+
+function exerciseDetail(id: number, type: number) {
+	console.log(id)
+	console.log(type)
+	if (type === 0) {
+		// 代码题
+		router.push({
+			path: '/program/detail',
+			query: { id: id } // 使用 query 参数传递 id
+		});
+	}else{
+		router.push({
+			path:'/choice/detail',
+			query: { id: id }
+		})
+	}
+
+}
 </script>
 
 <style scoped>

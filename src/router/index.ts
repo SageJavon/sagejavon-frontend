@@ -60,7 +60,12 @@ const routes: RouteRecordRaw[] = [
         path: '/recommend/exercise',
         name: 'recommendExercise',
         component: () => import('@/views/recommend-exercise/index.vue'),
-      }
+      },
+      {
+        path: '/choice/detail',
+        name: 'choiceDetail',
+        component: () => import('@/views/choice-detail/index.vue'),
+      },
     ],
   },
   {

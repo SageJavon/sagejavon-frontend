@@ -23,16 +23,13 @@ const message = useMessage()
 
 const collapsed = computed(() => appStore.siderCollapsed)
 
-const newSidebarCollapsed = ref(false)
 
 function goToKnowledgeSkills() {
   router.push('/knowledge/skills')
-  newSidebarCollapsed.value = false
 }
 
 function chat() {
   router.push('/chat/:uuid?')
-  newSidebarCollapsed.value = false
 }
 
 function goToKnowledgeGraph() {
@@ -42,7 +39,6 @@ function goToKnowledgeGraph() {
 function goTopersonStudy() {
   console.log('person')
   router.push('/person/study')
-  newSidebarCollapsed.value = true // 隐藏第二个侧边栏
 }
 
 function goHome() {
@@ -190,7 +186,7 @@ watch(
       <div v-show="!collapsed" class="fixed inset-0 z-40 w-full h-full bg-black/40" @click="handleUpdateCollapsed" />
     </template>
     <!-- <PromptStore v-model:visible="show" /> -->
-    <NLayoutSider v-if="!newSidebarCollapsed" :collapsed="newSidebarCollapsed" :collapsed-width="0" :width="180"
+    <NLayoutSider :collapsed="newSidebarCollapsed" :collapsed-width="0" :width="180"
       collapse-mode="transform" :show-trigger="isMobile ? false : 'arrow-circle'"
       style="height:100%;background-color:rgba(3, 34, 81, 0.2)" bordered :style="getMobileClass"
       @update-collapsed="handleNewSidebarCollapsed">

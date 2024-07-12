@@ -19,15 +19,24 @@
 				<div v-if="activeTab === 'content'">
 					<div class="program-content">
 						<div class="sub-section">
-							<span class="tag">{{ programDetail.difficulty }}</span>
-							<span class="knowledge-point" v-for="(knowledge, index) in programDetail.knowledgeConcept">
+							<span class="tag">{{ choiceDetail.difficulty }}</span>
+							<span class="knowledge-point" v-for="(knowledge, index) in choiceDetail.knowledgeConcept">
 								<i class="icon-tag">
 								</i> {{ knowledge.knowledge }}
 							</span>
 						</div>
-						<pre class="code-block">
-              <v-md-preview :text="programDetail.questionText"></v-md-preview>
-            </pre>
+						<v-md-preview :text="choiceDetail.questionText"></v-md-preview>
+						<div class="choices">
+							<div class="choices-item" @click="submitChoice('A')"><span class="option">A.</span> {{
+								choiceDetail.choiceA }}</div>
+							<div @click="submitChoice('B')" class=" choices-item"><span class="option">B.</span> {{
+								choiceDetail.choiceB }}</div>
+							<div @click="submitChoice('C')" class=" choices-item"><span class="option">C.</span> {{
+								choiceDetail.choiceC }}</div>
+							<div @click="submitChoice('D')" class=" choices-item"><span class="option">D.</span> {{
+								choiceDetail.choiceD }}</div>
+						</div>
+
 					</div>
 				</div>
 				<div v-if="activeTab === 'history'">
@@ -38,27 +47,11 @@
 				</div>
 			</div>
 		</div>
-		<div class="main">
-			<div class="tabs-two">
-				<div class="circle-flex">
-					<div class="circle"></div>
-					<button @click="activeTab = 'content'" :class="{ active: activeTab === 'content' }">代码</button>
-				</div>
-			</div>
-			<div class="editor">
-				<monacoEditor v-model="code" :language="language" width="100%" height="100%"
-					@editor-mounted="editorMounted"></monacoEditor>
-			</div>
-		</div>
-		<DragBall />
 	</div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import * as monaco from 'monaco-editor'
-import monacoEditor from './components/monacoEditor.vue';
-import DragBall from './components/DragBall.vue'
 import { useRoute } from 'vue-router';
 const route = useRoute()
 const questionId = ref(route.query.id)
@@ -69,73 +62,40 @@ const editorMounted = (editor: monaco.editor.IStandaloneCodeEditor) => {
 	console.log('editor实例加载完成', editor)
 }
 
-export interface Program {
+const activeTab = ref('content');
+
+
+export interface Choice {
+	choiceA: string;
+	choiceB: string;
+	choiceC: string;
+	choiceD: string;
 	difficulty: number;
 	/**
-	 * 题目id
+	 * 选择题id
 	 */
 	id: number;
 	knowledgeConcept: KnowledgeConcept[];
-	/**
-	 * 题目内容
-	 */
 	questionText: string;
 }
 
 export interface KnowledgeConcept {
-	/**
-	 * 知识点
-	 */
 	knowledge: string;
-	/**
-	 * 知识点id
-	 */
 	knowledgeId: number;
 }
 
-const programDetail = ref<Program>({
+
+const choiceDetail = ref<Choice>({
 
 	id: 0,
 	questionText: `
-### 字符三角形
+执行如下代码片段后，num的值为：
 
-## 题目描述
+\`\`\`java
+int num = 5;
+
+	num = (num % 2) == 0 ? num – 1: num + 1;
 \`\`\`
-public class HelloWorld {
-  public static void main(String[] args) {
-    System.out.println("Hello World!");
-    int a = 1;
-    a = a + 1;
-    a = a + 2;
-    System.out.println("a is " + a);
-    a = a + 3; // 断点行
-    a = a + 4;
-    System.out.println("a is " + a);
-  }
-}
-\`\`\`
-
-给定一个字符，用它构造一个底边长 5 个字符，高 3 个字符的等腰字符三角形。
-
-## 输入格式
-
-输入只有一行，包含一个字符。
-
-## 输出格式
-
-该字符构成的等腰三角形，底边长 5 个字符，高 3 个字符。
-
-## 样例 #1
-
-### 样例输入 #1
-
-\`
-*
-\`
-
-## 提示
-
-对于 100% 的数据，输入的字符是 ASCII 中的可见字符。
 
 `,
 	knowledgeConcept: [
@@ -148,80 +108,18 @@ public class HelloWorld {
 			knowledge: "java"
 		}
 	],
+	choiceA: "1",
+	choiceB: "4",
+	choiceC: "5",
+	choiceD: "6",
 	difficulty: 0
 
 });
 
 
-const activeTab = ref('content');
-
-const code = ref(`
-
-public class HelloWorld {
-  public static void main(String[] args) {
-    System.out.println("Hello World!");
-    int a = 1;
-    a = a + 1;
-    a = a + 2;
-    System.out.println("a is " + a);
-    a = a + 3; // 断点行
-    a = a + 4;
-    System.out.println("a is " + a);
-  }
+function submitChoice(choice: string) {
+	console.log('提交选择:', choice);
 }
-
-`)
-
-const cmOptions = {
-	mode: "text/x-java",  //Java语言
-	theme: "darcula", // 默认主题
-	autofocus: true,
-	lineNumbers: true,   //显示行号
-	smartIndent: true, // 自动缩进
-	autoCloseBrackets: true// 自动补全括号
-}
-
-const programContent = ref(`
-### 字符三角形
-
-## 题目描述
-\`\`\`
-public class HelloWorld {
-  public static void main(String[] args) {
-    System.out.println("Hello World!");
-    int a = 1;
-    a = a + 1;
-    a = a + 2;
-    System.out.println("a is " + a);
-    a = a + 3; // 断点行
-    a = a + 4;
-    System.out.println("a is " + a);
-  }
-}
-\`\`\`
-
-给定一个字符，用它构造一个底边长 5 个字符，高 3 个字符的等腰字符三角形。
-
-## 输入格式
-
-输入只有一行，包含一个字符。
-
-## 输出格式
-
-该字符构成的等腰三角形，底边长 5 个字符，高 3 个字符。
-
-## 样例 #1
-
-### 样例输入 #1
-
-\`
-*
-\`
-
-## 提示
-
-对于 100% 的数据，输入的字符是 ASCII 中的可见字符。
-`);
 
 </script>
 
@@ -261,7 +159,7 @@ public class HelloWorld {
 
 .editor {
 	width: 100%;
-	height: 90%;
+	height: 100%;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -361,5 +259,25 @@ public class HelloWorld {
 	margin-right: 5px;
 	background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%23666" d="M21.41 11.58l-9-9A2 2 0 0010.34 2H4a2 2 0 00-2 2v6.34a2 2 0 00.58 1.42l9 9a2 2 0 002.83 0l6.34-6.34a2 2 0 000-2.83zM6.5 8.5A1.5 1.5 0 118 7a1.5 1.5 0 01-1.5 1.5z"/></svg>') no-repeat center center;
 	background-size: contain;
+}
+
+.choices {
+	margin-left: 30px
+}
+
+.choices-item {
+	margin-top: 10px;
+}
+
+.choices-item:hover {
+
+	background-color: #f2f1f1;
+	padding: 10px;
+
+}
+
+.option {
+	font-weight: 600;
+	margin-right: 10px;
 }
 </style>
