@@ -23,8 +23,16 @@ const message = useMessage()
 
 const collapsed = computed(() => appStore.siderCollapsed)
 
+const newSidebarCollapsed = ref(false)
+
 function goToKnowledgeSkills() {
   router.push('/knowledge/skills')
+  newSidebarCollapsed.value = false
+}
+
+function chat() {
+  router.push('/chat/:uuid?')
+  newSidebarCollapsed.value = false
 }
 
 function goToKnowledgeGraph() {
@@ -34,6 +42,11 @@ function goToKnowledgeGraph() {
 function goTopersonStudy() {
   console.log('person')
   router.push('/person/study')
+  newSidebarCollapsed.value = true // 隐藏第二个侧边栏
+}
+
+function goHome() {
+  router.push('/')
 }
 
 function handleAdd() {
@@ -101,7 +114,7 @@ watch(
             <div class="flex flex-col h-full">
               <!-- 侧边栏内容 -->
               <div class="side-container">
-                <div class="side-item">
+                <div class="side-item" @click="goHome">
                   <img size="100" round :src="defaultModel" />
                 </div>
                 <NDivider />
@@ -117,6 +130,20 @@ watch(
                     </NText>
                   </div>
                 </div>
+
+
+                <div class="side-item">
+                  <div>
+                    <div class="side-item2" @click="chat">
+                      <NImage class="hover-hand" preview-disabled width="35" :src="teacher" />
+                    </div>
+
+                    <NText style="color:#9cacc0" dashed block @click="chat">
+                      聊天
+                    </NText>
+                  </div>
+                </div>
+
 
                 <div class="side-item">
                   <div>
@@ -137,17 +164,6 @@ watch(
 
                     <NText style="color:#9cacc0" dashed block>
                       个性学习
-                    </NText>
-                  </div>
-                </div>
-                <div class="side-item">
-                  <div>
-                    <div class="side-item2">
-                      <NImage class="hover-hand" preview-disabled width="35" :src="teacher" />
-                    </div>
-
-                    <NText style="color:#9cacc0" dashed block @click="goToKnowledgeGraph">
-                      老师出题
                     </NText>
                   </div>
                 </div>
@@ -174,9 +190,10 @@ watch(
       <div v-show="!collapsed" class="fixed inset-0 z-40 w-full h-full bg-black/40" @click="handleUpdateCollapsed" />
     </template>
     <!-- <PromptStore v-model:visible="show" /> -->
-    <NLayoutSider :collapsed="newSidebarCollapsed" :collapsed-width="0" :width="180" collapse-mode="transform"
-      :show-trigger="isMobile ? false : 'arrow-circle'" style="height:100%;background-color:rgba(3, 34, 81, 0.2)"
-      bordered :style="getMobileClass" @update-collapsed="handleNewSidebarCollapsed">
+    <NLayoutSider v-if="!newSidebarCollapsed" :collapsed="newSidebarCollapsed" :collapsed-width="0" :width="180"
+      collapse-mode="transform" :show-trigger="isMobile ? false : 'arrow-circle'"
+      style="height:100%;background-color:rgba(3, 34, 81, 0.2)" bordered :style="getMobileClass"
+      @update-collapsed="handleNewSidebarCollapsed">
       <div class="flex flex-col h-full w-full" :style="mobileSafeArea">
         <main class="flex flex-1 h-full w-full">
           <div class="flex flex-col h-full w-full">

@@ -22,6 +22,11 @@ const routes: RouteRecordRaw[] = [
     },
     children: [
       {
+        path: '/knowledge/skills',
+        name: 'knowledgeSkills',
+        component: () => import('@/views/knowledge-skills/index.vue'),
+      },
+      {
         path: '/chat/:uuid?',
         name: 'Chat',
         component: () => import('@/views/chat/index.vue'),
@@ -42,9 +47,19 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/views/program-detail/index.vue'),
       },
       {
-        path: '/knowledge/skills',
-        name: 'knowledgeSkills',
-        component: () => import('@/views/knowledge-skills/index.vue'),
+        path: '/choice/exercise',
+        name: 'choiceExercise',
+        component: () => import('@/views/choice-exercise/index.vue'),
+      },
+      {
+        path: '/program/exercise',
+        name: 'programExercise',
+        component: () => import('@/views/program-exercise/index.vue'),
+      },
+      {
+        path: '/recommend/exercise',
+        name: 'recommendExercise',
+        component: () => import('@/views/recommend-exercise/index.vue'),
       }
     ],
   },

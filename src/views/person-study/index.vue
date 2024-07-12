@@ -1,7 +1,7 @@
 <template>
   <div class="person-study-container">
     <div class="card choice-question">
-      <MainCard :image="iconSelect" title="选择题"></MainCard>
+      <MainCard :image="iconSelect" title="选择题" @click="navigateChoice"></MainCard>
     </div>
     <div class="card code-question">
       <MainCard :image="iconCode" title="代码题" @click="navigateProgram"></MainCard>
@@ -11,7 +11,23 @@
     </div>
     <div class="card hot-question"></div>
     <div class="card recent-record"></div>
-    <div class="card daily-recommendation"></div>
+    <div class="card daily-recommendation" @click="navigateRecommend">
+      <div class="recommendation">
+        <div>
+          <image style="width:100px" :src="iconRecommend" />
+        </div>
+        <div>每日推荐</div>
+        <div>
+          <div>·采用AI算法为你量身定制</div>
+          <div>
+            ·根据您的学习进度每日自动刷新
+          </div>
+          <div>
+            ·快来体验您的专属题单吧</div>
+
+        </div>
+      </div>
+    </div>
     <div class="card statistics"></div>
     <div class="card line-chart"></div>
   </div>
@@ -22,10 +38,17 @@ import MainCard from "@/views/person-study/components/MainCard.vue";
 import iconSelect from "./images/select-question.png"
 import iconCode from "./images/code-question.png"
 import iconHistory from "./images/history.png"
+import iconRecommend from "./images/daily-recommend.png"
 import { useRouter } from 'vue-router'
 const router = useRouter()
 function navigateProgram () {
-  router.push('/program/list')
+  router.push('/program/exercise')
+}
+function navigateChoice () {
+  router.push('/choice/exercise')
+}
+function navigateRecommend () {
+  router.push('/recommend/exercise')
 }
 
 </script>
@@ -78,6 +101,16 @@ function navigateProgram () {
 .daily-recommendation {
   grid-column: span 14;
   background: var(--daily-card-background-clolor);
+}
+
+.recommendation {
+  display: flex;
+
+}
+
+.recommendation image {
+  width: 100px;
+  height: 100px;
 }
 
 .statistics {
