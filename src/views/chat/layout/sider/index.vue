@@ -33,7 +33,7 @@ function chat() {
 }
 
 function goToKnowledgeGraph() {
-  router.push('/knowledge/graph') // 跳转到知识图谱页面
+  router.push('/knowledge/skills') // 跳转到知识图谱页面
 }
 
 function goTopersonStudy() {
@@ -165,13 +165,13 @@ watch(
                 </div>
                 <div class="side-item">
                   <div>
-                    <div class="side-item2" @click="goToKnowledgeSkills">
+                    <!-- <div class="side-item2" @click="goToKnowledgeSkills">
                       <NImage class="hover-hand" preview-disabled width="35" :src="teacher" />
-                    </div>
-
+                    </div> -->
+<!-- 
                     <NText style="color:#9cacc0" dashed block @click="goToKnowledgeSkills">
                       知识图谱测试
-                    </NText>
+                    </NText> -->
                   </div>
                 </div>
               </div>

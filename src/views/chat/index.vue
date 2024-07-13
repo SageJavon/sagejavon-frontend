@@ -111,7 +111,7 @@ async function onConversation() {
   scrollToBottom()
   try {
     // 发起后端请求获取模型响应
-    const response = await fetch('https://rag.xhpolaris.com/smart_query_stream', {
+    const response = await fetch('https://rag.xhpolaris.com/open_kf_api/queries/smart_query_stream', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

@@ -48,9 +48,11 @@
 			<div class="editor">
 				<monacoEditor v-model="code" :language="language" width="100%" height="100%"
 					@editor-mounted="editorMounted"></monacoEditor>
+
 			</div>
+			<NButton style="width:100%" type="primary">提交代码</NButton>
 		</div>
-		<DragBall />
+		<!-- <DragBall /> -->
 	</div>
 </template>
 
@@ -60,6 +62,8 @@ import * as monaco from 'monaco-editor'
 import monacoEditor from './components/monacoEditor.vue';
 import DragBall from './components/DragBall.vue'
 import { useRoute } from 'vue-router';
+import { programDetails } from './api/program_detail';
+import { NButton } from 'naive-ui';
 const route = useRoute()
 const questionId = ref(route.query.id)
 console.log(questionId.value)
@@ -93,82 +97,33 @@ export interface KnowledgeConcept {
 	knowledgeId: number;
 }
 
-const programDetail = ref<Program>({
+const getProgramDetail = async () => {
+	// localStorage.removeItem('chatStorage')
 
-	id: 0,
-	questionText: `
-### 字符三角形
-
-## 题目描述
-\`\`\`
-public class HelloWorld {
-  public static void main(String[] args) {
-    System.out.println("Hello World!");
-    int a = 1;
-    a = a + 1;
-    a = a + 2;
-    System.out.println("a is " + a);
-    a = a + 3; // 断点行
-    a = a + 4;
-    System.out.println("a is " + a);
-  }
-}
-\`\`\`
-
-给定一个字符，用它构造一个底边长 5 个字符，高 3 个字符的等腰字符三角形。
-
-## 输入格式
-
-输入只有一行，包含一个字符。
-
-## 输出格式
-
-该字符构成的等腰三角形，底边长 5 个字符，高 3 个字符。
-
-## 样例 #1
-
-### 样例输入 #1
-
-\`
-*
-\`
-
-## 提示
-
-对于 100% 的数据，输入的字符是 ASCII 中的可见字符。
-
-`,
-	knowledgeConcept: [
-		{
-			knowledgeId: 0,
-			knowledge: "java"
-		},
-		{
-			knowledgeId: 1,
-			knowledge: "java"
+	try {
+		const res = await programDetails(questionId.value) // 假设 chatList 是一个异步请求函数
+		if (res.status === 200) {
+			console.log(res)
+			programDetail.value = res.data.data
 		}
-	],
-	difficulty: 0
+		else {
+			// 更新失败
+		}
+	}
+	catch (err) {
+		console.error('获取推荐列表失败:', err)
+	}
+}
+getProgramDetail()
 
-});
+const programDetail = ref<Program>({});
 
 
 const activeTab = ref('content');
 
-const code = ref(`
-
-public class HelloWorld {
-  public static void main(String[] args) {
-    System.out.println("Hello World!");
-    int a = 1;
-    a = a + 1;
-    a = a + 2;
-    System.out.println("a is " + a);
-    a = a + 3; // 断点行
-    a = a + 4;
-    System.out.println("a is " + a);
-  }
-}
+const code = ref(`//请在这里写出你的代码
+//我们将使用大语言模型
+//为你的代码进行评分和建议
 
 `)
 
@@ -180,48 +135,6 @@ const cmOptions = {
 	smartIndent: true, // 自动缩进
 	autoCloseBrackets: true// 自动补全括号
 }
-
-const programContent = ref(`
-### 字符三角形
-
-## 题目描述
-\`\`\`
-public class HelloWorld {
-  public static void main(String[] args) {
-    System.out.println("Hello World!");
-    int a = 1;
-    a = a + 1;
-    a = a + 2;
-    System.out.println("a is " + a);
-    a = a + 3; // 断点行
-    a = a + 4;
-    System.out.println("a is " + a);
-  }
-}
-\`\`\`
-
-给定一个字符，用它构造一个底边长 5 个字符，高 3 个字符的等腰字符三角形。
-
-## 输入格式
-
-输入只有一行，包含一个字符。
-
-## 输出格式
-
-该字符构成的等腰三角形，底边长 5 个字符，高 3 个字符。
-
-## 样例 #1
-
-### 样例输入 #1
-
-\`
-*
-\`
-
-## 提示
-
-对于 100% 的数据，输入的字符是 ASCII 中的可见字符。
-`);
 
 </script>
 

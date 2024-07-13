@@ -1,12 +1,24 @@
 <template>
 	<div class="container">
-		<exercise-list :questions="questions"></exercise-list>
+		<div v-if="isLoading" class="loading-placeholder">
+			Loading data...
+			<!-- You can replace this with a spinner or any loading animation -->
+		</div>
+		<div v-else>
+			<exercise-list :questions="questions"></exercise-list>
+		</div>
+	</div>
+	<div class="sticky-pagination" v-if="!isLoading && questions.length > 0">
+		<n-pagination v-model:page="currentPage" :page-count="totalPages" show-quick-jumper
+			@update:page="handlePaginationChange"></n-pagination>
 	</div>
 </template>
 
-<script lang="ts" setup>
-import { ref } from 'vue';
+<script setup lang="ts">
+import { ref, onMounted, computed } from 'vue';
 import exerciseList from '@/components/exercise/exercise-list.vue';
+import { questionProgram } from './api/question_program';
+import { NPagination } from 'naive-ui';
 
 interface KnowledgeConcept {
 	knowledgeId: number;
@@ -22,55 +34,75 @@ interface Question {
 	type: number;
 }
 
-const questions = ref<Question[]>([
-	{
-		id: 'C1', questionText: '你好世界你好世界你好世界你好世界你好世界你好世界你好世界你好世界你好世界你好世界你好世界', knowledgeConcept: [{
-			knowledgeId: 0,
-			"knowledge": "java"
-		}, {
-			knowledgeId: 0,
-			"knowledge": "java"
-		}, {
-			knowledgeId: 0,
-			"knowledge": "java"
-		}], done: '完成', difficulty: 'SS', type: 0
-	},
-	{
-		id: 'C1', questionText: '你好世界你好世界你好世界你好世界你好世界你好世界你好世界你好世界你好世界你好世界你好世界', knowledgeConcept: [{
-			knowledgeId: 0,
-			"knowledge": "java"
-		}], done: '完成', difficulty: 'SS', type: 0
-	},
-	{
-		id: 'C1', questionText: '你好世界你好世界你好世界你好世界你好世界你好世界你好世界你好世界你好世界你好世界你好世界', knowledgeConcept: [{
-			knowledgeId: 0,
-			"knowledge": "java"
-		}], done: '完成', difficulty: 'SS', type: 0
-	},
-	{
-		id: 'C1', questionText: '你好世界你好世界你好世界你好世界你好世界你好世界你好世界你好世界你好世界你好世界你好世界', knowledgeConcept: [{
-			knowledgeId: 0,
-			"knowledge": "java"
-		}], done: '完成', difficulty: 'SS', type: 1
-	},
-]);
+const questions = ref<Question[]>([]);
+const isLoading = ref(false); // Track loading state
+
+const currentPage = ref(1);
+const pageSize = 10; // Adjust as per your pagination needs
+
+onMounted(async () => {
+	await fetchData(currentPage.value); // Fetch initial data based on currentPage
+});
+
+async function fetchData(pageNum: number) {
+	isLoading.value = true; // Set loading state while fetching data
+	try {
+		const query = {
+			pageNum,
+			pageSize,
+			type: 0, // Assuming you want to fetch questions of type 0
+			// You can add more query parameters here if needed
+		};
+		const response = await questionProgram(query);
+		questions.value = response.data.data.exerciseList; // Update questions with fetched data
+		currentPage.value = pageNum; // Update current page
+	} catch (error) {
+		console.error('Error fetching questions:', error);
+		// Handle error as needed (e.g., show error message to user)
+	} finally {
+		isLoading.value = false; // Reset loading state
+	}
+}
+
+function handlePaginationChange(pageNum: number) {
+	fetchData(pageNum); // Trigger fetchData when pagination changes
+}
+
+// Computed property for total pages
+const totalPages = computed(() => 11);
+
 </script>
+
 
 
 <style lang="scss">
 .container {
 	background-color: #f7f7f7;
+	padding: 20px;
+	min-height: 100vh;
+	/* Ensure container stretches to full viewport height */
+}
+
+.sticky-pagination {
 	position: absolute;
-	/* 将图表定位到页面的左上角 */
-	top: 0;
-	left: 0;
-	right: 0;
+	right: 0px;
 	bottom: 0;
-	margin: 0;
-	/* 移除外边距 */
-	width: 100%;
-	/* 设置宽度为100% */
-	height: 100%;
-	/* 设置高度为100% */
+	width:100%;
+	background-color: #f7f7f7;
+	padding: 10px 20px;
+	z-index: 1000;
+	display: flex;
+	justify-content: center;
+	/* Ensure pagination is above other content */
+}
+.loading-placeholder {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 200px;
+	/* Adjust height based on your design */
+	font-size: 1.5rem;
+	color: #555;
+	/* Placeholder text color */
 }
 </style>

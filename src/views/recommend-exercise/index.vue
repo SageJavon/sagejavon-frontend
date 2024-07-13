@@ -1,12 +1,19 @@
 <template>
 	<div class="container">
-		<exercise-list :questions="questions"></exercise-list>
+		<div v-if="isLoading" class="loading-placeholder">
+			Loading data...
+			<!-- You can replace this with a spinner or any loading animation -->
+		</div>
+		<div v-else>
+			<exercise-list :questions="questions"></exercise-list>
+		</div>
 	</div>
 </template>
 
-<script lang="ts" setup>
-import { ref } from 'vue';
+<script setup lang="ts">
+import { ref, onMounted } from 'vue';
 import exerciseList from '@/components/exercise/exercise-list.vue';
+import { questionRecommend } from './api/question_recommend';
 
 interface KnowledgeConcept {
 	knowledgeId: number;
@@ -22,49 +29,53 @@ interface Question {
 	type: number;
 }
 
-const questions = ref<Question[]>([
-	{
-		id: 'C1', questionText: '你好世界你好世界你好世界你好世界你好世界你好世界你好世界你好世界你好世界你好世界你好世界', knowledgeConcept: [{
-			knowledgeId: 0,
-			"knowledge": "java"
-		}], done: '完成', difficulty: 'SS', type: 1
-	},
-	{
-		id: 'C1', questionText: '你好世界你好世界你好世界你好世界你好世界你好世界你好世界你好世界你好世界你好世界你好世界', knowledgeConcept: [{
-			knowledgeId: 0,
-			"knowledge": "java"
-		}], done: '完成', difficulty: 'SS', type: 1
-	},
-	{
-		id: 'C1', questionText: '你好世界你好世界你好世界你好世界你好世界你好世界你好世界你好世界你好世界你好世界你好世界', knowledgeConcept: [{
-			knowledgeId: 0,
-			"knowledge": "java"
-		}], done: '完成', difficulty: 'SS', type: 1
-	},
-	{
-		id: 'C1', questionText: '你好世界你好世界你好世界你好世界你好世界你好世界你好世界你好世界你好世界你好世界你好世界', knowledgeConcept: [{
-			knowledgeId: 0,
-			"knowledge": "java"
-		}], done: '完成', difficulty: 'SS', type: 1
-	},
-]);
-</script>
+const questions = ref<Question[]>([]);
 
+const isLoading = ref(false); // Track loading state
+
+onMounted(async () => {
+	await fetchData(); // Fetch initial data
+});
+
+async function fetchData() {
+	isLoading.value = true; // Set loading state while fetching data
+	try {
+		const res = await questionRecommend(10); // Fetch data
+		if (res.status === 200) {
+			questions.value = res.data.data; // Update questions with fetched data
+		} else {
+			// Handle update failure
+		}
+	} catch (err) {
+		console.error('Failed to fetch recommended questions:', err);
+		// Handle error as needed
+	} finally {
+		isLoading.value = false; // Reset loading state
+	}
+}
+</script>
 
 <style lang="scss">
 .container {
 	background-color: #f7f7f7;
 	position: absolute;
-	/* 将图表定位到页面的左上角 */
 	top: 0;
 	left: 0;
 	right: 0;
 	bottom: 0;
 	margin: 0;
-	/* 移除外边距 */
 	width: 100%;
-	/* 设置宽度为100% */
 	height: 100%;
-	/* 设置高度为100% */
+}
+
+.loading-placeholder {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 200px;
+	/* Adjust height based on your design */
+	font-size: 1.5rem;
+	color: #555;
+	/* Placeholder text color */
 }
 </style>

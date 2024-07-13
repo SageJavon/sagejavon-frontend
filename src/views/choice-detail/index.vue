@@ -53,6 +53,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
+import { choiceDetails } from './api/choice_detail';
 const route = useRoute()
 const questionId = ref(route.query.id)
 console.log(questionId.value)
@@ -84,37 +85,26 @@ export interface KnowledgeConcept {
 	knowledgeId: number;
 }
 
+const choiceDetail = ref<Choice>({});
+const getChoiceDetail = async () => {
+	// localStorage.removeItem('chatStorage')
 
-const choiceDetail = ref<Choice>({
-
-	id: 0,
-	questionText: `
-执行如下代码片段后，num的值为：
-
-\`\`\`java
-int num = 5;
-
-	num = (num % 2) == 0 ? num – 1: num + 1;
-\`\`\`
-
-`,
-	knowledgeConcept: [
-		{
-			knowledgeId: 0,
-			knowledge: "java"
-		},
-		{
-			knowledgeId: 1,
-			knowledge: "java"
+	try {
+		const res = await choiceDetails(questionId.value) // 假设 chatList 是一个异步请求函数
+		if (res.status === 200) {
+			console.log(res)
+			choiceDetail.value = res.data.data
 		}
-	],
-	choiceA: "1",
-	choiceB: "4",
-	choiceC: "5",
-	choiceD: "6",
-	difficulty: 0
+		else {
+			// 更新失败
+		}
+	}
+	catch (err) {
+		console.error('获取推荐列表失败:', err)
+	}
+}
+getChoiceDetail()
 
-});
 
 
 function submitChoice(choice: string) {

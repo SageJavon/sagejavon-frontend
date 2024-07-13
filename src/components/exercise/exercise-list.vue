@@ -98,11 +98,10 @@ function exerciseDetail(id: number, type: number) {
 	width: 100%;
 	display: flex;
 	justify-content: center;
-	margin-top: 20px;
 }
 
 .question-list {
-	width: 90%;
+	width: 100%;
 }
 
 .question-list table {
