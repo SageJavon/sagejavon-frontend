@@ -1,49 +1,76 @@
 <template>
 	<div class="container">
-		<div class="sidebar">
-			<div class="tabs">
-				<div class="circle-flex">
-					<div class="circle"></div>
-					<div @click="activeTab = 'content'" :class="{ active: activeTab === 'content' }">题目内容</div>
-				</div>
-				<div class="circle-flex">
-					<div class="circle"></div>
-					<div @click="activeTab = 'history'" :class="{ active: activeTab === 'history' }">历史记录</div>
-				</div>
-				<div class="circle-flex">
-					<div class="circle"></div>
-					<div @click="activeTab = 'solution'" :class="{ active: activeTab === 'solution' }">正确题解</div>
-				</div>
-			</div>
-			<div class="content">
-				<div v-if="activeTab === 'content'">
-					<div class="program-content">
-						<div class="sub-section">
-							<span class="tag">{{ choiceDetail.difficulty }}</span>
-							<span class="knowledge-point" v-for="(knowledge, index) in choiceDetail.knowledgeConcept">
-								<i class="icon-tag">
-								</i> {{ knowledge.knowledge }}
-							</span>
-						</div>
-						<v-md-preview :text="choiceDetail.questionText"></v-md-preview>
-						<div class="choices">
-							<div class="choices-item" @click="submitChoice('A')"><span class="option">A.</span> {{
-								choiceDetail.choiceA }}</div>
-							<div @click="submitChoice('B')" class=" choices-item"><span class="option">B.</span> {{
-								choiceDetail.choiceB }}</div>
-							<div @click="submitChoice('C')" class=" choices-item"><span class="option">C.</span> {{
-								choiceDetail.choiceC }}</div>
-							<div @click="submitChoice('D')" class=" choices-item"><span class="option">D.</span> {{
-								choiceDetail.choiceD }}</div>
-						</div>
-
+		<div class="container-two">
+			<div class="sidebar">
+				<div class="tabs">
+					<div class="circle-flex">
+						<div class="circle"></div>
+						<div @click="activeTab = 'content'" :class="{ active: activeTab === 'content' }">题目内容</div>
+					</div>
+					<div class="circle-flex">
+						<div class="circle"></div>
+						<div @click="activeTab = 'history'" :class="{ active: activeTab === 'history' }">历史记录</div>
+					</div>
+					<div class="circle-flex">
+						<div class="circle"></div>
+						<div @click="activeTab = 'solution'" :class="{ active: activeTab === 'solution' }">正确题解</div>
 					</div>
 				</div>
-				<div v-if="activeTab === 'history'">
-					<p>这里显示历史记录...</p>
-				</div>
-				<div v-if="activeTab === 'solution'">
-					<p>这里显示正确题解...</p>
+				<div class="content">
+					<div class="content-navigation">
+						<div class="navigation" v-if="activeTab === 'content' && !isLoading">
+							<button @click="previousQuestion" class="nav-button">
+								<img :src="iconLeftArrow" />
+							</button>
+						</div>
+						<div v-if="isLoading" class="editor">
+							Loading... <!-- Placeholder while loading -->
+						</div>
+						<div v-else-if="activeTab === 'content' && choiceDetail">
+							<div>
+								<div class="sub-section">
+									<span class="tag">{{ choiceDetail.difficulty }}</span>
+									<span class="knowledge-point"
+										v-for="(knowledge, index) in choiceDetail.knowledgeConcept" :key="index">
+										<i class="icon-tag"></i> {{ knowledge.knowledge }}
+									</span>
+								</div>
+								<v-md-preview :text="choiceDetail.questionText"></v-md-preview>
+								<div class="choices">
+									<div :class="{ 'choices-item': true, 'correct-choice': choiceDetail.choice === 'A' && choiceDetail.score === 1, 'wrong-choice': choiceDetail.choice === 'A' && choiceDetail.score === 0 }"
+										@click="submitChoice('A')"><span class="option">A.</span> {{
+											choiceDetail.choiceA }}
+									</div>
+									<div :class="{ 'choices-item': true, 'correct-choice': choiceDetail.choice === 'B' && choiceDetail.score === 1, 'wrong-choice': choiceDetail.choice === 'B' && choiceDetail.score === 0 }"
+										@click="submitChoice('B')"><span class="option">B.</span> {{
+											choiceDetail.choiceB }}
+									</div>
+									<div :class="{ 'choices-item': true, 'correct-choice': choiceDetail.choice === 'C' && choiceDetail.score === 1, 'wrong-choice': choiceDetail.choice === 'C' && choiceDetail.score === 0 }"
+										@click="submitChoice('C')"><span class="option">C.</span> {{
+											choiceDetail.choiceC }}
+									</div>
+									<div :class="{ 'choices-item': true, 'correct-choice': choiceDetail.choice === 'D' && choiceDetail.score === 1, 'wrong-choice': choiceDetail.choice === 'D' && choiceDetail.score === 0 }"
+										@click="submitChoice('D')"><span class="option">D.</span> {{
+											choiceDetail.choiceD }}
+									</div>
+								</div>
+							</div>
+						</div>
+						<div v-else>
+							没有更多题目了~
+						</div>
+						<div class="navigation" v-if="activeTab === 'content' && !isLoading">
+							<button @click="nextQuestion" class="nav-button">
+								<img :src="iconRightArrow" />
+							</button>
+						</div>
+					</div>
+					<div v-if="activeTab === 'history'">
+						<p>这里显示历史记录...</p>
+					</div>
+					<div v-if="activeTab === 'solution'">
+						<p>这里显示正确题解...</p>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -51,20 +78,39 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { onMounted, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { choiceDetails } from './api/choice_detail';
-const route = useRoute()
-const questionId = ref(route.query.id)
-console.log(questionId.value)
+import { questionSelect } from './api/question_select';
+import iconLeftArrow from './images/left-arrow.png'
+import iconRightArrow from './images/right-arrow.png'
 
-const language = ref('java')
-const editorMounted = (editor: monaco.editor.IStandaloneCodeEditor) => {
-	console.log('editor实例加载完成', editor)
-}
-
+const route = useRoute();
+const router = useRouter();
+const questionId = ref(route.query.id);
 const activeTab = ref('content');
+const choiceDetail = ref<Choice>({});
+const isLoading = ref(false); // Track loading state
 
+const getChoiceDetail = async (id) => {
+	isLoading.value = true; // Start loading
+	try {
+		const res = await choiceDetails(id);
+		if (res.status === 200) {
+			choiceDetail.value = res.data.data;
+		} else {
+			// Handle error
+		}
+	} catch (err) {
+		console.error('获取选择题详情失败:', err);
+	} finally {
+		isLoading.value = false; // Stop loading
+	}
+};
+
+onMounted(() => {
+	getChoiceDetail(questionId.value);
+})
 
 export interface Choice {
 	choiceA: string;
@@ -72,12 +118,11 @@ export interface Choice {
 	choiceC: string;
 	choiceD: string;
 	difficulty: number;
-	/**
-	 * 选择题id
-	 */
 	id: number;
 	knowledgeConcept: KnowledgeConcept[];
 	questionText: string;
+	score: number; // Add score property to Choice interface
+	choice: string;
 }
 
 export interface KnowledgeConcept {
@@ -85,54 +130,93 @@ export interface KnowledgeConcept {
 	knowledgeId: number;
 }
 
-const choiceDetail = ref<Choice>({});
-const getChoiceDetail = async () => {
-	// localStorage.removeItem('chatStorage')
-
-	try {
-		const res = await choiceDetails(questionId.value) // 假设 chatList 是一个异步请求函数
-		if (res.status === 200) {
-			console.log(res)
-			choiceDetail.value = res.data.data
-		}
-		else {
-			// 更新失败
-		}
-	}
-	catch (err) {
-		console.error('获取推荐列表失败:', err)
-	}
-}
-getChoiceDetail()
-
-
-
 function submitChoice(choice: string) {
-	console.log('提交选择:', choice);
+	const request = {
+		choice: choice,
+		id: questionId.value,
+	};
+
+	questionSelect(request)
+		.then((response) => {
+			console.log('提交成功:', response.data);
+			// Update choiceDetail with the received data
+			choiceDetail.value.score = response.data.data.score;
+			choiceDetail.value.choice = choice;
+			console.log(choiceDetail.value.score);
+			console.log(choiceDetail.value.choice);
+		})
+		.catch((error) => {
+			console.error('提交失败:', error);
+			// Handle error
+		});
 }
 
-</script>
+function previousQuestion() {
+	// Logic to navigate to the previous question
+	// You can update the questionId and fetch the new question details
+	const prevId = getPreviousQuestionId(questionId.value);
+	if (prevId) {
+		router.push({
+			path: '/choice/detail',
+			query: { id: prevId }
+		})
+	}
+}
 
+function nextQuestion() {
+	// Logic to navigate to the next question
+	// You can update the questionId and fetch the new question details
+	const nextId = getNextQuestionId(questionId.value);
+	if (nextId) {
+		router.push({
+			path: '/choice/detail',
+			query: { id: nextId }
+		})
+	}
+}
+
+// Dummy functions to get the previous and next question IDs
+// Replace these with your actual logic to get the correct IDs
+function getPreviousQuestionId(currentId) {
+	return Number(currentId) - 1; // Example logic
+}
+
+function getNextQuestionId(currentId) {
+	return Number(currentId) + 1; // Example logic
+}
+</script>
 <style scoped>
 .container {
 	display: flex;
-	padding: 20px;
 	/* Add padding to container */
-	height: 100vh;
+	height: 100%;
 	/* Adjust the height to make the container full height */
-	justify-content: space-between;
 	overflow: hidden;
 	/* Hide overflow to avoid scrollbars */
-	gap: 20px;
 	/* Add gap between sidebar and main */
+	width: 100%;
+	justify-content: center;
+	align-items: center;
+	background-color: #F7F7F7;
+
+
 }
 
+.container-two {
+	width: 60%;
+	height: 95%;
+	display: flex;
+	background-color: #ffffff;
+	border-radius: 10px;
+}
+
+
 .sidebar {
-	flex: 2;
-	border: 1px solid #f2f1f1;
+	flex: 1;
 	height: 100%;
 	overflow: auto;
 	border-radius: 10px;
+
 	/* Enable scrolling for the sidebar */
 	/* Add padding inside the sidebar */
 }
@@ -143,8 +227,8 @@ function submitChoice(choice: string) {
 	background-color: #fff;
 	justify-content: center;
 	align-items: center;
-	border: 1px solid #f2f1f1;
-	/* Add padding inside the main content */
+	border: 1px solid var(--, #E6E6E6)
+		/* Add padding inside the main content */
 }
 
 .editor {
@@ -177,7 +261,7 @@ function submitChoice(choice: string) {
 	display: flex;
 	margin-bottom: 20px;
 	justify-content: left;
-	background-color: #f2f1f1
+	background-color: #E6E6E6
 }
 
 .tabs div {
@@ -203,7 +287,8 @@ function submitChoice(choice: string) {
 
 .tabs div {
 	transition: background-color 0.3s;
-	color: #aaa;
+	color: #808080;
+	;
 }
 
 .tabs div.active {
@@ -213,8 +298,6 @@ function submitChoice(choice: string) {
 .tabs div:not(:last-child) {
 	border-right: none;
 }
-
-.code-block {}
 
 .sub-section {
 	display: flex;
@@ -257,17 +340,69 @@ function submitChoice(choice: string) {
 
 .choices-item {
 	margin-top: 10px;
+	border-radius: 20px;
+	padding: 2px;
+	padding-left: 10px;
 }
 
 .choices-item:hover {
-
 	background-color: #f2f1f1;
 	padding: 10px;
-
+	cursor: pointer;
+	border-radius: 10px;
 }
 
 .option {
 	font-weight: 600;
 	margin-right: 10px;
+}
+
+.correct-choice {
+	background: linear-gradient(87.37deg, rgba(0, 255, 87, 0.6) 2.19%, rgba(255, 255, 255, 0.2) 15.05%);
+	;
+	/* Light green for correct choice */
+}
+
+.wrong-choice {
+	background: linear-gradient(87.37deg, rgba(255, 0, 0, 0.4) 2.19%, rgba(255, 255, 255, 0.2) 15.05%);
+	/* Light red for wrong choice */
+}
+
+.content {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	height: 85%;
+	align-items: center;
+	align-content: center;
+}
+
+.content-navigation {
+	display: flex;
+	width: 100%;
+	justify-content: space-between;
+
+}
+
+.navigation {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.nav-button {
+	padding: 6px 4px;
+	border-radius: 8px;
+	background-color: #052350;
+	border: none;
+	cursor: pointer;
+	font-weight: bold;
+	margin: 0 10px;
+	align-items: center;
+	transition: background-color 0.3s;
+}
+
+.nav-button:hover {
+	background-color: #b0aeae;
 }
 </style>

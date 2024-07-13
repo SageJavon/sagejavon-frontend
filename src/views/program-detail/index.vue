@@ -50,7 +50,7 @@
 					@editor-mounted="editorMounted"></monacoEditor>
 
 			</div>
-			<NButton style="width:100%" type="primary">提交代码</NButton>
+			<NButton style="width:100%;margin-top:5px" type="primary" @click="submitCode">提交代码</NButton>
 		</div>
 		<!-- <DragBall /> -->
 	</div>
@@ -64,6 +64,7 @@ import DragBall from './components/DragBall.vue'
 import { useRoute } from 'vue-router';
 import { programDetails } from './api/program_detail';
 import { NButton } from 'naive-ui';
+import { questionCode } from './api/question_code';
 const route = useRoute()
 const questionId = ref(route.query.id)
 console.log(questionId.value)
@@ -121,21 +122,25 @@ const programDetail = ref<Program>({});
 
 const activeTab = ref('content');
 
-const code = ref(`//请在这里写出你的代码
-//我们将使用大语言模型
-//为你的代码进行评分和建议
+const code = ref("")
 
-`)
+function submitCode(choice: string) {
+	const request = {
+		id: questionId.value,
+		answer: code.value,
+		submitNum:1
+	};
 
-const cmOptions = {
-	mode: "text/x-java",  //Java语言
-	theme: "darcula", // 默认主题
-	autofocus: true,
-	lineNumbers: true,   //显示行号
-	smartIndent: true, // 自动缩进
-	autoCloseBrackets: true// 自动补全括号
+	questionCode(request)
+		.then((response) => {
+			console.log('提交成功:', response.data);
+			
+		})
+		.catch((error) => {
+			console.error('提交失败:', error);
+			// Handle error
+		});
 }
-
 </script>
 
 <style scoped>

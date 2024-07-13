@@ -41,7 +41,7 @@ const currentPage = ref(1);
 const pageSize = 10; // Adjust as per your pagination needs
 
 onMounted(async () => {
-	fetchData(currentPage.value); // Fetch initial data based on currentPage
+	await fetchData(currentPage.value); // Fetch initial data based on currentPage
 });
 
 async function fetchData(pageNum: number) {
@@ -50,10 +50,11 @@ async function fetchData(pageNum: number) {
 		const query = {
 			pageNum,
 			pageSize,
-			type: 1, // Assuming you want to fetch questions of type 1
+			type: 1, // Assuming you want to fetch questions of type 0
 			// You can add more query parameters here if needed
 		};
 		const response = await questionChoice(query);
+		console.log(response)
 		questions.value = response.data.data.exerciseList; // Update questions with fetched data
 		currentPage.value = pageNum; // Update current page
 	} catch (error) {
@@ -72,6 +73,8 @@ function handlePaginationChange(pageNum: number) {
 const totalPages = computed(() => 11);
 
 </script>
+
+
 
 <style lang="scss">
 .container {

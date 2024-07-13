@@ -1,29 +1,20 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 
 export interface Request {
+    choice: string;
     /**
-     * 代码
-     */
-    answer: string;
-    /**
-     * 题目id
+     * 选择题id
      */
     id: number;
-    /**
-     * 提交次数
-     */
-    submitNum: number;
     [property: string]: any;
 }
 
-
-function questionCode(query: Request): Promise<AxiosResponse> {
-  const { answer, id,submitNum, ...rest } = query;
+function questionSelect(query: Request): Promise<AxiosResponse> {
+  const { choice, id, ...rest } = query;
 
   const params = new URLSearchParams();
-  params.append('answer', answer?.toString() || '');
-	params.append('id', id.toString());
-	params.append('submitNum',submitNum.toString())
+  params.append('choice', choice?.toString() || '');
+  params.append('id', id.toString());
 
   // Append additional properties from `rest`
   for (const key in rest) {
@@ -34,7 +25,7 @@ function questionCode(query: Request): Promise<AxiosResponse> {
 
   const config = {
     method: 'post',
-    url: `https://api.xhpolaris.com/sagejavon/question/code?${params.toString()}`,
+    url: `https://api.xhpolaris.com/sagejavon/question/select?${params.toString()}`,
     headers: {
       'X-Xh-Env': 'prod',
       'X-Xh-Lane': '',
@@ -52,4 +43,4 @@ function questionCode(query: Request): Promise<AxiosResponse> {
     });
 }
 
-export { questionCode };
+export { questionSelect };
