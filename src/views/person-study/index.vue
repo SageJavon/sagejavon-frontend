@@ -7,10 +7,16 @@
       <MainCard :image="iconCode" title="代码题" @click="navigateProgram"></MainCard>
     </div>
     <div class="card history">
-      <MainCard :image="iconHistory" title="历史记录"></MainCard>
+      <MainCard :image="iconHistory" title="历史记录">
+
+      </MainCard>
     </div>
-    <div class="card hot-question"></div>
-    <div class="card recent-record"></div>
+    <div class="card hot-question">
+      <HotQuestion />
+    </div>
+    <div class="card recent-record">
+      <HistoryRecord />
+    </div>
     <div class="card daily-recommendation" @click="navigateRecommend">
       <div class="daily-container">
         <div class="left-side">
@@ -60,6 +66,9 @@ import iconComplete from "./images/complete-exercises.png"
 
 import { useRouter } from 'vue-router'
 import Echart from "./components/Echart.vue"
+import HotQuestion from "./components/HotQuestion.vue"
+import  HistoryRecord  from "./components/HistoryRecord.vue"
+
 const router = useRouter()
 function navigateProgram () {
   router.push('/program/exercise')
@@ -185,7 +194,7 @@ function navigateRecommend () {
   flex-wrap: wrap;
   justify-content: center;
   align-content: center;
-  height:100%;
+  height: 100%;
 }
 
 .statistics-row {
@@ -195,25 +204,25 @@ function navigateRecommend () {
 }
 
 .statistics-col-4 {
-  display:flex;
+  display: flex;
   align-items: center;
-  padding:6px;
+  padding: 6px;
 }
 
-.statistics-img{
-  width:40px;
+.statistics-img {
+  width: 40px;
 
 }
 
 .statistics-text {
-  font-size:20px;
+  font-size: 20px;
   color: #fff;
-  margin:7px;
+  margin: 7px;
 }
 
 .statistics-number {
   font-weight: bold;
-  font-size:30px;
+  font-size: 30px;
   color: #ffffff;
 
 }
