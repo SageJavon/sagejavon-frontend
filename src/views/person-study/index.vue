@@ -67,7 +67,8 @@ import iconComplete from "./images/complete-exercises.png"
 import { useRouter } from 'vue-router'
 import Echart from "./components/Echart.vue"
 import HotQuestion from "./components/HotQuestion.vue"
-import  HistoryRecord  from "./components/HistoryRecord.vue"
+import HistoryRecord from "./components/HistoryRecord.vue"
+
 
 const router = useRouter()
 function navigateProgram () {
