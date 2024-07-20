@@ -72,10 +72,9 @@ async function fetchData(pageNum: number) {
 
 
 
-<style lang="scss">
+<style lang="scss" scoped>
 .container {
 	padding: 10px;
-	min-height: 100vh;
 	/* Ensure container stretches to full viewport height */
 }
 
@@ -91,21 +90,21 @@ async function fetchData(pageNum: number) {
 	/* Placeholder text color */
 }
 
-.hot-question{
-	display:flex;
+.hot-question {
+	display: flex;
 	justify-content: center;
-	align-content:center;
-	padding:2px;
+	align-content: center;
+	padding: 2px;
 }
 
-.hot-title{
-	color:#ffffff;
-	align-content:center;
-	font-size:24px;
-	padding-left:8px;
+.hot-title {
+	color: #ffffff;
+	align-content: center;
+	font-size: 24px;
+	padding-left: 8px;
 }
 
-.hot-icon{
-	align-content:center;
+.hot-icon {
+	align-content: center;
 }
 </style>

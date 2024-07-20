@@ -75,11 +75,10 @@ const totalPages = computed(() => 11);
 
 
 
-<style lang="scss">
+<style lang="scss" scoped>
 .container {
 	background-color: #f7f7f7;
 	padding: 20px;
-	min-height: 100vh;
 	/* Ensure container stretches to full viewport height */
 }
 
@@ -87,7 +86,7 @@ const totalPages = computed(() => 11);
 	position: absolute;
 	right: 0px;
 	bottom: 0;
-	width:100%;
+	width: 100%;
 	background-color: #f7f7f7;
 	padding: 10px 20px;
 	z-index: 1000;
@@ -95,6 +94,7 @@ const totalPages = computed(() => 11);
 	justify-content: center;
 	/* Ensure pagination is above other content */
 }
+
 .loading-placeholder {
 	display: flex;
 	justify-content: center;
