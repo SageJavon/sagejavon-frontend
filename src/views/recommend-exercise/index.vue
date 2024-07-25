@@ -57,7 +57,7 @@ async function fetchData() {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .container {
 	background-color: #f7f7f7;
 	position: absolute;

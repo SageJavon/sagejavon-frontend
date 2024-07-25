@@ -7,10 +7,9 @@ function questionRecommend(query: number): Promise<AxiosResponse> {
   //   portrait: userInfo.portrait,
   //   gender: userInfo.gender === 'female' ? 0 : 1,
   // }
-
   const config = {
     method: 'get',
-    url: `https://api.xhpolaris.com/sagejavon/question/recommend?questionNum=${query}`,
+    url: `https://api.xhpolaris.com/sagejavon/question/recommend?questionNum=${query}&difficultyOrder=0`,
     headers: {
       'X-Xh-Env': 'prod',
       'X-Xh-Lane': '',
@@ -18,6 +17,7 @@ function questionRecommend(query: number): Promise<AxiosResponse> {
       'token': localStorage.getItem('user-token'),
     },
   }
+
 
   return axios(config)
     .then((response: AxiosResponse) => {
