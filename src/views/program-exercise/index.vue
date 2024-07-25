@@ -50,8 +50,8 @@ async function fetchData(pageNum: number) {
 		const query = {
 			pageNum,
 			pageSize,
-			type: 0, // Assuming you want to fetch questions of type 0
-			// You can add more query parameters here if needed
+			type: 0,
+			difficultyOrder: 0
 		};
 		const response = await questionProgram(query);
 		questions.value = response.data.data.exerciseList; // Update questions with fetched data

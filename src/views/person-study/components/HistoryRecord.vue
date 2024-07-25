@@ -52,8 +52,8 @@ async function fetchData(pageNum: number) {
 		const query = {
 			pageNum,
 			pageSize,
-			type: 1, // Assuming you want to fetch questions of type 0
-			// You can add more query parameters here if needed
+			type: 1,
+			difficultyOrder: 0
 		};
 		const response = await hotChoice(query);
 		console.log(response)
