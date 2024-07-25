@@ -69,9 +69,6 @@ async function fetchData(pageNum: number) {
 
 
 </script>
-
-
-
 <style lang="scss" scoped>
 .container {
 	padding: 10px;
