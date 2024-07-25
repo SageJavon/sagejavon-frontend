@@ -1,4 +1,5 @@
 <template>
+	<search-filter @update:query="handleSearch"></search-filter>
 	<div class="container">
 		<div v-if="isLoading" class="loading-placeholder">
 			Loading data...
@@ -14,6 +15,7 @@
 import { ref, onMounted } from 'vue';
 import exerciseList from '@/components/exercise/exercise-list.vue';
 import { questionRecommend } from './api/question_recommend';
+import SearchFilter from '@/components/exercise/SearchFilter.vue';
 
 interface KnowledgeConcept {
 	knowledgeId: number;
@@ -66,6 +68,7 @@ async function fetchData() {
 	margin: 0;
 	width: 100%;
 	height: 100%;
+	margin-top:20%;
 }
 
 .loading-placeholder {
@@ -77,5 +80,11 @@ async function fetchData() {
 	font-size: 1.5rem;
 	color: #555;
 	/* Placeholder text color */
+}
+
+.list-title {
+	font-size: 16px;
+	color:#555;
+	margin-top: 5px;
 }
 </style>

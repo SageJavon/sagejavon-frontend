@@ -6,10 +6,8 @@
     <div class="card code-question">
       <MainCard :image="iconCode" title="代码题" @click="navigateProgram"></MainCard>
     </div>
-    <div class="card history">
-      <MainCard :image="iconHistory" title="历史记录">
-
-      </MainCard>
+    <div class="card history" @click="navigateHistory">
+      <MainCard :image="iconHistory" title="历史记录" ></MainCard>
     </div>
     <div class="card hot-question">
       <HotQuestion />
@@ -78,7 +76,10 @@ function navigateChoice () {
   router.push('/choice/exercise')
 }
 function navigateRecommend () {
-  router.push('/recommend/exercise')
+  router.push('/recommend/exercise') 
+}
+function navigateHistory () {
+  router.push('/history')
 }
 
 </script>
