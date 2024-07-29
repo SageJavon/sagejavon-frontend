@@ -21,9 +21,12 @@ function questionCode(query: Request): Promise<AxiosResponse> {
   const { answer, id,submitNum, ...rest } = query;
 
   const params = new URLSearchParams();
-  params.append('answer', answer?.toString() || '');
 	params.append('id', id.toString());
-	params.append('submitNum',submitNum.toString())
+  params.append('submitNum', submitNum.toString())
+  
+  const data = {
+    'answer':answer
+  }
 
   // Append additional properties from `rest`
   for (const key in rest) {
@@ -41,6 +44,7 @@ function questionCode(query: Request): Promise<AxiosResponse> {
       'Content-Type': 'application/json',
       'token': localStorage.getItem('user-token') || '',
     },
+    data
   };
 
   return axios(config)

@@ -31,10 +31,12 @@
 					</div>
 				</div>
 				<div v-if="activeTab === 'history'">
-					<p>这里显示历史记录...</p>
+					<div v-if="records.length!=0"><history-list :records="records"></history-list></div>
+					<div v-else>还没有答题记录</div>
 				</div>
 				<div v-if="activeTab === 'solution'">
-					<p>这里显示正确题解...</p>
+					<monaco-editor v-model="correct" :language="language" width="100%" height="500px"
+					@editor-mounted="editorMounted"></monaco-editor>
 				</div>
 			</div>
 		</div>
@@ -50,19 +52,24 @@
 					@editor-mounted="editorMounted"></monacoEditor>
 
 			</div>
-			<NButton style="width:100%;margin-top:5px" type="primary" @click="submitCode">提交代码</NButton>
+			<NButton v-if="!isLoading" style="width:100%;margin-top:5px" type="primary" @click="submitCode">提交代码
+			</NButton>
+			<NButton v-if="isLoading" style="width:100%;margin-top:5px" type="info" disabled>正在评分中...
+			</NButton>
 		</div>
 		<!-- <DragBall /> -->
 
 		<NModal v-model:show="showModal" class="custom-card" preset="card" :style="bodyStyle" :title="'您的得分为:' + score"
 			size="huge" :bordered="false" :segmented="segmented">
+			正确答案：
+			{{ correctAnswer==null?'暂无':correctAnswer }}
 			<v-md-preview :text="suggestion"></v-md-preview>
 		</NModal>
 	</div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref,onMounted } from 'vue';
 import * as monaco from 'monaco-editor'
 import monacoEditor from './components/monacoEditor.vue';
 import DragBall from './components/DragBall.vue'
@@ -71,8 +78,9 @@ import { programDetails } from './api/program_detail';
 import { NButton, NModal } from 'naive-ui';
 import { questionCode } from './api/question_code';
 import ModalDialog from './components/ModalDialog.vue'
-
-
+import historyList from '@/components/exercise/history-list.vue';
+import {recordList} from './api/record_list'
+import {codeRecordDetail} from '@/components/exercise/api/code_record_detail';
 const bodyStyle = ref({
 	width: '700px',
 })
@@ -91,6 +99,50 @@ const language = ref('java')
 const editorMounted = (editor: monaco.editor.IStandaloneCodeEditor) => {
 	console.log('editor实例加载完成', editor)
 }
+
+
+interface KnowledgeConcept {
+	knowledgeId: number;
+	knowledge: string;
+}
+
+
+export interface ExerciseRecordList {
+	difficulty: number;
+	exerciseId: number;
+	knowledgeConcept: KnowledgeConcept[];
+	questionText: string;
+	recordId: number;
+	score: number;
+	submitTime: string;
+	type: number;
+}
+
+const records = ref<ExerciseRecordList[]>([]);
+const correctAnswer=ref("")
+const correct=ref("")
+// const response = await recordList(Number(questionId.value));
+// console.log(response)
+// records.value = response.data.data
+// console.log(records.value)
+
+onMounted(()=>{
+	recordList(questionId.value).then((res)=>{
+		console.log(res)
+		records.value=res.data.data
+	})
+
+	// 获取正确答案
+	codeRecordDetail(questionId.value)
+		.then((response) => {
+			correct.value=response.data.data.correctAnswer
+
+		})
+		.catch((error) => {
+			console.error('提交失败:', error);
+			// Handle error
+		});
+})
 
 export interface Program {
 	difficulty: number;
@@ -122,7 +174,6 @@ const getProgramDetail = async () => {
 	try {
 		const res = await programDetails(questionId.value) // 假设 chatList 是一个异步请求函数
 		if (res.status === 200) {
-			console.log(res)
 			programDetail.value = res.data.data
 		}
 		else {
@@ -146,58 +197,30 @@ const score = ref(0)
 
 const suggestion = ref("")
 
+const isLoading = ref(false)
+
+const submitNum=ref(0)
+
 function submitCode(choice: string) {
+	isLoading.value = true
+	submitNum.value+=1
 	const request = {
 		id: questionId.value,
 		answer: code.value,
-		submitNum: 1
+		submitNum: submitNum.value
 	};
+	console.log(request)
 
 	questionCode(request)
 		.then((response) => {
 			console.log('提交成功:', response.data);
 			score.value = response.data.data.score
 			// suggestion.value = response.data.data.suggestion
-			suggestion.value = `
-
-## 学习建议
-- **理解基础概念：**
-  - 确保理解变量的概念，如何声明和使用。
-  - 理解赋值语句和表达式的执行顺序。
-
-- **掌握基本语法：**
-  - 熟悉 Java 中的数据类型（如 int）、运算符和基本语句（如 if、for、while）。
-
-- **学习调试技巧：**
-  - 学会使用断点和调试器来逐步执行代码，观察变量的变化和程序的执行流程，这样可以更清晰地理解代码的运行过程。
-
-- **加强对控制流的理解：**
-  - 练习使用条件语句（if-else）、循环语句（for、while）等，控制程序的流程和逻辑。
-
-- **尝试更复杂的示例和项目：**
-  - 通过解决问题或实现小项目来应用所学知识，这有助于加深理解和掌握编程技能。
-
-## 学习资源推荐：
-- **网上课程和教程：**
-  - Coursera 和 edX 等平台上有很多优秀的计算机科学课程，可以免费学习或付费学习。
-  - Oracle 官方文档：Java 编程语言的官方文档提供了详尽的学习资料和示例。
-
-- **书籍：**
-  - 《Thinking in Java》 by Bruce Eckel：这本书被认为是入门 Java 编程的经典之作，适合初学者阅读。
-  - 《Effective Java》 by Joshua Bloch：虽然更适合有一定经验的开发人员，但对理解 Java 语言的特性和最佳实践也非常有帮助。
-
-- **在线资源：**
-  - Stack Overflow：一个社区驱动的问答网站，可以在这里找到关于 Java 编程的各种问题和解答。
-  - GitHub：浏览开源项目的代码库，了解其他开发者是如何使用 Java 的。
-
-- **练习平台：**
-  - LeetCode、HackerRank 等在线编程练习平台提供了大量的编程题目和挑战，适合练习算法和数据结构的应用。
-
-总结：
-通过深入学习和练习，结合有效的学习资源和平台，这位学生可以逐步提升他的 Java 编程技能。重要的是保持耐心和持续的学习态度，编程技能是通过不断练习和实践来提升的！
-
-			`
+			console.log(response.data.data)
+			suggestion.value = response.data.data.suggestion
+			correctAnswer.value = response.data.data.correctAnswer
 			showModal.value = true
+			isLoading.value = false
 
 		})
 		.catch((error) => {

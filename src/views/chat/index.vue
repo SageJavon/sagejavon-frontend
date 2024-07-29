@@ -96,19 +96,6 @@ async function onConversation() {
   loading.value = true
   prompt.value = ''
   const options: Chat.ConversationRequest = { conversationId: usingContext.value ? window.location.hash : Math.random().toString() }
-  addChat(
-    +localStorage.getItem('active-uuid'),
-    {
-      dateTime: new Date().toLocaleString(),
-      text: 'SageJavon思考中....',
-      loading: true,
-      inversion: false,
-      error: false,
-      conversationOptions: null,
-      requestOptions: { prompt: message, options: { ...options } },
-    },
-  )
-  scrollToBottom()
   try {
     // 发起后端请求获取模型响应
     const response = await fetch('https://rag.xhpolaris.com/open_kf_api/queries/smart_query_stream', {
@@ -121,48 +108,67 @@ async function onConversation() {
         user_id: '9ddc73e1-4992-4618-9e58-5bdf57bf3b91',
       }),
     })
-
-    if (!response.body)
-      return
-
-    const reader = response.body.pipeThrough(new TextDecoderStream()).getReader()
-    let finalResponse = ''
-    while (true) {
-      const { value, done } = await reader.read()
-      if (done)
-        break
-
-      console.log(finalResponse)
-      updateChat(+localStorage.getItem('active-uuid'), dataSources.value.length - 1, {
+    console.log(response)
+    if(response.status==500){
+        addChat(+localStorage.getItem('active-uuid'), {
         dateTime: new Date().toLocaleString(),
-        text: finalResponse,
+        text: '账户已经欠费，请联系工作人员进行充值！',
         inversion: false,
-        error: false,
+        error: true,
         loading: false,
-        conversationOptions: {},
-        requestOptions: { prompt: message, options: {} },
+        conversationOptions: null,
+        requestOptions: { prompt: '账户已经欠费，请联系工作人员进行充值！', options: {} },
       })
-      // 累加接收到的数据块
-      finalResponse += value
-    }
+    }else if(response.status==200){
+      addChat(
+        +localStorage.getItem('active-uuid'),
+        {
+          dateTime: new Date().toLocaleString(),
+          text: 'SageJavon思考中....',
+          loading: true,
+          inversion: false,
+          error: false,
+          conversationOptions: null,
+          requestOptions: { prompt: message, options: { ...options } },
+    },
+  )
+  scrollToBottom()
+       const reader = response.body.pipeThrough(new TextDecoderStream()).getReader()
+      let finalResponse = ''
+      while (true) {
+        const { value, done } = await reader.read()
+        if (done)
+          break
 
-    scrollToBottom()
+        console.log(finalResponse)
+        updateChat(+localStorage.getItem('active-uuid'), dataSources.value.length - 1, {
+          dateTime: new Date().toLocaleString(),
+          text: finalResponse,
+          inversion: false,
+          error: false,
+          loading: false,
+          conversationOptions: {},
+          requestOptions: { prompt: message, options: {} },
+        })
+        // 累加接收到的数据块
+        finalResponse += value
+      }
+
+      scrollToBottom()
+      }
   }
   catch (error: any) {
-    console.error('Error calling GLM:', error)
-
-    const errorMessage = error?.text ?? t('common.wrong')
-
-    // 如果调用出错，添加错误消息到聊天记录
-    addChat(+localStorage.getItem('active-uuid'), {
-      dateTime: new Date().toLocaleString(),
-      text: errorMessage,
-      inversion: false,
-      error: true,
-      loading: false,
-      conversationOptions: null,
-      requestOptions: { prompt: message, options: {} },
-    })
+    // console.error('Error calling GLM:', error)
+    // // 如果调用出错，添加错误消息到聊天记录
+    // addChat(+localStorage.getItem('active-uuid'), {
+    //   dateTime: new Date().toLocaleString(),
+    //   text: '账户已经欠费，请联系工作人员进行充值！',
+    //   inversion: false,
+    //   error: true,
+    //   loading: false,
+    //   conversationOptions: null,
+    //   requestOptions: { prompt: message, options: {} },
+    // })
 
     scrollToBottom()
   }
