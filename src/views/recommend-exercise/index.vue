@@ -45,6 +45,7 @@ async function fetchData() {
     try {
         const response = await questionRecommend(10);
         questions.value = response.data.data;
+		console.log(response)
     } catch (err) {
         console.error('Error fetching data:', err);
         error.value = 'Failed to fetch data'; // Update error message

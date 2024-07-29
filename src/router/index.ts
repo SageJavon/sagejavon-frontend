@@ -13,30 +13,6 @@ const routes: RouteRecordRaw[] = [
     },
   },
   {
-    path: '/chat',
-    name: 'Chat',
-    component: ChatLayout,
-    redirect: '/chat',
-    meta: {
-      requiresAuth: true,
-    },
-    children: [
-      {
-        path: '/knowledge/skills',
-        name: 'knowledgeSkills',
-        component: () => import('@/views/knowledge-skills/index.vue'),
-      },
-      {
-        path: '/chat/:uuid?',
-        name: 'Chat',
-        component: () => import('@/views/chat/index.vue'),
-      },
-      {
-        path: '/person/study',
-        name: 'personStudy',
-        component: () => import('@/views/person-study/index.vue'),
-      },
-      {
         path: '/program/list',
         name: 'programList',
         component: () => import('@/views/program-list/index.vue'),
@@ -75,6 +51,30 @@ const routes: RouteRecordRaw[] = [
         path: '/history',
         name: 'history',
         component: () => import('@/views/history/index.vue')
+      },
+  {
+    path: '/chat',
+    name: 'Chat',
+    component: ChatLayout,
+    redirect: '/chat',
+    meta: {
+      requiresAuth: true,
+    },
+    children: [
+      {
+        path: '/knowledge/skills',
+        name: 'knowledgeSkills',
+        component: () => import('@/views/knowledge-skills/index.vue'),
+      },
+      {
+        path: '/chat/:uuid?',
+        name: 'Chat',
+        component: () => import('@/views/chat/index.vue'),
+      },
+      {
+        path: '/person/study',
+        name: 'personStudy',
+        component: () => import('@/views/person-study/index.vue'),
       }
     ],
   },
