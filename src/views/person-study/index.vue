@@ -78,8 +78,12 @@ function navigateChoice () {
   router.push('/choice/exercise')
 }
 function navigateRecommend () {
-  router.push('/recommend/exercise')
+  router.push('/recommend/exercise') 
 }
+//TODO:合并筛选和历史记录
+// function navigateHistory () {
+//   router.push('/history')
+// }
 function navigateHistory () {
   router.push('/program/history')
 }

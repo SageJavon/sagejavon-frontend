@@ -1,7 +1,7 @@
 import type { AxiosError, AxiosResponse } from 'axios'
 import axios from 'axios'
 
-function questionRecommend(query: number): Promise<AxiosResponse> {
+function questionRecommend(query: string): Promise<AxiosResponse> {
   // const data = {
   //   nickname: userInfo.nickname,
   //   portrait: userInfo.portrait,
@@ -11,8 +11,6 @@ function questionRecommend(query: number): Promise<AxiosResponse> {
     method: 'get',
     url: `https://api.xhpolaris.com/sagejavon/question/recommend?questionNum=${query}&difficultyOrder=0`,
     headers: {
-      'X-Xh-Env': 'prod',
-      'X-Xh-Lane': '',
       'Content-Type': 'application/json',
       'token': localStorage.getItem('user-token'),
     },
