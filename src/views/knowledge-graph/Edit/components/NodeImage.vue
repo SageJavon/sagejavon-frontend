@@ -23,7 +23,7 @@
 
 <script setup>
 /**
- * @Author: 黄原寅
+ * 
  * @Desc: 节点图片内容设置
  */
 import { onBeforeMount, onMounted, ref } from 'vue'
@@ -74,7 +74,7 @@ const onchange = src => {
 }
 
 /**
- * @Author: 黄原寅
+ * 
  * @Desc: 取消
  */
 const cancel = () => {
@@ -90,7 +90,7 @@ const reset = () => {
 }
 
 /**
- * @Author: 黄原寅
+ * 
  * @Desc:  确定
  */
 const confirm = async () => {

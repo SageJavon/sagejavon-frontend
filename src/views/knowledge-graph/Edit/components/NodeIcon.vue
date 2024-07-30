@@ -23,7 +23,7 @@ import { nodeIconList } from 'simple-mind-map/src/svg/icons'
 import icon from '@/config/icon'
 import bus from '@/utils/bus.js'
 /**
- * @Author: 黄原寅
+ * 
  * @Desc: 节点图标内容设置
  */
 export default {
@@ -62,7 +62,7 @@ export default {
       return /^<svg/.test(icon) ? icon : `<img src="${icon}" />`
     },
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 设置icon
      */
     setIcon(type, name) {

@@ -35,7 +35,7 @@
 
 <script setup>
 /**
- * @Author: 黄原寅
+ * 
  * @Desc: 节点标签内容设置
  */
 import { onBeforeMount, onMounted, ref } from 'vue'
@@ -75,7 +75,7 @@ const handleShowNodeTag = () => {
 }
 
 /**
- * @Author: 黄原寅
+ * 
  * @Desc: 添加
  */
 const add = () => {
@@ -84,7 +84,7 @@ const add = () => {
 }
 
 /**
- * @Author: 黄原寅
+ * 
  * @Desc: 删除
  */
 const del = index => {
@@ -92,7 +92,7 @@ const del = index => {
 }
 
 /**
- * @Author: 黄原寅
+ * 
  * @Desc: 取消
  */
 const cancel = () => {
@@ -101,7 +101,7 @@ const cancel = () => {
 }
 
 /**
- * @Author: 黄原寅
+ * 
  * @Desc:  确定
  */
 const confirm = () => {

@@ -14,7 +14,6 @@
     </div>
   </div>
 </template>
-
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
 import exerciseList from '@/components/exercise/exercise-list.vue';
@@ -74,23 +73,22 @@ function handlePaginationChange(pageNum: number) {
 const totalPages = computed(() => 11);
 
 </script>
-
 <style lang="scss" scoped>
 .full-height {
   height: 100vh; /* Ensure full viewport height */
-  width:100%;
   display: flex;
-  flex-direction: column;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  flex-direction: column; /* Stack children vertically */
 }
 
 .container {
   flex: 1; /* Take remaining space */
   padding: 20px;
-  justify-content:center;
-  justify-items:center;
-  align-content:center;
-  align-items:center;
-  /* Ensure container stretches to full viewport height */
+  width: 100vw;
+  display: flex;
+  justify-content: center; /* Center content horizontally */
+  align-items: center; /* Center content vertically */
 }
 
 .sticky-pagination {

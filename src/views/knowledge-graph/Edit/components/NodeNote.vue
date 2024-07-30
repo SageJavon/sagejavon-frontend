@@ -24,7 +24,7 @@ import Editor from '@toast-ui/editor'
 import '@toast-ui/editor/dist/toastui-editor.css' // Editor's Style
 import bus from '@/utils/bus.js'
 /**
- * @Author: 黄原寅
+ * 
  * @Desc: 节点备注内容设置
  */
 const dialogVisible = ref(false)
@@ -62,7 +62,7 @@ const handleShowNodeNote = () => {
 }
 
 /**
- * @Author: 黄原寅
+ * 
  * @Desc: 初始化编辑器
  */
 const initEditor = () => {
@@ -78,7 +78,7 @@ const initEditor = () => {
 }
 
 /**
- * @Author: 黄原寅
+ * 
  * @Desc: 取消
  */
 const cancel = () => {
@@ -87,7 +87,7 @@ const cancel = () => {
 }
 
 /**
- * @Author: 黄原寅
+ * 
  * @Desc:  确定
  */
 const confirm = () => {

@@ -1,5 +1,6 @@
 <template>
-	<div class="container">
+	<div class="full-height">
+		<div class="container">
 		<div class="container-two">
 			<div class="sidebar">
 				<div class="tabs">
@@ -74,6 +75,7 @@
 				</div>
 			</div>
 		</div>
+	</div>
 	</div>
 </template>
 
@@ -186,21 +188,25 @@ function getNextQuestionId(currentId) {
 }
 </script>
 <style scoped>
-.container {
-	display: flex;
-	/* Add padding to container */
-	height: 100%;
-	/* Adjust the height to make the container full height */
-	overflow: hidden;
-	/* Hide overflow to avoid scrollbars */
-	/* Add gap between sidebar and main */
-	width: 100%;
-	justify-content: center;
-	align-items: center;
-	background-color: #F7F7F7;
 
-
+.full-height {
+  height: 100vh; /* Ensure full viewport height */
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  flex-direction: column; /* Stack children vertically */
+  background-color: #F7F7F7;
 }
+
+.container {
+  flex: 1; /* Take remaining space */
+  padding: 20px;
+  width: 100vw;
+  display: flex;
+  justify-content: center; /* Center content horizontally */
+  align-items: center; /* Center content vertically */
+}
+
 
 .container-two {
 	width: 60%;

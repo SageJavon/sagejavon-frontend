@@ -17,7 +17,7 @@
 
 <!-- <script setup>
 /**
- * @Author: 黄原寅
+ * 
  * @Desc: 快捷键功能
  */
 import { ref, onMounted, nextTick, computed } from 'vue'

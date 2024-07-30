@@ -260,7 +260,7 @@ import {
 import bus from '@/utils/bus.js'
 import { mapState } from 'vuex'
 /**
- * @Author: 黄原寅
+ * 
  * @Desc: 节点样式设置
  */
 export default {
@@ -330,7 +330,7 @@ export default {
   },
   methods: {
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 监听节点激活事件
      */
     onNodeActive(...args) {
@@ -343,7 +343,7 @@ export default {
     },
 
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 初始
      */
     initNodeStyle() {
@@ -375,7 +375,7 @@ export default {
     },
 
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 修改样式
      */
     update(prop) {
@@ -385,7 +385,7 @@ export default {
     },
 
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 切换加粗样式
      */
     toggleFontWeight() {
@@ -398,7 +398,7 @@ export default {
     },
 
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 切换字体样式
      */
     toggleFontStyle() {
@@ -411,7 +411,7 @@ export default {
     },
 
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 修改字体颜色
      */
     changeFontColor(color) {
@@ -420,7 +420,7 @@ export default {
     },
 
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 修改边框颜色
      */
     changeBorderColor(color) {
@@ -429,7 +429,7 @@ export default {
     },
 
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 修改线条颜色
      */
     changeLineColor(color) {
@@ -438,7 +438,7 @@ export default {
     },
 
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 修改背景颜色
      */
     changeFillColor(color) {

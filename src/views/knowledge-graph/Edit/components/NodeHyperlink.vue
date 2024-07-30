@@ -29,7 +29,7 @@
 import { ref, onMounted, onBeforeMount } from 'vue'
 import bus from '@/utils/bus.js'
 /**
- * @Author: 黄原寅
+ * 
  * @Desc: 节点超链接内容设置
  */
 const dialogVisible = ref(false)
@@ -84,7 +84,7 @@ const handleShowNodeLink = () => {
 }
 
 /**
- * @Author: 黄原寅
+ * 
  * @Desc: 取消
  */
 const cancel = () => {
@@ -94,7 +94,7 @@ const cancel = () => {
 }
 
 /**
- * @Author: 黄原寅
+ * 
  * @Desc:  确定
  */
 const confirm = () => {

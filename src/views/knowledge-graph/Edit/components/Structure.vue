@@ -26,7 +26,7 @@ import bus from '@/utils/bus.js'
 import { mapState, useStore } from 'vuex'
 import { layoutImgMap } from '@/config/constant.js'
 /**
- * @Author: 黄原寅
+ * 
  * @Desc: 结构
  */
 const props = defineProps({
@@ -63,7 +63,7 @@ onMounted(() => {
   })
 })
 /**
- * @Author: 黄原寅
+ * 
  * @Desc: 使用主题
  */
 const useLayout = layout => {

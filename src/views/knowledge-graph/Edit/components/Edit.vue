@@ -107,7 +107,7 @@ customThemeList.forEach(item => {
 })
 
 /**
- * @Author: 黄原寅
+ * 
  * @Desc: 编辑区域
  */
 export default {
@@ -278,7 +278,7 @@ export default {
       }
     },
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 获取思维导图数据，实际应该调接口获取
      */
     getData() {
@@ -295,7 +295,7 @@ export default {
     },
 
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 存储数据当数据有变时
      */
     bindSaveEvent() {
@@ -313,7 +313,7 @@ export default {
     },
 
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 手动保存
      */
     manualSave() {
@@ -328,7 +328,7 @@ export default {
     },
 
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 初始化
      */
     init() {
@@ -466,7 +466,7 @@ export default {
     },
 
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 动态设置思维导图数据
      */
     setData(data) {
@@ -482,7 +482,7 @@ export default {
     },
 
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 重新渲染
      */
     reRender() {
@@ -490,7 +490,7 @@ export default {
     },
 
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 执行命令
      */
     execCommand(args) {
@@ -498,7 +498,7 @@ export default {
     },
 
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 导出
      */
     async export(args) {
@@ -513,7 +513,7 @@ export default {
     },
 
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 修改导出内边距
      */
     onPaddingChange(data) {
@@ -521,7 +521,7 @@ export default {
     },
 
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 显示新特性提示
      */
     showNewFeatureInfo() {
@@ -539,7 +539,7 @@ export default {
     },
 
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 加载节点富文本编辑插件
      */
     addRichTextPlugin() {
@@ -548,7 +548,7 @@ export default {
     },
 
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 移除节点富文本编辑插件
      */
     removeRichTextPlugin() {

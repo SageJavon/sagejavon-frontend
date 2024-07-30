@@ -1,5 +1,6 @@
 <template>
-	<div class="container">
+	<div class="full-height">
+		<div class="container">
 		<div class="sidebar">
 			<div class="tabs">
 				<div class="circle-flex">
@@ -65,6 +66,7 @@
 			{{ correctAnswer==null?'暂无':correctAnswer }}
 			<v-md-preview :text="suggestion"></v-md-preview>
 		</NModal>
+	</div>
 	</div>
 </template>
 
@@ -231,6 +233,15 @@ function submitCode(choice: string) {
 </script>
 
 <style scoped>
+
+.full-height {
+  height: 100vh; /* Ensure full viewport height */
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  flex-direction: column; /* Stack children vertically */
+  background-color: #F7F7F7;
+}
 .container {
 	display: flex;
 	padding: 20px;

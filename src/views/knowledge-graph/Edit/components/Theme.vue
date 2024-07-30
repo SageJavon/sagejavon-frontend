@@ -22,7 +22,7 @@
 
 <script setup>
 /**
- * @Author: 黄原寅寅
+ * 寅
  * @Desc: 主题
  */
 import { ref, defineProps, onMounted, computed, watch, onBeforeMount } from 'vue'
@@ -132,7 +132,7 @@ const initGroup = () => {
 }
 
 /**
- * @Author: 黄原寅寅
+ * 寅
  * @Desc: 使用主题
  */
 const useTheme = item => {

@@ -16,7 +16,7 @@
 
 <script setup>
 /**
- * @Author: 黄原寅
+ * 
  * @Desc: 放大缩小
  */
 import { ref, defineProps, watch } from 'vue'
@@ -47,7 +47,7 @@ watch(
 )
 
 /**
- * @Author: 黄原寅
+ * 
  * @Desc: 转换成百分数
  */
 const toPer = scale => {
@@ -55,7 +55,7 @@ const toPer = scale => {
 }
 
 /**
- * @Author: 黄原寅
+ * 
  * @Desc: 缩小
  */
 
@@ -64,7 +64,7 @@ const narrow = () => {
 }
 
 /**
- * @Author: 黄原寅
+ * 
  * @Desc: 放大
  */
 const enlarge = () => {

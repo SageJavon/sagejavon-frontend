@@ -20,21 +20,21 @@ const store = createStore({
   },
   mutations: {
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 设置思维导图数据
      */
     setMindMapData(state, data) {
       state.mindMapData = data
     },
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 设置操作本地文件标志位
      */
     setIsHandleLocalFile(state, data) {
       state.isHandleLocalFile = data
     },
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 设置本地配置
      */
     setLocalConfig(state, data) {
@@ -45,21 +45,21 @@ const store = createStore({
       storeLocalConfig(state.localConfig)
     },
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 设置当前显示的侧边栏
      */
     setActiveSidebar(state, data) {
       state.activeSidebar = data
     },
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 设置暗黑模式
      */
     setIsDark(state, data) {
       state.isDark = data
     },
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 设置大纲编辑模式
      */
     setIsOutlineEdit(state, data) {
@@ -72,7 +72,7 @@ const store = createStore({
   },
   actions: {
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 设置初始思维导图数据
      */
     getUserMindMapData(ctx) {

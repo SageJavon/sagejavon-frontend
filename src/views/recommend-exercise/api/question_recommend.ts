@@ -17,8 +17,6 @@ function questionRecommend(num: string): Promise<AxiosResponse> {
     method: 'get',
     url: `https://api.xhpolaris.com/sagejavon/question/recommend?${params}`,
     headers: {
-      'X-Xh-Env': 'prod',
-      'X-Xh-Lane': '',
       'Content-Type': 'application/json',
       'token': localStorage.getItem('user-token') || '',
     },
