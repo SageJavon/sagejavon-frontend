@@ -61,6 +61,8 @@
   <script setup lang="ts">
   import { ref, onMounted, defineEmits } from 'vue';
   import { knowledgePoint } from './api/knowledge_point'; 
+  import DatePickerComponent from '@/components/DatePickerComponent.vue'; // 根据实际路径调整
+
   
   const emit = defineEmits(['update:filters', 'search']);
   
@@ -162,7 +164,7 @@ async function fetchData() {
   }
   
   .search-filter {
-    width: 100vw;
+  width: 100vw;
   background-color: #fff;
   padding: 5px;
   border-radius: 8px;

@@ -97,8 +97,9 @@ const totalPages = computed(() => pages.value);
   padding: 20px;
   width: 100vw;
   display: flex;
-  justify-content: flex-start; /* Center content horizontally */
+//   justify-content: flex-start; /* Center content horizontally */
   align-items: flex-start; /* Center content vertically */
+  box-sizing: border-box;
 }
 
 .sticky-pagination {
