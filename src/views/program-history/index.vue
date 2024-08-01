@@ -1,4 +1,5 @@
 <template>
+	<search-history @update:query="handleSearch"></search-history>
 	<div class="full-height">
 		<div class="container">
 		<div v-if="isLoading" class="loading-placeholder">
@@ -17,6 +18,7 @@
 </template>
 
 <script setup lang="ts">
+import SearchHistory from '@/components/exercise/SearchHistory.vue';
 import { ref, onMounted, computed } from 'vue';
 import historyList from '@/components/exercise/history-list.vue';
 import { recordProgram } from './api/record_program';
@@ -87,6 +89,7 @@ const totalPages = computed(() => pages.value);
   justify-content: center; /* Center horizontally */
   align-items: center; /* Center vertically */
   flex-direction: column; /* Stack children vertically */
+  margin-top: -30px;
 }
 
 .container {
@@ -94,8 +97,8 @@ const totalPages = computed(() => pages.value);
   padding: 20px;
   width: 100vw;
   display: flex;
-  justify-content: center; /* Center content horizontally */
-  align-items: center; /* Center content vertically */
+  justify-content: flex-start; /* Center content horizontally */
+  align-items: flex-start; /* Center content vertically */
 }
 
 .sticky-pagination {
