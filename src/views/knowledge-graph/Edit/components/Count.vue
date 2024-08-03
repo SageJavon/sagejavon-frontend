@@ -15,7 +15,7 @@
 import bus from '@/utils/bus.js'
 import { mapState } from 'vuex'
 /**
- * @Author: 黄原寅
+ * 
  * @Desc: 字数及节点数量统计
  */
 let countEl = document.createElement('div')
@@ -47,7 +47,7 @@ export default {
   },
   methods: {
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 监听数据变化
      */
     onDataChange(data) {
@@ -59,7 +59,7 @@ export default {
       this.words = countEl.textContent.length
     },
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 遍历
      */
     walk(data) {

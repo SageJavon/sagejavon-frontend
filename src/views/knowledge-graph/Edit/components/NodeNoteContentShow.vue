@@ -16,7 +16,7 @@ import Viewer from '@toast-ui/editor/dist/toastui-editor-viewer'
 import '@toast-ui/editor/dist/toastui-editor-viewer.css'
 import bus from '@/utils/bus.js'
 /**
- * @Author: 黄原寅
+ * 
  * @Desc: 节点备注内容显示
  */
 export default {
@@ -51,7 +51,7 @@ export default {
   },
   methods: {
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 显示备注浮层
      */
     onShowNoteContent([content, left, top, node]) {
@@ -73,14 +73,14 @@ export default {
       this.updateNoteContentPosition(left, top)
     },
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 隐藏备注浮层
      */
     hideNoteContent() {
       this.show = false
     },
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 初始化编辑器
      */
     initEditor() {

@@ -4,7 +4,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import { ChatLayout } from '@/views/chat/layout'
 
 const routes: RouteRecordRaw[] = [
-    {
+  {
     path: '/',
     name: 'Root',
     component: () => import('@/views/welcome/index.vue'),
@@ -22,11 +22,6 @@ const routes: RouteRecordRaw[] = [
     },
     children: [
       {
-        path: '/knowledge/skills',
-        name: 'knowledgeSkills',
-        component: () => import('@/views/knowledge-skills/index.vue'),
-      },
-      {
         path: '/chat/:uuid?',
         name: 'Chat',
         component: () => import('@/views/chat/index.vue'),
@@ -37,45 +32,15 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/views/person-study/index.vue'),
       },
       {
-        path: '/program/list',
-        name: 'programList',
-        component: () => import('@/views/program-list/index.vue'),
+        path: '/program/tutor',
+        name: 'programTutor',
+        component: () => import('@/views/program-tutor/index.vue'),
       },
       {
-        path: '/program/detail',
-        name: 'programDetail',
-        component: () => import('@/views/program-detail/index.vue'),
+        path: '/knowledge/skills',
+        name: 'knowledgeSkills',
+        component: () => import('@/views/knowledge-skills/index.vue'),
       },
-      {
-        path: '/choice/exercise',
-        name: 'choiceExercise',
-        component: () => import('@/views/choice-exercise/index.vue'),
-      },
-      {
-        path: '/program/exercise',
-        name: 'programExercise',
-        component: () => import('@/views/program-exercise/index.vue'),
-      },
-      {
-        path: '/recommend/exercise',
-        name: 'recommendExercise',
-        component: () => import('@/views/recommend-exercise/index.vue'),
-      },
-      {
-        path: '/choice/detail',
-        name: 'choiceDetail',
-        component: () => import('@/views/choice-detail/index.vue'),
-      },
-      {
-        path: '/program/history',
-        name: 'programHistory',
-        component: () => import('@/views/program-history/index.vue'),
-      },
-      {
-        path: '/history',
-        name: 'history',
-        component: () => import('@/views/history/index.vue')
-      }
     ],
   },
   {
@@ -94,10 +59,45 @@ const routes: RouteRecordRaw[] = [
     redirect: '/404',
   },
   {
-    path: '/knowledge/graph',
-    name: 'knowledgeGraph',
-    component: () => import('@/views/knowledge-graph/Edit/index.vue'),
-  }
+    path: '/program/list',
+    name: 'programList',
+    component: () => import('@/views/program-list/index.vue'),
+  },
+  {
+    path: '/program/detail',
+    name: 'programDetail',
+    component: () => import('@/views/program-detail/index.vue'),
+  },
+  {
+    path: '/choice/exercise',
+    name: 'choiceExercise',
+    component: () => import('@/views/choice-exercise/index.vue'),
+  },
+  {
+    path: '/program/exercise',
+    name: 'programExercise',
+    component: () => import('@/views/program-exercise/index.vue'),
+  },
+  {
+    path: '/recommend/exercise',
+    name: 'recommendExercise',
+    component: () => import('@/views/recommend-exercise/index.vue'),
+  },
+  {
+    path: '/choice/detail',
+    name: 'choiceDetail',
+    component: () => import('@/views/choice-detail/index.vue'),
+  },
+  {
+    path: '/program/history',
+    name: 'programHistory',
+    component: () => import('@/views/program-history/index.vue'),
+  },
+  {
+    path: '/history',
+    name: 'history',
+    component: () => import('@/views/history/index.vue')
+  },
 ]
 
 export const router = createRouter({

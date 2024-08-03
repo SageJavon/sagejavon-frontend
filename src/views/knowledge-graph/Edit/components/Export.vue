@@ -58,7 +58,7 @@
 
 <script setup>
 /**
- * @Author: 黄原寅
+ * 
  * @Desc: 导出功能
  */
 import { onMounted, ref, computed, onBeforeMount } from 'vue'
@@ -105,7 +105,7 @@ const onPaddingChange = () => {
 }
 
 /**
- * @Author: 黄原寅
+ * 
  * @Desc: 取消导出
  */
 const cancel = () => {
@@ -113,7 +113,7 @@ const cancel = () => {
 }
 
 /**
- * @Author: 黄原寅
+ * 
  * @Desc:  确定导出
  */
 const confirm = () => {

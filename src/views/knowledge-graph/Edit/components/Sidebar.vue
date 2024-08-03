@@ -19,7 +19,7 @@ import { mapState, mapMutations } from 'vuex'
 import bus from '@/utils/bus.js'
 
 /**
- * @Author: 黄原寅
+ * 
  * @Desc: 侧边栏容器
  */
 export default {

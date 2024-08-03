@@ -41,7 +41,7 @@ export default {
   },
   methods: {
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 图片选择事件
      */
     onImgUploadInputChange(e) {
@@ -51,7 +51,7 @@ export default {
     },
 
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 拖动上传图片
      */
     onDrop(e) {
@@ -61,7 +61,7 @@ export default {
     },
 
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 选择图片
      */
     selectImg(file) {
@@ -74,7 +74,7 @@ export default {
     },
 
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 获取图片大小
      */
     getSize() {
@@ -97,7 +97,7 @@ export default {
     },
 
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 删除图片
      */
     deleteImg() {

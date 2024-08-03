@@ -1,5 +1,6 @@
 <template>
-	<div class="container">
+	<div class="full-height">
+		<div class="container">
 		<div v-if="isLoading" class="loading-placeholder">
 			Loading data...
 			<!-- You can replace this with a spinner or any loading animation -->
@@ -11,6 +12,7 @@
 	<div class="sticky-pagination" v-if="!isLoading && questions.length > 0">
 		<n-pagination v-model:page="currentPage" :page-count="totalPages" show-quick-jumper
 			@update:page="handlePaginationChange"></n-pagination>
+	</div>
 	</div>
 </template>
 
@@ -76,33 +78,42 @@ const totalPages = computed(() => 11);
 
 
 <style lang="scss" scoped>
+.full-height {
+  height: 100vh; /* Ensure full viewport height */
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  flex-direction: column; /* Stack children vertically */
+}
+
 .container {
-	background-color: #f7f7f7;
-	padding: 20px;
-	/* Ensure container stretches to full viewport height */
+  flex: 1; /* Take remaining space */
+  padding: 20px;
+  width: 100vw;
+  display: flex;
+  justify-content: center; /* Center content horizontally */
+  align-items: center; /* Center content vertically */
 }
 
 .sticky-pagination {
-	position: absolute;
-	right: 0px;
-	bottom: 0;
-	width: 100%;
-	background-color: #f7f7f7;
-	padding: 10px 20px;
-	z-index: 1000;
-	display: flex;
-	justify-content: center;
-	/* Ensure pagination is above other content */
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+  background-color: #f7f7f7;
+  padding: 10px 20px;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  /* Ensure pagination is above other content */
 }
 
 .loading-placeholder {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	height: 200px;
-	/* Adjust height based on your design */
-	font-size: 1.5rem;
-	color: #555;
-	/* Placeholder text color */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px; /* Adjust height based on your design */
+  font-size: 1.5rem;
+  color: #555; /* Placeholder text color */
 }
 </style>
+

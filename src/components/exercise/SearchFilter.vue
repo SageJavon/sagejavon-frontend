@@ -121,10 +121,13 @@ async function fetchData() {
 
 .search-filter {
   background-color: #fff;
-  padding: 5px;
+  /* padding: 5px; */
+  padding: 0;
+  box-sizing: border-box;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  margin: 20px 20px 10px 20px;
+  /* margin: 20px 20px 10px 20px; */
+  margin: 0;
 }
 
 .filter-conditions,

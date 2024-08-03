@@ -1,6 +1,8 @@
 <template>
-    <search-filter @update:query="handleSearch"></search-filter>
+    <div class="full-height">
+   
     <div class="container">
+        <div class="container-table"><search-filter @update:query="handleSearch"></search-filter></div>
         <div class="container-table">
 			<div v-if="isLoading" class="loading-placeholder">
 			Loading data...
@@ -11,6 +13,7 @@
 				<p v-if="error" class="error-message">{{ error }}</p>
 			</div>
 		</div>
+    </div>
     </div>
 </template>
 
@@ -45,6 +48,7 @@ async function fetchData() {
     try {
         const response = await questionRecommend(10);
         questions.value = response.data.data;
+		console.log(response)
     } catch (err) {
         console.error('Error fetching data:', err);
         error.value = 'Failed to fetch data'; // Update error message
@@ -61,31 +65,48 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-.container {
-    background-color: #f7f7f7;
-	width:100%;
-	display:flex;
+.full-height {
+  height: 100vh; /* Ensure full viewport height */
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  flex-direction: column; /* Stack children vertically */
 }
-.container-table{
-	width:100%;
-	justify-content:center;
-	justify-items:center;
-}
-
-.loading-placeholder {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 200px;
-    /* Adjust height based on your design */
-    font-size: 1.5rem;
-    color: #555;
-    /* Placeholder text color */
-}
-
 .error-message {
     color: red;
     font-size: 1.2rem;
     text-align: center;
+}
+.container-table{
+	justify-content:center;
+	justify-items:center;
+}
+
+.container {
+  flex: 1; /* Take remaining space */
+  padding: 20px;
+  justify-content: center; /* Center content horizontally */
+  align-items: center; /* Center content vertically */
+}
+
+.sticky-pagination {
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+  background-color: #f7f7f7;
+  padding: 10px 20px;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  /* Ensure pagination is above other content */
+}
+
+.loading-placeholder {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px; /* Adjust height based on your design */
+  font-size: 1.5rem;
+  color: #555; /* Placeholder text color */
 }
 </style>

@@ -1,5 +1,7 @@
 <template>
-	<div class="container">
+	<search-history @update:query="handleSearch"></search-history>
+	<div class="full-height">
+		<div class="container">
 		<div v-if="isLoading" class="loading-placeholder">
 			Loading data...
 			<!-- You can replace this with a spinner or any loading animation -->
@@ -12,9 +14,11 @@
 		<n-pagination v-model:page="currentPage" :page-count="totalPages" show-quick-jumper
 			@update:page="handlePaginationChange"></n-pagination>
 	</div>
+	</div>
 </template>
 
 <script setup lang="ts">
+import SearchHistory from '@/components/exercise/SearchHistory.vue';
 import { ref, onMounted, computed } from 'vue';
 import historyList from '@/components/exercise/history-list.vue';
 import { recordProgram } from './api/record_program';
@@ -79,32 +83,43 @@ const totalPages = computed(() => pages.value);
 
 
 <style lang="scss" scoped>
+.full-height {
+  height: 100vh; /* Ensure full viewport height */
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  flex-direction: column; /* Stack children vertically */
+  margin-top: -30px;
+}
+
 .container {
-	background-color: #f7f7f7;
-	padding: 20px;
+  flex: 1; /* Take remaining space */
+  padding: 20px;
+  width: 100vw;
+  display: flex;
+//   justify-content: flex-start; /* Center content horizontally */
+  align-items: flex-start; /* Center content vertically */
+  box-sizing: border-box;
 }
 
 .sticky-pagination {
-	position: absolute;
-	right: 0px;
-	bottom: 0;
-	width: 100%;
-	background-color: #f7f7f7;
-	padding: 10px 20px;
-	z-index: 1000;
-	display: flex;
-	justify-content: center;
-	/* Ensure pagination is above other content */
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+  background-color: #f7f7f7;
+  padding: 10px 20px;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  /* Ensure pagination is above other content */
 }
 
 .loading-placeholder {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	height: 200px;
-	/* Adjust height based on your design */
-	font-size: 1.5rem;
-	color: #555;
-	/* Placeholder text color */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px; /* Adjust height based on your design */
+  font-size: 1.5rem;
+  color: #555; /* Placeholder text color */
 }
 </style>

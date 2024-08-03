@@ -93,7 +93,7 @@ function exerciseDetail(id: number, type: number) {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .container {
 	width: 100%;
 	display: flex;

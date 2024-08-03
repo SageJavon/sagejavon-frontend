@@ -88,7 +88,7 @@ import ToolbarNodeBtnList from './ToolbarNodeBtnList.vue'
 import { throttle } from 'simple-mind-map/src/utils/index'
 
 /**
- * @Author: 黄原寅
+ * 
  * @Desc: 工具栏
  */
 let fileHandle = null
@@ -180,7 +180,7 @@ export default {
       loopCheck()
     },
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 监听本地文件读写
      */
     onWriteLocalFile(content) {
@@ -190,7 +190,7 @@ export default {
       }, 1000)
     },
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 打开本地文件
      */
     async openLocalFile() {
@@ -234,7 +234,7 @@ export default {
     },
 
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 读取本地文件
      */
     async readFile() {
@@ -255,7 +255,7 @@ export default {
     },
 
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 渲染读取的数据
      */
     setData(str) {
@@ -281,7 +281,7 @@ export default {
     },
 
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 写入本地文件
      */
     async writeLocalFile(content) {
@@ -298,7 +298,7 @@ export default {
     },
 
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 创建本地文件
      */
     async createNewLocalFile() {
@@ -306,7 +306,7 @@ export default {
     },
 
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 另存为
      */
     async saveLocalFile() {
@@ -315,7 +315,7 @@ export default {
     },
 
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 创建本地文件
      */
     async createLocalFile(content) {

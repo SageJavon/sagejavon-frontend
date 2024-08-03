@@ -53,7 +53,7 @@ export default {
     ...mapActions(['getUserMindMapData']),
     ...mapMutations(['setLocalConfig']),
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 初始化本地配置
      */
     initLocalConfig() {

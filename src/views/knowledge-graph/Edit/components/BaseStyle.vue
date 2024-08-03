@@ -655,7 +655,7 @@ import { storeConfig } from '@/api'
 import bus from '@/utils/bus.js'
 import { mapState, mapMutations } from 'vuex'
 /**
- * @Author: 黄原寅
+ * 
  * @Desc: 基础样式
  */
 export default {
@@ -783,7 +783,7 @@ export default {
       }, 0)
     },
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 初始样式
      */
     initStyle() {
@@ -849,7 +849,7 @@ export default {
     },
 
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: margin初始值
      */
     initMarginStyle() {
@@ -859,7 +859,7 @@ export default {
     },
 
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 更新配置
      */
     update(key, value) {
@@ -908,7 +908,7 @@ export default {
     },
 
     /**
-     * @Author: 黄原寅
+     * 
      * @Desc: 设置margin
      */
     updateMargin(type, value) {

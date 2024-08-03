@@ -1,5 +1,6 @@
 <!-- src/components/exercise/SearchFilter.vue -->
 <template>
+  <div class="container">
     <div class="search-filter">
       <div class="search">
         <label class="filter-conditions">筛选条件</label>
@@ -9,12 +10,13 @@
             {{ difficulty }}
           </option>
         </select>
-        <select v-model="selectedKnowledgePoint" class="knowledge-point">
-          <option value="" disabled selected class="default-option">知识点</option>
-          <option v-for="point in points" :key="point.knowledgeId" :value="point.knowledge">
-            {{ point.knowledge }}
-          </option>
+        <select v-model="selectedKnowledgePoint" class="knowledge-point" @change="addKnowledge">
+            <option value="" disabled selected class="default-option">知识点</option>
+            <option v-for="point in points" :key="point.knowledgeId" :value="point.knowledge">
+                 {{ point.knowledge }}
+            </option>
         </select>
+
         <label class="keyword">题目关键词</label>
         <div class="search-input-container">
           <input v-model="keyword" type="text" class="input" placeholder="输入内容..." />
@@ -53,11 +55,14 @@
         </button>
       </div>
     </div>
+  </div>
   </template>
   
   <script setup lang="ts">
   import { ref, onMounted, defineEmits } from 'vue';
   import { knowledgePoint } from './api/knowledge_point'; 
+  import DatePickerComponent from '@/components/DatePickerComponent.vue'; // 根据实际路径调整
+
   
   const emit = defineEmits(['update:filters', 'search']);
   
@@ -77,11 +82,12 @@
   const isLoading = ref(false);
   
   const addKnowledge = () => {
-    if (knowledge.value && !selectedKnowledge.value.includes(knowledge.value)) {
-      selectedKnowledge.value.push(knowledge.value);
-      knowledge.value = '';
-    }
-  };
+  if (selectedKnowledgePoint.value && !selectedKnowledge.value.includes(selectedKnowledgePoint.value)) {
+    selectedKnowledge.value.push(selectedKnowledgePoint.value);
+    selectedKnowledgePoint.value = ''; // 清空选择框
+  }
+};
+
   
   const removeKnowledge = (index: number) => {
     selectedKnowledge.value.splice(index, 1);
@@ -143,7 +149,14 @@ async function fetchData() {
   
    
   <style scoped>
-  /* 保持原有的样式 */
+  .container {
+  display: flex;
+  justify-content: center;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin: auto;
+}
+
   .search {
     background-color: #fff;
     padding: 20px;
@@ -151,15 +164,16 @@ async function fetchData() {
   }
   
   .search-filter {
-    background-color: #fff;
-    padding: 5px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    margin-left: 20px;
-    margin-bottom: 10px;
-    margin-top: 20px;
-    margin-right: 20px;
-  }
+  width: 100vw;
+  background-color: #fff;
+  padding: 5px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-left: 20px;
+  margin-bottom: 10px;
+  margin-top: 20px;
+  margin-right: 20px;
+}
   
   .filter-conditions,
   .selected-conditions,
