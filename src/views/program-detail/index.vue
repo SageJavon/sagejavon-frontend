@@ -1,75 +1,80 @@
 <template>
-	<div class="container">
-		<div class="sidebar">
-			<div class="tabs">
-				<div class="circle-flex">
-					<div class="circle"></div>
-					<div @click="activeTab = 'content'" :class="{ active: activeTab === 'content' }">题目内容</div>
-				</div>
-				<div class="circle-flex">
-					<div class="circle"></div>
-					<div @click="activeTab = 'history'" :class="{ active: activeTab === 'history' }">历史记录</div>
-				</div>
-				<div class="circle-flex">
-					<div class="circle"></div>
-					<div @click="activeTab = 'solution'" :class="{ active: activeTab === 'solution' }">正确题解</div>
-				</div>
-			</div>
-			<div class="content">
-				<div v-if="activeTab === 'content'">
-					<div class="program-content">
-						<div class="sub-section">
-							<span class="tag">{{ programDetail.difficulty }}</span>
-							<span class="knowledge-point" v-for="(knowledge, index) in programDetail.knowledgeConcept">
-								<i class="icon-tag">
-								</i> {{ knowledge.knowledge }}
-							</span>
-						</div>
-						<pre class="code-block">
-              <v-md-preview :text="programDetail.questionText"></v-md-preview>
-            </pre>
+	<PanelBox class="program-detail-container">
+		<template #question>
+			<div class="sidebar">
+				<div class="tabs">
+					<div class="circle-flex">
+						<div class="circle"></div>
+						<div @click="activeTab = 'content'" :class="{ active: activeTab === 'content' }">题目内容</div>
+					</div>
+					<div class="circle-flex">
+						<div class="circle"></div>
+						<div @click="activeTab = 'history'" :class="{ active: activeTab === 'history' }">历史记录</div>
+					</div>
+					<div class="circle-flex">
+						<div class="circle"></div>
+						<div @click="activeTab = 'solution'" :class="{ active: activeTab === 'solution' }">正确题解</div>
 					</div>
 				</div>
-				<div v-if="activeTab === 'history'">
-					<div v-if="records.length!=0"><history-list :records="records"></history-list></div>
-					<div v-else>还没有答题记录</div>
-				</div>
-				<div v-if="activeTab === 'solution'">
-					<monaco-editor v-model="correct" :language="language" width="100%" height="500px"
-					@editor-mounted="editorMounted"></monaco-editor>
+				<div class="content">
+					<div v-if="activeTab === 'content'">
+						<div class="program-content">
+							<div class="sub-section">
+								<span class="tag">{{ programDetail.difficulty }}</span>
+								<span class="knowledge-point"
+									v-for="(knowledge, index) in programDetail.knowledgeConcept">
+									<i class="icon-tag">
+									</i> {{ knowledge.knowledge }}
+								</span>
+							</div>
+							<pre class="code-block">
+              <v-md-preview :text="programDetail.questionText"></v-md-preview>
+            </pre>
+						</div>
+					</div>
+					<div v-if="activeTab === 'history'">
+						<div v-if="records.length != 0"><history-list :records="records"></history-list></div>
+						<div v-else>还没有答题记录</div>
+					</div>
+					<div v-if="activeTab === 'solution'">
+						<monaco-editor v-model="correct" :language="language" width="100%" height="500px"
+							@editor-mounted="editorMounted"></monaco-editor>
+					</div>
 				</div>
 			</div>
-		</div>
-		<div class="main">
-			<div class="tabs-two">
-				<div class="circle-flex">
-					<div class="circle"></div>
-					<button @click="activeTab = 'content'" :class="{ active: activeTab === 'content' }">代码</button>
+		</template>
+		<template #code>
+			<div class="main">
+				<div class="tabs-two">
+					<div class="circle-flex">
+						<div class="circle"></div>
+						<button @click="activeTab = 'content'" :class="{ active: activeTab === 'content' }">代码</button>
+					</div>
 				</div>
-			</div>
-			<div class="editor">
-				<monacoEditor v-model="code" :language="language" width="100%" height="100%"
-					@editor-mounted="editorMounted"></monacoEditor>
+				<div class="editor">
+					<monacoEditor v-model="code" :language="language" width="100%" height="100%"
+						@editor-mounted="editorMounted"></monacoEditor>
 
+				</div>
+				<NButton v-if="!isLoading" style="width:100%;margin-top:5px" type="primary" @click="submitCode">提交代码
+				</NButton>
+				<NButton v-if="isLoading" style="width:100%;margin-top:5px" type="info" disabled>正在评分中...
+				</NButton>
 			</div>
-			<NButton v-if="!isLoading" style="width:100%;margin-top:5px" type="primary" @click="submitCode">提交代码
-			</NButton>
-			<NButton v-if="isLoading" style="width:100%;margin-top:5px" type="info" disabled>正在评分中...
-			</NButton>
-		</div>
-		<!-- <DragBall /> -->
-
+			<!-- <DragBall /> -->
+		</template>
 		<NModal v-model:show="showModal" class="custom-card" preset="card" :style="bodyStyle" :title="'您的得分为:' + score"
 			size="huge" :bordered="false" :segmented="segmented">
 			正确答案：
-			{{ correctAnswer==null?'暂无':correctAnswer }}
+			{{ correctAnswer == null ? '暂无' : correctAnswer }}
 			<v-md-preview :text="suggestion"></v-md-preview>
 		</NModal>
-	</div>
+	</PanelBox>
 </template>
 
 <script setup lang="ts">
-import { ref,onMounted } from 'vue';
+import PanelBox from '../panel-box/index.vue'
+import { ref, onMounted } from 'vue';
 import * as monaco from 'monaco-editor'
 import monacoEditor from './components/monacoEditor.vue';
 import DragBall from './components/DragBall.vue'
@@ -79,8 +84,8 @@ import { NButton, NModal } from 'naive-ui';
 import { questionCode } from './api/question_code';
 import ModalDialog from './components/ModalDialog.vue'
 import historyList from '@/components/exercise/history-list.vue';
-import {recordList} from './api/record_list'
-import {codeRecordDetail} from '@/components/exercise/api/code_record_detail';
+import { recordList } from './api/record_list'
+import { codeRecordDetail } from '@/components/exercise/api/code_record_detail';
 const bodyStyle = ref({
 	width: '700px',
 })
@@ -119,23 +124,23 @@ export interface ExerciseRecordList {
 }
 
 const records = ref<ExerciseRecordList[]>([]);
-const correctAnswer=ref("")
-const correct=ref("")
+const correctAnswer = ref("")
+const correct = ref("")
 // const response = await recordList(Number(questionId.value));
 // console.log(response)
 // records.value = response.data.data
 // console.log(records.value)
 
-onMounted(()=>{
-	recordList(questionId.value).then((res)=>{
+onMounted(() => {
+	recordList(questionId.value).then((res) => {
 		console.log(res)
-		records.value=res.data.data
+		records.value = res.data.data
 	})
 
 	// 获取正确答案
 	codeRecordDetail(questionId.value)
 		.then((response) => {
-			correct.value=response.data.data.correctAnswer
+			correct.value = response.data.data.correctAnswer
 
 		})
 		.catch((error) => {
@@ -199,11 +204,11 @@ const suggestion = ref("")
 
 const isLoading = ref(false)
 
-const submitNum=ref(0)
+const submitNum = ref(0)
 
 function submitCode(choice: string) {
 	isLoading.value = true
-	submitNum.value+=1
+	submitNum.value += 1
 	const request = {
 		id: questionId.value,
 		answer: code.value,
@@ -231,16 +236,17 @@ function submitCode(choice: string) {
 </script>
 
 <style scoped>
-.container {
+.program-detail-container {
 	display: flex;
-	padding: 20px;
+	padding: 12px;
 	/* Add padding to container */
-	height: 100vh;
+	height: 100%;
+	width: 100%;
 	/* Adjust the height to make the container full height */
 	justify-content: space-between;
 	overflow: hidden;
 	/* Hide overflow to avoid scrollbars */
-	gap: 20px;
+	gap: 12px;
 	/* Add gap between sidebar and main */
 }
 
@@ -257,6 +263,7 @@ function submitCode(choice: string) {
 .main {
 	border-radius: 10px;
 	flex: 1;
+	height: 100%;
 	background-color: #fff;
 	justify-content: center;
 	align-items: center;
