@@ -1,19 +1,19 @@
 <template>
     <div class="full-height">
-   
-    <div class="container">
-        <div class="container-table"><search-filter @update:query="handleSearch"></search-filter></div>
-        <div class="container-table">
-			<div v-if="isLoading" class="loading-placeholder">
-			Loading data...
-			<!-- You can replace this with a spinner or any loading animation -->
-			</div>
-			<div v-else>
-				<exercise-list v-if="!error" :questions="questions"></exercise-list>
-				<p v-if="error" class="error-message">{{ error }}</p>
-			</div>
-		</div>
-    </div>
+        <div class="container">
+            <div class="container-table"><welcom></welcom></div>
+            <div class="container-table"><search-filter @update:query="handleSearch"></search-filter></div>
+                <div class="container-table">
+                    <div v-if="isLoading" class="loading-placeholder">
+                        Loading data...
+                        <!-- You can replace this with a spinner or any loading animation -->
+                    </div>
+                    <div v-else>
+                        <exercise-list v-if="!error" :questions="questions"></exercise-list>
+                        <p v-if="error" class="error-message">{{ error }}</p>
+                    </div>
+		    </div>
+        </div>
     </div>
 </template>
 
@@ -22,6 +22,7 @@ import { ref, onMounted } from 'vue';
 import { questionRecommend } from './api/question_recommend';
 import exerciseList from '@/components/exercise/exercise-list.vue';
 import SearchFilter from '@/components/exercise/SearchFilter.vue';
+import welcom from '@/components/exercise/recommd-welcom.vue';
 
 interface KnowledgeConcept {
     knowledgeId: number;

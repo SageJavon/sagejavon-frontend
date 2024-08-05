@@ -26,8 +26,8 @@
 						<td>
 							<span :class="statusClass(question.done)"></span>
 						</td>
-						<td :class="difficultyClass(question.difficulty)" class="difficulty text-ellipsis">
-							{{ question.difficulty }}
+						<td :class="[difficultyClass(question.difficulty), 'difficulty', 'text-ellipsis']">
+    						{{ difficultyKind(question.difficulty) }}
 						</td>
 						<td>
 							{{ question.type === 0 ? '代码题' : '选择题' }}
@@ -49,6 +49,7 @@ interface Question {
 	id: string;
 	name: string;
 	knowledgePoints: string[];
+	done: string;
 	status: string;
 	difficulty: string;
 }
@@ -56,19 +57,34 @@ interface Question {
 const props = defineProps<{ questions: Question[] }>();
 
 const statusClass = (status: string) => {
-	return status === '完成' ? 'status-complete' : 'status-pending';
+	return status === '1' ? 'status-complete' : 'status-pending';
 };
 
-const difficultyClass = (difficulty: string) => {
+const difficultyClass = (difficulty: number) => {
 	switch (difficulty) {
-		case 'SS':
+		case 3:
 			return 'difficulty-ss';
-		case 'A':
+		case 2:
 			return 'difficulty-a';
-		case 'B':
+		case 1:
 			return 'difficulty-b';
-		case 'C':
+		case 0:
 			return 'difficulty-c';
+		default:
+			return '';
+	}
+};
+
+const difficultyKind = (difficulty: number) => {
+	switch (difficulty) {
+		case 3:
+			return 'SS';
+		case 2:
+			return 'A';
+		case 1:
+			return 'B';
+		case 0:
+			return 'C';
 		default:
 			return '';
 	}

@@ -35,7 +35,7 @@
 							{{ formatTime(record.submitTime)}}
 						</td>
 						<td :class="difficultyClass(record.difficulty)" class="difficulty text-ellipsis">
-							{{ record.difficulty }}
+							{{ difficultyKind(record.difficulty) }}
 						</td>
 						<td>
 							{{ record.type === 1 ? '选择题' : '代码题' }}
@@ -124,20 +124,35 @@ const props = defineProps<{ records: Record[] }>();
 const statusClass = (status: string) => {
 	return status === '完成' ? 'status-complete' : 'status-pending';
 };
-const difficultyClass = (difficulty: string) => {
+const difficultyClass = (difficulty: number) => {
 	switch (difficulty) {
-		case 'SS':
+		case 3:
 			return 'difficulty-ss';
-		case 'A':
+		case 2:
 			return 'difficulty-a';
-		case 'B':
+		case 1:
 			return 'difficulty-b';
-		case 'C':
+		case 0:
 			return 'difficulty-c';
 		default:
 			return '';
 	}
 };
+const difficultyKind = (difficulty: number) => {
+	switch (difficulty) {
+		case 3:
+			return 'SS';
+		case 2:
+			return 'A';
+		case 1:
+			return 'B';
+		case 0:
+			return 'C';
+		default:
+			return '';
+	}
+};
+
 function exerciseDetail(id: number, type: number) {
 	console.log(id)
 	console.log(type)
