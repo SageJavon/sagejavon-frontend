@@ -106,21 +106,21 @@
         </div>
         <!-- <DragBall /> -->
       </template>
-      <NModal
-        v-model:show="showModal"
-        class="custom-card"
-        preset="card"
-        :style="bodyStyle"
-        :title="'您的得分为:' + score"
-        size="huge"
-        :bordered="false"
-        :segmented="segmented"
-      >
-        正确答案：
-        {{ correctAnswer == null ? "暂无" : correctAnswer }}
-        <v-md-preview :text="suggestion"></v-md-preview>
-      </NModal>
     </PanelBox>
+    <NModal
+      v-model:show="showModal"
+      class="custom-card"
+      preset="card"
+      :style="bodyStyle"
+      :title="'您的得分为:' + score"
+      size="huge"
+      :bordered="false"
+      :segmented="segmented"
+    >
+      正确答案：
+      {{ correctAnswer == null ? "暂无" : correctAnswer }}
+      <v-md-preview :text="suggestion"></v-md-preview>
+    </NModal>
   </div>
 </template>
 
