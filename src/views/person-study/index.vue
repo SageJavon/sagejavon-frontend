@@ -1,15 +1,13 @@
 <template>
   <div class="person-study-container">
     <div class="card choice-question">
-      <MainCard :image="iconSelect" title="选择题" @click="navigateChoice"></MainCard>
+      <MainCard :image="iconSelect" title="选择题" :description="choiceDescription" @click="navigateChoice"></MainCard>
     </div>
     <div class="card code-question">
-      <MainCard :image="iconCode" title="代码题" @click="navigateProgram"></MainCard>
+      <MainCard :image="iconCode" title="代码题" :description="codeDescription" @click="navigateProgram"></MainCard>
     </div>
     <div class="card history" @click="navigateHistory">
-      <MainCard :image="iconHistory" title="历史记录">
-
-      </MainCard>
+      <MainCard :image="iconHistory" title="历史记录" :description="historyDescription"></MainCard>
     </div>
     <div class="card hot-question">
       <HotQuestion />
@@ -38,10 +36,10 @@
           <div class="statistics-col-4">
             <img class="statistics-img" :src="iconDays" />
             <div class="statistics-text">连续打卡</div>
-            <div class="statistics-number">223</div>
+            <div class="statistics-number">{{ solveDays }}</div>
           </div>
           <div class="statistics-col-4">
-            <div class="statistics-number">369</div>
+            <div class="statistics-number">{{ solveQuestions }}</div>
             <div class="statistics-text">完成题目</div>
 
             <img class="statistics-img" :src="iconComplete" />
@@ -56,6 +54,7 @@
 </template>
 
 <script setup>
+import {ref,onMounted} from 'vue';
 import MainCard from "@/views/person-study/components/MainCard.vue";
 import iconSelect from "./images/select-question.png"
 import iconCode from "./images/code-question.png"
@@ -68,7 +67,14 @@ import { useRouter } from 'vue-router'
 import Echart from "./components/Echart.vue"
 import HotQuestion from "./components/HotQuestion.vue"
 import HistoryRecord from "./components/HistoryRecord.vue"
+import { fetchPersonStudy } from './api/person-study';
 
+//响应数据初始态 
+const choiceDescription = ref('加载中...');
+const codeDescription = ref('加载中...');
+const historyDescription = ref('加载中...');
+const solveDays = ref('加载中...');
+const solveQuestions = ref('加载中...');
 
 const router = useRouter()
 function navigateProgram () {
@@ -86,7 +92,24 @@ function navigateRecommend () {
 // }
 function navigateHistory () {
   router.push('/program/history')
-}
+} 
+
+onMounted(async () => {
+  try {
+    const data = await fetchPersonStudy();
+    choiceDescription.value = `共收录${data.selectNumber}道选择题`;
+    codeDescription.value = `共收录${data.codeNumber}道代码题`;
+    historyDescription.value = `共收录${data.solveQuestions}条历史记录`;
+    solveDays.value = data.solveDays;
+    solveQuestions.value = data.solveQuestions;
+  } catch (error) {
+    choiceDescription.value = '数据加载失败';
+    codeDescription.value = '数据加载失败';
+    historyDescription.value = '数据加载失败';
+    solveDays.value = '数据加载失败';
+    solveQuestions.value = '数据加载失败';
+  }
+});
 
 </script>
 
