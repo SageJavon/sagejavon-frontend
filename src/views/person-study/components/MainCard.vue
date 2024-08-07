@@ -27,12 +27,20 @@ defineProps({
 })
 </script>
 
-<style>
+<style scoped>
 * {
-  font-size: 16px;
-  --icon-size: 7rem;
-  --main-card-title-font-size: 3rem;
+  --icon-size: 6.2rem;
+  --main-card-title-font-size: 2.2rem;
   --main-card-description-font-size: 1.2rem;
+  /* 禁止文本选择 */
+  -webkit-user-select: none;
+  /* Safari */
+  -moz-user-select: none;
+  /* Firefox */
+  -ms-user-select: none;
+  /* IE10+/Edge */
+  user-select: none;
+  /* Standard */
 }
 
 .main-card {
@@ -42,6 +50,7 @@ defineProps({
   flex-direction: row;
   align-items: center;
   justify-content: space-evenly;
+  cursor: pointer;
 }
 
 .icon {
@@ -64,5 +73,45 @@ defineProps({
   font-size: var(--main-card-description-font-size);
   font-weight: 300;
   color: white;
+}
+
+@media screen and (min-width: 2000px) {
+  * {
+    --icon-size: 6.6rem;
+    --main-card-title-font-size: 3rem;
+    --main-card-description-font-size: 1.6rem;
+  }
+}
+
+@media screen and (max-width: 1664px) {
+  * {
+    --icon-size: 6rem;
+    --main-card-title-font-size: 2rem;
+    --main-card-description-font-size: 1rem;
+  }
+}
+
+@media screen and (max-width: 1354px) {
+  * {
+    --icon-size: 5.5rem;
+    --main-card-title-font-size: 1.8rem;
+    --main-card-description-font-size: 0.9rem;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  * {
+    --icon-size: 4.8rem;
+    --main-card-title-font-size: 1.6rem;
+    --main-card-description-font-size: 0.8rem;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  * {
+    --icon-size: 4rem;
+    --main-card-title-font-size: 1.4rem;
+    --main-card-description-font-size: 0.6rem;
+  }
 }
 </style>

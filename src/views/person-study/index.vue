@@ -16,19 +16,7 @@
       <HistoryRecord />
     </div>
     <div class="card daily-recommendation" @click="navigateRecommend">
-      <div class="daily-container">
-        <div class="left-side">
-          <img :src="iconRecommend" class="daily-icon" />
-        </div>
-        <div class="title">每日推荐</div>
-        <div class="right-side">
-          <ul class="features">
-            <li>·采用AI算法为你量身定制</li>
-            <li>·根据您的学习进度每日自动刷新</li>
-            <li>·快来体验您的专属题单吧</li>
-          </ul>
-        </div>
-      </div>
+      <DailyRecoCard />
     </div>
     <div class="card statistics">
       <div class="statistics-container">
@@ -41,7 +29,6 @@
           <div class="statistics-col-4">
             <div class="statistics-number">{{ solveQuestions }}</div>
             <div class="statistics-text">完成题目</div>
-
             <img class="statistics-img" :src="iconComplete" />
           </div>
         </div>
@@ -54,15 +41,14 @@
 </template>
 
 <script setup>
-import {ref,onMounted} from 'vue';
+import { ref, onMounted } from 'vue';
 import MainCard from "@/views/person-study/components/MainCard.vue";
+import DailyRecoCard from "@/views/person-study/components/DailyRecoCard.vue";
 import iconSelect from "./images/select-question.png"
 import iconCode from "./images/code-question.png"
 import iconHistory from "./images/history.png"
-import iconRecommend from "./images/daily-recommend.png"
 import iconDays from "./images/days.png"
 import iconComplete from "./images/complete-exercises.png"
-
 import { useRouter } from 'vue-router'
 import Echart from "./components/Echart.vue"
 import HotQuestion from "./components/HotQuestion.vue"
@@ -77,22 +63,22 @@ const solveDays = ref('加载中...');
 const solveQuestions = ref('加载中...');
 
 const router = useRouter()
-function navigateProgram () {
+function navigateProgram() {
   router.push('/program/exercise')
 }
-function navigateChoice () {
+function navigateChoice() {
   router.push('/choice/exercise')
 }
-function navigateRecommend () {
-  router.push('/recommend/exercise') 
+function navigateRecommend() {
+  router.push('/recommend/exercise')
 }
 //TODO:合并筛选和历史记录
 // function navigateHistory () {
 //   router.push('/history')
 // }
-function navigateHistory () {
+function navigateHistory() {
   router.push('/program/history')
-} 
+}
 
 onMounted(async () => {
   try {
@@ -114,7 +100,7 @@ onMounted(async () => {
 </script>
 
 <style>
-* {
+:root {
   --theme-blue: #052350;
   --card-radius: 16px;
   --card-background-color: linear-gradient(108.33deg, #052B65 0%, #053B8B 101.33%);
@@ -171,54 +157,6 @@ onMounted(async () => {
   grid-column: span 15;
 }
 
-
-/* 每日推荐处 */
-.daily-container {
-  display: flex;
-  height: 100%;
-  width: 100%;
-  justify-items: center;
-  justify-content: center;
-  align-items: center;
-  align-content: center;
-}
-
-.left-side {
-  flex: 2;
-  display: flex;
-  justify-content: center;
-}
-
-.right-side {
-  flex: 4.5;
-}
-
-.title {
-  flex: 3;
-  color: #ffffff;
-  font-size: 40px;
-}
-
-.features {
-  list-style: none;
-  padding: 0;
-  color: #ffffff;
-
-}
-
-.features li {
-  margin-bottom: 5px;
-  font-size: 17px;
-}
-
-.daily-icon {
-  width: 6rem;
-}
-
-/* 每日推荐处 */
-
-
-
 /* 数据统计处 */
 .statistics-container {
   display: flex;
@@ -255,6 +193,5 @@ onMounted(async () => {
   font-weight: bold;
   font-size: 30px;
   color: #ffffff;
-
 }
 </style>
