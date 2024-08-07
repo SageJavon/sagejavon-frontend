@@ -289,6 +289,7 @@ watch(
 .side-container {
   height: 100%;
   overflow-y: auto;
+  user-select: none;
 }
 
 .side-item {
@@ -306,12 +307,12 @@ watch(
   justify-items: center;
 }
 
-.hover-hand {
+.side-item {
   cursor: pointer;
   /* 默认鼠标样式为小手掌 */
 }
 
-.hover-hand:hover {
+.side-item:hover {
   cursor: pointer;
   /* 鼠标悬停时仍然显示小手掌 */
 }
