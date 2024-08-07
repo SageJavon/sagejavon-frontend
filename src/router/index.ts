@@ -5,36 +5,16 @@ import { ChatLayout } from '@/views/chat/layout'
 
 const routes: RouteRecordRaw[] = [
   {
-    path: '/forces',
-    name: 'Forces',
-    component: (): unknown => import('@/views/Forces.vue'),
-  },
-  {
-    path: '/hierarchy',
-    name: 'Hierarchy',
-    component: (): unknown => import('@/views/Hierarchy.vue'),
-  },
-  {
-    path: '/fires',
-    name: 'Fires',
-    component: (): unknown => import('@/views/Fires.vue'),
-  },
-  {
-    path: '/knowledge/graph',
-    name: 'knowledgeGraph',
-    component: (): unknown => import('@/views/XMind/index.vue'),
-  },
-  {
-    path: '/login',
-    name: 'Login',
-    component: () => import('@/views/login/index.vue'),
+    path: '/',
+    name: 'Root',
+    component: () => import('@/views/welcome/index.vue'),
     meta: {
       requiresAuth: false,
     },
   },
   {
-    path: '/',
-    name: 'Root',
+    path: '/chat',
+    name: 'Chat',
     component: ChatLayout,
     redirect: '/chat',
     meta: {
@@ -45,6 +25,21 @@ const routes: RouteRecordRaw[] = [
         path: '/chat/:uuid?',
         name: 'Chat',
         component: () => import('@/views/chat/index.vue'),
+      },
+      {
+        path: '/person/study',
+        name: 'personStudy',
+        component: () => import('@/views/person-study/index.vue'),
+      },
+      {
+        path: '/program/tutor',
+        name: 'programTutor',
+        component: () => import('@/views/program-tutor/index.vue'),
+      },
+      {
+        path: '/knowledge/skills',
+        name: 'knowledgeSkills',
+        component: () => import('@/views/knowledge-skills/index.vue'),
       },
     ],
   },
@@ -62,6 +57,46 @@ const routes: RouteRecordRaw[] = [
     path: '/:pathMatch(.*)*',
     name: 'notFound',
     redirect: '/404',
+  },
+  {
+    path: '/program/list',
+    name: 'programList',
+    component: () => import('@/views/program-list/index.vue'),
+  },
+  {
+    path: '/program/detail',
+    name: 'programDetail',
+    component: () => import('@/views/program-detail/index.vue'),
+  },
+  {
+    path: '/choice/exercise',
+    name: 'choiceExercise',
+    component: () => import('@/views/choice-exercise/index.vue'),
+  },
+  {
+    path: '/program/exercise',
+    name: 'programExercise',
+    component: () => import('@/views/program-exercise/index.vue'),
+  },
+  {
+    path: '/recommend/exercise',
+    name: 'recommendExercise',
+    component: () => import('@/views/recommend-exercise/index.vue'),
+  },
+  {
+    path: '/choice/detail',
+    name: 'choiceDetail',
+    component: () => import('@/views/choice-detail/index.vue'),
+  },
+  {
+    path: '/program/history',
+    name: 'programHistory',
+    component: () => import('@/views/program-history/index.vue'),
+  },
+  {
+    path: '/history',
+    name: 'history',
+    component: () => import('@/views/history/index.vue')
   },
 ]
 
