@@ -23,7 +23,7 @@
 * {
     --icon-size: 6.2rem;
     --main-card-title-font-size: 2.2rem;
-    --main-card-description-font-size: 1.2rem;
+    --main-card-description-font-size: 1rem;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -119,6 +119,14 @@
         --icon-size: 4rem;
         --main-card-title-font-size: 1.4rem;
         --main-card-description-font-size: 0.6rem;
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    * {
+        --icon-size: 6rem;
+        --main-card-title-font-size: 2rem;
+        --main-card-description-font-size: 1rem;
     }
 }
 </style>

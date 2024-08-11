@@ -31,7 +31,7 @@ defineProps({
 * {
   --icon-size: 6.2rem;
   --main-card-title-font-size: 2.2rem;
-  --main-card-description-font-size: 1.2rem;
+  --main-card-description-font-size: 1rem;
   /* 禁止文本选择 */
   -webkit-user-select: none;
   /* Safari */
@@ -112,6 +112,14 @@ defineProps({
     --icon-size: 4rem;
     --main-card-title-font-size: 1.4rem;
     --main-card-description-font-size: 0.6rem;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  * {
+    --icon-size: 6rem;
+    --main-card-title-font-size: 2rem;
+    --main-card-description-font-size: 1rem;
   }
 }
 </style>

@@ -74,6 +74,8 @@ async function fetchData(pageNum: number) {
 
 <style lang="scss" scoped>
 .container {
+	width: 100%;
+	height: 100%;
 	padding: 10px;
 	/* Ensure container stretches to full viewport height */
 }

@@ -19,15 +19,17 @@
       <DailyRecoCard />
     </div>
     <div class="card statistics">
-      <div class="statistics-container">
-        <div class="statistics-row">
-          <div class="statistics-col-4">
+      <div class="statistics-row">
+        <div class="statistics-col-4">
+          <div style="display: flex; flex-direction: row; column-gap: 0.8rem; align-items: center; justify-content: center;">
             <img class="statistics-img" :src="iconDays" />
             <div class="statistics-text">连续打卡</div>
-            <div class="statistics-number">{{ solveDays }}</div>
           </div>
-          <div class="statistics-col-4">
-            <div class="statistics-number">{{ solveQuestions }}</div>
+          <div class="statistics-number">{{ solveDays }}</div>
+        </div>
+        <div class="statistics-col-4">
+          <div class="statistics-number">{{ solveQuestions }}</div>
+          <div style="display: flex; flex-direction: row; column-gap: 0.8rem; align-items: center; justify-content: center;">
             <div class="statistics-text">完成题目</div>
             <img class="statistics-img" :src="iconComplete" />
           </div>
@@ -38,6 +40,7 @@
       <Echart />
     </div>
   </div>
+
 </template>
 
 <script setup>
@@ -86,8 +89,8 @@ onMounted(async () => {
     choiceDescription.value = `共收录${data.selectNumber}道选择题`;
     codeDescription.value = `共收录${data.codeNumber}道代码题`;
     historyDescription.value = `共收录${data.solveQuestions}条历史记录`;
-    solveDays.value = data.solveDays;
-    solveQuestions.value = data.solveQuestions;
+    solveDays.value = padNumber(data.solveDays);
+    solveQuestions.value = padNumber(data.solveQuestions);
   } catch (error) {
     choiceDescription.value = '数据加载失败';
     codeDescription.value = '数据加载失败';
@@ -97,13 +100,21 @@ onMounted(async () => {
   }
 });
 
+function padNumber(num) {
+  const numStr = num.toString();
+  if (numStr.length >= 4) {
+    return numStr;
+  }
+  return numStr.padStart(4, '0');
+}
+
 </script>
 
 <style>
 :root {
   --theme-blue: #052350;
   --card-radius: 16px;
-  --card-background-color: linear-gradient(108.33deg, #052B65 0%, #053B8B 101.33%);
+  --card-background-color: linear-gradient(108.33deg, #0A368D 0%, #052B75 101.33%);
   --daily-card-background-clolor: linear-gradient(90deg, #074CB5 0%, #0CD089 100%);
 }
 
@@ -125,7 +136,7 @@ onMounted(async () => {
 
 .card:hover {
   transform: translate(-4px, -4px);
-  box-shadow: 4px 4px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: 4px 4px 12px rgba(5, 38, 137, 0.5);
 }
 
 .choice-question,
@@ -158,40 +169,66 @@ onMounted(async () => {
 }
 
 /* 数据统计处 */
-.statistics-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-content: center;
-  height: 100%;
-}
-
 .statistics-row {
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
 }
 
 .statistics-col-4 {
+  width: 100%;
   display: flex;
   align-items: center;
-  padding: 6px;
+  justify-content: space-evenly;
 }
 
 .statistics-img {
   width: 40px;
-
 }
 
 .statistics-text {
   font-size: 20px;
   color: #fff;
-  margin: 7px;
 }
 
 .statistics-number {
+  font-family: "SJ";
   font-weight: bold;
-  font-size: 30px;
-  color: #ffffff;
+  font-size: 36px;
+  background: linear-gradient(78.09deg, #1E7AFF -10.56%, #15FFAC 134.74%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+  letter-spacing: 2px;
+}
+
+@media screen and (max-width: 1354px) {
+  .statistics-text {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .person-study-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    grid-gap: 1rem;
+    padding: 2rem 1rem;
+  }
+  .card {
+    display: flex;
+    flex-direction: column;
+  }
+  .card:not(.hot-question, .recent-record) {
+    min-height: 240px;
+  }
+  .statistics-text {
+    display: block;
+  }
 }
 </style>
