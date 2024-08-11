@@ -3,15 +3,15 @@
         <div class="container">
             <div class="container-table"><welcom></welcom></div>
             <div class="container-table"><search-filter @update:query="handleSearch"></search-filter></div>
-                <div class="container-table">
-                    <div v-if="isLoading" class="loading-placeholder">
-                        Loading data...
-                        <!-- You can replace this with a spinner or any loading animation -->
-                    </div>
-                    <div v-else>
-                        <exercise-list v-if="!error" :questions="questions"></exercise-list>
-                        <p v-if="error" class="error-message">{{ error }}</p>
-                    </div>
+            <div class="container-table">
+                <div v-if="isLoading" class="loading-placeholder">
+                    Loading data...
+                    <!-- You can replace this with a spinner or any loading animation -->
+                </div>
+                <div v-else>
+                    <exercise-list v-if="!error" :questions="questions"></exercise-list>
+                    <p v-if="error" class="error-message">{{ error }}</p>
+                </div>
 		    </div>
         </div>
     </div>
@@ -67,7 +67,6 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .full-height {
-  height: 100vh; /* Ensure full viewport height */
   display: flex;
   justify-content: center; /* Center horizontally */
   align-items: center; /* Center vertically */
@@ -85,7 +84,6 @@ onMounted(() => {
 
 .container {
   flex: 1; /* Take remaining space */
-  padding: 20px;
   justify-content: center; /* Center content horizontally */
   align-items: center; /* Center content vertically */
 }
