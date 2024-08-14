@@ -6,9 +6,21 @@
         <div class="infoList">
           <p class="infoRow">是一个java课程小助手</p>
           <p class="infoRow">同时也是得力的编程助手</p>
-          <p class="infoRow">帮你回答知识</p>
+          <p class="infoRow"></p>
         </div>
-        <div class="desc">为高等教育赋能</div>
+        <div class="desc">小助手提供以下功能:
+          <div>
+            <ul style="">
+              <li>课程知识询问</li>
+              <li>编程启发式辅导</li>
+              <li>通用代码问题询问</li>
+              <li>代码解释</li>
+              <li>代码修复</li>
+              <li>自适应学习</li>
+              <li>知识图谱</li>
+            </ul>
+          </div>
+        </div>
         <div class="btnBox">
           <NButton class="btn" type="primary" @click="useOnline">在线使用</NButton>
           <NButton type="info" class="btn" @click="jumpDoc">使用文档</NButton>
