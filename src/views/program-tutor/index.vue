@@ -1,4 +1,4 @@
-<script setup lang='ts'>
+<script setup lang="ts">
 import type { Ref } from "vue";
 import { computed, onMounted, onUnmounted, ref } from "vue";
 import { useRoute } from "vue-router";
@@ -38,10 +38,10 @@ const { addChat, updateChat, updateChatSome, getChatByUuidAndIndex } =
 const { scrollRef, scrollToBottom, scrollToBottomIfAtBottom } = useScroll();
 const { usingContext, toggleUsingContext } = useUsingContext();
 
-const uuid = localStorage.getItem("active-uuid");
+const uuid = localStorage.getItem("program-uuid");
 
 const dataSources = computed(() =>
-  chatStore.getChatByUuid(+localStorage.getItem("active-uuid"))
+  chatStore.getChatByUuid(+localStorage.getItem("program-uuid"))
 );
 console.log(dataSources);
 const getEnabledNetwork = computed(() => chatStore.getEnabledNetwork);
@@ -62,7 +62,7 @@ const { promptList: promptTemplate } = storeToRefs<any>(promptStore);
 // 未知原因刷新页面，loading 状态不会重置，手动重置
 dataSources.value.forEach((item, index) => {
   if (item.loading)
-    updateChatSome(+localStorage.getItem("active-uuid"), index, {
+    updateChatSome(+localStorage.getItem("program-uuid"), index, {
       loading: false,
     });
 });
@@ -91,7 +91,7 @@ async function onConversation() {
 
   controller = new AbortController();
 
-  addChat(+localStorage.getItem("active-uuid"), {
+  addChat(+localStorage.getItem("program-uuid"), {
     dateTime: new Date().toLocaleString(),
     text: message,
     inversion: true,
@@ -123,7 +123,7 @@ async function onConversation() {
     );
     console.log(response.body);
     if (response.status == 500) {
-      addChat(+localStorage.getItem("active-uuid"), {
+      addChat(+localStorage.getItem("program-uuid"), {
         dateTime: new Date().toLocaleString(),
         text: "账户已经欠费，请联系工作人员进行充值！",
         inversion: false,
@@ -138,7 +138,7 @@ async function onConversation() {
     } else if (response.status == 200) {
       const data = await response.json();
       const answer = data.data.response;
-      addChat(+localStorage.getItem("active-uuid"), {
+      addChat(+localStorage.getItem("program-uuid"), {
         dateTime: new Date().toLocaleString(),
         text: "SageJavon思考中....",
         loading: true,
@@ -150,7 +150,7 @@ async function onConversation() {
       scrollToBottom();
       let finalResponse = answer;
       updateChat(
-        +localStorage.getItem("active-uuid"),
+        +localStorage.getItem("program-uuid"),
         dataSources.value.length - 1,
         {
           dateTime: new Date().toLocaleString(),
@@ -183,107 +183,6 @@ async function onConversation() {
     loading.value = false;
   }
 }
-
-// async function onRegenerate(index: number) {
-//   if (loading.value)
-//     return
-
-//   controller = new AbortController()
-
-//   const { requestOptions } = dataSources.value[index]
-
-//   const message = requestOptions?.prompt ?? ''
-
-//   let options: Chat.ConversationRequest = {}
-
-//   if (requestOptions.options)
-//     options = { ...requestOptions.options }
-
-//   loading.value = true
-
-//   updateChat(
-//     +uuid,
-//     index,
-//     {
-//       dateTime: new Date().toLocaleString(),
-//       text: '',
-//       inversion: false,
-//       error: false,
-//       loading: true,
-//       conversationOptions: null,
-//       requestOptions: { prompt: message, options: { ...options } },
-//     },
-//   )
-//   // debugger;
-//   try {
-//     await fetchChatAPIProcess<Chat.ConversationResponse>({
-//       prompt: message,
-//       options,
-//       network: !!chatStore.getEnabledNetwork,
-//       signal: controller.signal,
-//       onDownloadProgress: ({ event }) => {
-//         const xhr = event.target
-//         const { responseText = '' } = xhr || {}
-//         // Always process the final line
-//         // const lastIndex = responseText.lastIndexOf('\n')
-//         const chunk = responseText
-//         // if (lastIndex !== -1)
-//         // chunk = responseText.substring(lastIndex)
-//         try {
-//           // const data = JSON.parse(chunk)
-//           updateChat(
-//             +uuid,
-//             dataSources.value.length - 1,
-//             {
-//               dateTime: new Date().toLocaleString(),
-//               text: chunk ?? '',
-//               inversion: false,
-//               error: false,
-//               loading: false,
-//               conversationOptions: { },
-//               requestOptions: { prompt: message, options: { ...options } },
-//             },
-//           )
-//           scrollToBottom()
-//         }
-//         catch (error) {
-//           //
-//         }
-//       },
-//     })
-//   }
-//   catch (error: any) {
-//     if (error.text === 'canceled') {
-//       updateChatSome(
-//         +uuid,
-//         index,
-//         {
-//           loading: false,
-//         },
-//       )
-//       return
-//     }
-
-//     const errorMessage = error?.text ?? t('common.wrong')
-
-//     updateChat(
-//       +uuid,
-//       index,
-//       {
-//         dateTime: new Date().toLocaleString(),
-//         text: errorMessage,
-//         inversion: false,
-//         error: true,
-//         loading: false,
-//         conversationOptions: null,
-//         requestOptions: { prompt: message, options: { ...options } },
-//       },
-//     )
-//   }
-//   finally {
-//     loading.value = false
-//   }
-// }
 
 function handleExport() {
   if (loading.value) return;
@@ -334,7 +233,7 @@ function handleDelete(index: number) {
     positiveText: t("common.yes"),
     negativeText: t("common.no"),
     onPositiveClick: () => {
-      chatStore.deleteChatByUuid(+localStorage.getItem("active-uuid"), index);
+      chatStore.deleteChatByUuid(+localStorage.getItem("program-uuid"), index);
     },
   });
 }
@@ -352,7 +251,7 @@ function handleClear() {
     positiveText: t("common.yes"),
     negativeText: t("common.no"),
     onPositiveClick: () => {
-      chatStore.clearChatByUuid(+localStorage.getItem("active-uuid"));
+      chatStore.clearChatByUuid(+localStorage.getItem("program-uuid"));
     },
   });
 }

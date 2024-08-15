@@ -1,4 +1,4 @@
-<script setup lang='ts'>
+<script setup lang="ts">
 import type { CSSProperties } from "vue";
 import { computed, ref, watch } from "vue";
 import {
@@ -8,6 +8,7 @@ import {
   NImage,
   NLayoutSider,
   NText,
+  NSpin,
   useMessage,
 } from "naive-ui";
 import { useRouter } from "vue-router";
@@ -21,28 +22,29 @@ import source from "@/assets/source.png";
 import study from "@/assets/study.png";
 import teacher from "@/assets/teacher.png";
 import { newChat } from "@/views/chat/api/new_chat";
-const router = useRouter(); // 使用 useRouter
+
+const router = useRouter();
 const appStore = useAppStore();
 const chatStore = useChatStore();
-
 const { isMobile } = useBasicLayout();
-const show = ref(false);
+const show = ref(true);
 const message = useMessage();
+const loading = ref(false); // 加载状态
 
 const collapsed = computed(() => appStore.siderCollapsed);
-
+const uuid = localStorage.getItem("active-uuid");
 function goToKnowledgeSkills() {
   router.push("/knowledge/skills");
 }
 
 function chat() {
   show.value = true;
-  router.push("/chat/:uuid?");
+  router.push(`/chat/${uuid}`);
 }
 
 function goToKnowledgeGraph() {
   show.value = false;
-  router.push("/knowledge/skills"); // 跳转到知识图谱页面
+  router.push("/knowledge/skills");
 }
 
 function goTopersonStudy() {
@@ -61,12 +63,13 @@ function goHome() {
 }
 
 function handleAdd() {
+  loading.value = true; // 开始加载
   newChat()
     .then((res) => {
       if (res.status === 200) {
         message.info("新增成功", { duration: 5000 });
         chatStore.addHistory({
-          title: "新增提问",
+          title: "知识问答" + res.data.data,
           uuid: res.data.data,
           isEdit: false,
         });
@@ -77,6 +80,9 @@ function handleAdd() {
     })
     .catch((err) => {
       console.error("新增失败:", err);
+    })
+    .finally(() => {
+      loading.value = false; // 结束加载
     });
   if (isMobile.value) appStore.setSiderCollapsed(true);
 }
@@ -240,12 +246,20 @@ watch(
         @click="handleUpdateCollapsed"
       />
     </template>
-    <!-- <PromptStore v-model:visible="show" /> -->
+
+    <!-- 加载指示器 -->
+    <div
+      v-if="loading"
+      class="fixed inset-0 flex items-center justify-center bg-black/50 z-50"
+    >
+      <NSpin size="large" />
+    </div>
+
     <NLayoutSider
       v-if="show"
       :collapsed="newSidebarCollapsed"
       :collapsed-width="0"
-      :width="180"
+      :width="220"
       collapse-mode="transform"
       :show-trigger="isMobile ? false : 'arrow-circle'"
       style="height: 100%; background-color: rgba(3, 34, 81, 0.2)"
@@ -309,11 +323,16 @@ watch(
 
 .side-item {
   cursor: pointer;
-  /* 默认鼠标样式为小手掌 */
 }
 
 .side-item:hover {
   cursor: pointer;
-  /* 鼠标悬停时仍然显示小手掌 */
+}
+
+.fixed-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 50;
 }
 </style>
