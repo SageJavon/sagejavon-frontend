@@ -10,6 +10,7 @@ import { useScroll } from './hooks/useScroll'
 import { useChat } from './hooks/useChat'
 import { useUsingContext } from './hooks/useUsingContext'
 import { smartQueryStream } from './api/smart_query_stream'
+import {chatMessage} from './api/chat_message'
 import { HoverButton, SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useChatStore, usePromptStore } from '@/store'
@@ -73,6 +74,26 @@ async function callChatGLM(message: string) {
 async function onConversation() {
   const message = prompt.value
 
+  // 将用户的聊天保存到数据库
+  chatMessage({
+      chatId:Number(localStorage.getItem('active-uuid')),
+      role:0,
+      content:message
+    })
+    .then((res) => {
+      console.log(res)
+      if (res.status === 200) {
+        console.log('数据库添加成功')
+      }
+      else {
+        // 更新失败
+
+      }
+    })
+    .catch((err) => {
+      console.error('新增失败:', err)
+    })
+
   if (loading.value)
     return
 
@@ -95,6 +116,8 @@ async function onConversation() {
   scrollToBottom()
   loading.value = true
   prompt.value = ''
+
+
   const options: Chat.ConversationRequest = { conversationId: usingContext.value ? window.location.hash : Math.random().toString() }
   try {
     // 发起后端请求获取模型响应
@@ -133,7 +156,7 @@ async function onConversation() {
     },
   )
   scrollToBottom()
-       const reader = response.body.pipeThrough(new TextDecoderStream()).getReader()
+      const reader = response.body.pipeThrough(new TextDecoderStream()).getReader()
       let finalResponse = ''
       while (true) {
         const { value, done } = await reader.read()
@@ -153,6 +176,25 @@ async function onConversation() {
         // 累加接收到的数据块
         finalResponse += value
       }
+
+      chatMessage({
+        chatId:Number(localStorage.getItem('active-uuid')),
+        role:1,
+        content:finalResponse
+      })
+      .then((res) => {
+        console.log(res)
+        if (res.status === 200) {
+          console.log('数据库添加成功')
+        }
+        else {
+          // 更新失败
+
+        }
+      })
+      .catch((err) => {
+        console.error('新增失败:', err)
+      })
 
       scrollToBottom()
       }
