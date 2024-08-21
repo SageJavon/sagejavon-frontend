@@ -21,7 +21,8 @@
     <div class="card statistics">
       <div class="statistics-row">
         <div class="statistics-col-4">
-          <div style="display: flex; flex-direction: row; column-gap: 0.8rem; align-items: center; justify-content: center;">
+          <div
+            style="display: flex; flex-direction: row; column-gap: 0.8rem; align-items: center; justify-content: center;">
             <img class="statistics-img" :src="iconDays" />
             <div class="statistics-text">连续打卡</div>
           </div>
@@ -29,7 +30,8 @@
         </div>
         <div class="statistics-col-4">
           <div class="statistics-number">{{ solveQuestions }}</div>
-          <div style="display: flex; flex-direction: row; column-gap: 0.8rem; align-items: center; justify-content: center;">
+          <div
+            style="display: flex; flex-direction: row; column-gap: 0.8rem; align-items: center; justify-content: center;">
             <div class="statistics-text">完成题目</div>
             <img class="statistics-img" :src="iconComplete" />
           </div>
@@ -202,7 +204,6 @@ function padNumber(num) {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  text-fill-color: transparent;
   letter-spacing: 2px;
 }
 
@@ -220,13 +221,16 @@ function padNumber(num) {
     grid-gap: 1rem;
     padding: 2rem 1rem;
   }
+
   .card {
     display: flex;
     flex-direction: column;
   }
+
   .card:not(.hot-question, .recent-record) {
     min-height: 240px;
   }
+
   .statistics-text {
     display: block;
   }
