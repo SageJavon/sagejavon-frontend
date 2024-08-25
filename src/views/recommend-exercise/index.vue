@@ -1,7 +1,7 @@
 <template>
     <div class="full-height">
         <div class="container">
-            <div class="container-table"><welcom></welcom></div>
+            <div class="container-table"><welcom @change-question="handleChangeQuestion"></welcom></div>
             <div class="container-table"><search-filter @update:query="handleSearch"></search-filter></div>
             <div class="container-table">
                 <div v-if="isLoading" class="loading-placeholder">
@@ -41,6 +41,11 @@ interface Question {
 const questions = ref<Question[]>([]);
 const isLoading = ref(false); // Track loading state
 const error = ref<string | null>(null); // Track error state
+
+function handleChangeQuestion(payload: any) {
+  console.log('Received from child:', payload);
+  fetchData()
+}
 
 // Fetch data function
 async function fetchData() {
