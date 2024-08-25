@@ -4,7 +4,7 @@
 		<div class="greeting">
 		  {{ userInfo.nickname }}，{{ greetingMessage }}！🥰
 		</div>
-		<div class="recommend">今日为您推荐共计 x 道题目，您已完成 x 道。😗继续加油😙</div>
+		<div class="recommend">今日为您推荐共计 10 道题目。😗加油😙</div>
 	  </div>
 	  <div class="box2">
 		<div class="flushed" @click="changeQuestion">

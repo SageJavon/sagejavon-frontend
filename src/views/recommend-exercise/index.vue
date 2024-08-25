@@ -2,7 +2,7 @@
     <div class="full-height">
         <div class="container">
             <div class="container-table"><welcom @change-question="handleChangeQuestion"></welcom></div>
-            <div class="container-table"><search-filter @update:query="handleSearch"></search-filter></div>
+            <!-- <div class="container-table"><search-filter @update:query="handleSearch"></search-filter></div> -->
             <div class="container-table">
                 <div v-if="isLoading" class="loading-placeholder">
                     Loading data...
@@ -46,7 +46,6 @@ function handleChangeQuestion(payload: any) {
   console.log('Received from child:', payload);
   fetchData()
 }
-
 // Fetch data function
 async function fetchData() {
     isLoading.value = true; // Set loading state while fetching data
