@@ -74,6 +74,7 @@
     "viewerjs": "^1.11.6",
     "vue": "^3.4.38",
     "vue-codemirror": "^5.1.0",
+    "vue-datepicker-local": "^1.0.19",
     "vue-i18n": "^9.14.0",
     "vue-markdown": "^2.2.4",
     "vue-router": "^4.4.3",

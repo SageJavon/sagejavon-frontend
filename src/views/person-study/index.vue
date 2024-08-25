@@ -1,5 +1,6 @@
 <template>
   <div class="person-study-container">
+    <QuestionHover :index="1"/>
     <div class="card choice-question">
       <MainCard :image="iconSelect" title="选择题" :description="choiceDescription" @click="navigateChoice"></MainCard>
     </div>
@@ -46,6 +47,7 @@
 </template>
 
 <script setup>
+import QuestionHover from '@/components/question-list/QuestionHover.vue'
 import { ref, onMounted } from 'vue';
 import MainCard from "@/views/person-study/components/MainCard.vue";
 import DailyRecoCard from "@/views/person-study/components/DailyRecoCard.vue";

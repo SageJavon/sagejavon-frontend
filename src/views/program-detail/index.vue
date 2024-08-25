@@ -1,5 +1,6 @@
 <template>
   <div class="full-height">
+    <QuestionHover :index="2"/>
     <PanelBox class="program-detail-container">
       <template #question>
         <div class="sidebar">
@@ -94,7 +95,7 @@
             style="width: 100%; margin-top: 5px"
             type="primary"
             @click="submitCode"
-            >提交代码
+            >提交代码(大模型评分)
           </NButton>
           <NButton
             v-if="isLoading"
@@ -125,6 +126,7 @@
 </template>
 
 <script setup lang="ts">
+import QuestionHover from '@/components/question-list/QuestionHover.vue'
 import PanelBox from "../panel-box/index.vue";
 import { ref, onMounted } from "vue";
 import * as monaco from "monaco-editor";

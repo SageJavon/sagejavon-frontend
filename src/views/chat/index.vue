@@ -22,6 +22,7 @@ import { chatMessage } from "./api/chat_message";
 import { useBasicLayout } from "@/hooks/useBasicLayout";
 import { useChatStore, usePromptStore } from "@/store";
 import { t } from "@/locales";
+import QuestionHover from '@/components/question-list/QuestionHover.vue'
 let controller = new AbortController();
 
 // const openLongReply = import.meta.env.VITE_GLOB_OPEN_LONG_REPLY === 'true'
@@ -480,6 +481,7 @@ onUnmounted(() => {
     style="background-color: rgba(3, 34, 81, 0.1)"
     class="flex flex-col w-full h-full"
   >
+    <QuestionHover :index="0"/>
     <HeaderComponent
       v-if="isMobile"
       :using-context="usingContext"
