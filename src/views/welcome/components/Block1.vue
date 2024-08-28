@@ -1,183 +1,71 @@
 <template>
   <div class="block1Container" :style="{ height: height + 'px' }">
+    <div class="placeholder"></div>
     <div class="blockContent">
-      <div class="infoBox">
-        <div class="blockTitle">SageJavon</div>
-        <div class="infoList">
-          <p class="infoRow">是一个java课程小助手</p>
-          <p class="infoRow">也是一个Java小专家</p>
-          <p class="infoRow"></p>
-        </div>
-        <div class="desc">
-          小助手提供以下功能:
-          <div>
-            <ul style="">
-              <li>课程知识询问</li>
-              <li>编程启发式辅导</li>
-              <li>通用代码问题询问</li>
-              <li>代码解释</li>
-              <li>代码修复</li>
-              <li>自适应学习</li>
-              <li>知识图谱</li>
-            </ul>
+      <!-- 内容的头部 -->
+      <div class="content-header">
+        <div class="infoBox">
+          <!-- 文字盒子 -->
+          <div class="txtBox">
+            <div class="txt1">SageJavon</div>
+            <div class="txt2">专注于Java知识的一款课程小助手</div>
+            <div class="txt3">我是一段简短的描述</div>
+          </div>
+          <!-- 按钮盒子 -->
+          <div class="btnBox">
+            <button class="btn main" @click="useOnline">开始使用SageJavon</button>
+            <button class="btn" @click="jumpDoc">使用文档</button>
+            <button class="btn" @click="">GitHub</button>
           </div>
         </div>
-        <div class="btnBox">
-          <NButton class="btn" type="primary" @click="useOnline"
-            >在线使用</NButton
-          >
-          <NButton type="info" class="btn" @click="jumpDoc">使用文档</NButton>
+        <div class="picBox">
+          <div class="animation1"></div>
+          <div class="animation2"></div>
+          <div class="animation3"></div>
+          <div class="pic" v-if="!isClickOnline"></div>
+          <div class="sign-in-container" v-if="isLogin">
+            <NTabs class="custom-tabs" :bar-width="24" type="line" animated="true" default-value="signin" size="large"
+              justify-content="space-evenly">
+              <!-- 登录 -->
+              <NTabPane name="signin" tab="登录">
+                <NForm>
+                  <NFormItemRow label="1.输入账号">
+                    <NInput v-model:value="account" type="text" maxlength="40" />
+                  </NFormItemRow>
+                  <NFormItemRow label="2.验证您的身份">
+                    <div class="password-container">
+                      <div style="display: flex; flex-direction: row">
+                        <NInput v-model:value="verifyCode" type="text" maxlength="6" />
+                        <!-- 在按钮旁边显示倒计时信息 -->
+                        <NButton :disabled="countdown > 0" @click="verifyCode_signIn()">
+                          {{
+                            countdown > 0
+                              ? `${countdown} 秒后重新获取`
+                              : "获取验证码"
+                          }}
+                        </NButton>
+                      </div>
+                    </div>
+                  </NFormItemRow>
+                </NForm>
+                <div class="button-container">
+                  <button ghost class="cancel-button button" @click="cancel">
+                    取消
+                  </button>
+                  <button class="login-button button" @click="signIn(signInType)">
+                    登录
+                  </button>
+                </div>
+              </NTabPane>
+            </NTabs>
+          </div>
         </div>
       </div>
-      <div class="picBox">
-        <div class="animation1"></div>
-        <div class="animation2"></div>
-        <div class="animation3"></div>
-        <div class="pic" v-if="!isClickOnline"></div>
-        <div class="sign-in-container" v-if="isLogin">
-          <NTabs
-            class="custom-tabs"
-            :bar-width="24"
-            type="line"
-            animated="true"
-            default-value="signin"
-            size="large"
-            justify-content="space-evenly"
-          >
-            <!-- 登录 -->
-            <NTabPane name="signin" tab="登录">
-              <NForm>
-                <NFormItemRow label="1.输入账号">
-                  <NInput v-model:value="account" type="text" maxlength="40" />
-                </NFormItemRow>
-                <NFormItemRow label="2.验证您的身份">
-                  <div class="password-container">
-                    <NInput
-                      v-if="signInType === 'password'"
-                      v-model:value="password"
-                      show-password-on="click"
-                      type="password"
-                      maxlength="20"
-                    />
-                    <div v-else style="display: flex; flex-direction: row">
-                      <NInput
-                        v-model:value="verifyCode"
-                        type="text"
-                        maxlength="6"
-                      />
-                      <!-- 在按钮旁边显示倒计时信息 -->
-                      <NButton
-                        :disabled="countdown > 0"
-                        @click="verifyCode_signIn()"
-                      >
-                        {{
-                          countdown > 0
-                            ? `${countdown} 秒后重新获取`
-                            : "获取验证码"
-                        }}
-                      </NButton>
-                    </div>
-                    <div class="help-container">
-                      <a href="#">忘记密码?</a>
-                      <a
-                        href="#"
-                        @click="
-                          signInType === 'password'
-                            ? (signInType = 'verifyCode')
-                            : (signInType = 'password')
-                        "
-                        >切换至{{
-                          signInType === "password" ? "验证码" : "密码"
-                        }}登录</a
-                      >
-                    </div>
-                  </div>
-                </NFormItemRow>
-              </NForm>
-              <div class="button-container">
-                <NButton
-                  ghost
-                  class="cancel-button"
-                  type="primary"
-                  @click="cancel"
-                >
-                  取消
-                </NButton>
-                <NButton
-                  class="login-button"
-                  type="primary"
-                  @click="signIn(signInType)"
-                >
-                  登录
-                </NButton>
-              </div>
-            </NTabPane>
-            <!-- 注册 -->
-            <NTabPane v-if="showVerifyCode" name="signup" tab="注册">
-              <NForm>
-                <NFormItemRow label="输入验证码">
-                  <NInput
-                    v-model:value="verifyCode"
-                    type="text"
-                    maxlength="6"
-                  />
-                  <button
-                    :disabled="countdown > 0"
-                    @click="verifyCode_signIn()"
-                  >
-                    {{
-                      countdown > 0 ? `${countdown} 秒后重新获取` : "获取验证码"
-                    }}
-                  </button>
-                </NFormItemRow>
-              </NForm>
-              <div class="button-container">
-                <NButton
-                  ghost
-                  class="cancel-button"
-                  type="primary"
-                  @click="cancel"
-                >
-                  取消
-                </NButton>
-                <NButton
-                  class="login-button"
-                  type="primary"
-                  @click="registerVerify"
-                >
-                  注册并登录
-                </NButton>
-              </div>
-            </NTabPane>
-            <NTabPane v-else name="signup" tab="注册">
-              <NForm>
-                <NFormItemRow label="1.输入账号">
-                  <NInput v-model:value="account" type="text" maxlength="40" />
-                </NFormItemRow>
-                <!-- <n-form-item-row label="2.输入密码">
-                                <n-input show-password-on="click" v-model:value="password" type="password"
-                                    maxlength="20" />
-                            </n-form-item-row>
-                            <n-form-item-row label="3.确认密码">
-                                <n-input show-password-on="click" v-model:value="confirmPassword" type="password"
-                                    maxlength="20" />
-                            </n-form-item-row> -->
-              </NForm>
-              <div class="button-container">
-                <NButton
-                  ghost="true"
-                  class="cancel-button"
-                  type="primary"
-                  @click="cancel"
-                >
-                  取消
-                </NButton>
-                <NButton class="login-button" type="primary" @click="register">
-                  注册
-                </NButton>
-              </div>
-            </NTabPane>
-          </NTabs>
+      <!-- 卡片式特性介绍 -->
+      <div class="card-container">
+        <div v-for="item in cardContent" :key="item.id" class="card">
+          <div class="card-title">{{ item.title }}</div>
+          <div class="card-desc">{{ item.desc }}</div>
         </div>
       </div>
     </div>
@@ -191,6 +79,28 @@ const isLogin = ref(false);
 const isClickOnline = ref(false);
 const router = useRouter();
 const height = ref(0);
+const cardContent = [
+  {
+    id: 1,
+    title: "😍启发式辅导",
+    desc: "我是描述我是描述我是描述我是描述我是描述我是描述我是描述我是描述我是描述我是描述",
+  },
+  {
+    id: 2,
+    title: "🙌课程知识询问",
+    desc: "我是描述我是描述我是描述我是描述我是描述我是描述",
+  },
+  {
+    id: 3,
+    title: "👌代码解释与修复",
+    desc: "我是描述我是描述我是描述我是描述我是描述我是描述",
+  },
+  {
+    id: 4,
+    title: "😜自适应学习",
+    desc: "我是描述我是描述我是描述我是描述我是描述我是描述",
+  },
+];
 import {
   NButton,
   NConfigProvider,
@@ -461,25 +371,21 @@ function __validateVerifyCode(verifyCode) {
 
 function cancel() {
   account.value = "";
-  password.value = "";
   verifyCode.value = "";
-  showVerifyCode.value = false;
-  signInType.value = "password";
 
   user.value = null;
-  // 返回首页
-  window.location.href = "/";
+  isLogin.value = false;
+  isClickOnline.value = false;
 }
 </script>
 
 <style lang="less" scoped>
 .sign-in-container {
-  width: 400px;
-  height: 60vh;
+  width: 360px;
   background-color: rgba(255, 255, 255, 0.5);
-  padding: 24px;
+  padding: 20px;
   border-radius: 12px;
-  box-shadow: 4px 4px 24px rgba(0, 0, 0, 0.1);
+  box-shadow: 4px 4px 24px rgba(0, 0, 0, 0.08);
 }
 
 .password-container {
@@ -488,145 +394,207 @@ function cancel() {
   flex-direction: column;
 }
 
-.help-container {
-  color: black;
-  display: flex;
-  justify-content: space-between;
-  margin-top: 12px;
-}
-
-.help-container a {
-  color: #000;
-}
-
 .button-container {
   position: relative;
   bottom: 0px;
   width: 100%;
   display: flex;
   justify-content: space-between;
+
+  .cancel-button {
+    width: 36%;
+    border: 1px solid #00000080;
+  }
+
+  .login-button {
+    width: 60%;
+    background-color: #fa6e2d;
+    border: 0px;
+    color: white;
+  }
+
+  .button {
+    border-radius: 8px;
+    padding: 4px 0;
+  }
 }
 
-.button-container .cancel-button {
-  width: 36%;
-}
-
-.button-container .login-button {
-  width: 60%;
-}
 .block1Container {
   background-color: #f0f9fa;
   border-radius: 0 0 0 450px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
+
+  .placeholder {
+    height: 76px;
+    width: 100%;
+    margin-bottom: 24px;
+  }
 
   .blockContent {
     width: 100%;
     max-width: 1140px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    padding: 0 32px;
 
-    .infoBox {
-      .blockTitle {
-        font-size: 16px;
-        color: #1e3547;
-        margin-bottom: 10px;
-      }
+    .content-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: stretch;
 
-      .infoList {
-        margin-top: 20px;
+      .infoBox {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
 
-        .infoRow {
-          font-size: 45px;
-          color: #1e3547;
-          font-weight: 700;
-          margin-bottom: 20px;
+        .txtBox {
+          max-width: 524px;
+
+          .txt1 {
+            font-family: "Punctuation SC", "Inter", ui-sans-serif, system-ui, "Noto Sans SC", "Heiti SC", "Microsoft YaHei", "DengXian", sans-serif;
+            font-weight: 700;
+            line-height: 72px;
+            font-size: 56px;
+            background: linear-gradient(93.62deg, #F37676 4.09%, #FBCD2C 108.47%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+          }
+
+          .txt2 {
+            letter-spacing: 2px;
+            font-family: "Punctuation SC", "Inter", ui-sans-serif, system-ui, "Noto Sans SC", "Heiti SC", "Microsoft YaHei", "DengXian", sans-serif;
+            font-weight: 700;
+            line-height: 64px;
+            font-size: 56px;
+            color: #3e3e3e;
+          }
+
+          .txt3 {
+            font-size: 24px;
+            line-height: 36px;
+            margin-top: 12px;
+            color: #656565;
+          }
+        }
+
+        .btnBox {
+          display: flex;
+          margin-top: 24px;
+          column-gap: 12px;
+
+          .btn {
+            height: 40px;
+            padding: 0 24px;
+            cursor: pointer;
+            letter-spacing: 2%;
+            color: #fff;
+            background-color: #fa6e2d;
+            border: 0px;
+            font-weight: 600;
+            font-size: 16px;
+            border-radius: 22px;
+            transition: all 0.2s;
+          }
+
+          .btn:not(.main) {
+            color: #474747;
+            background-color: #00000012;
+          }
+
+          .btn:hover {
+            background-color: #e3672e;
+          }
+
+          .btn:not(.main):hover {
+            background-color: #00000020;
+          }
+
         }
       }
 
-      .desc {
-        color: #828f99;
-        font-size: 20px;
-        line-height: 1.5;
-      }
+      .picBox {
+        position: relative;
 
-      .btnBox {
-        display: flex;
-        align-items: center;
-        margin-top: 20px;
+        .pic {
+          width: 320px;
+          height: 300px;
+          background-image: url("../../../assets/sagejavon.png");
+          background-size: cover;
+        }
 
-        .btn {
-          height: 44px;
-          padding: 0 20px;
-          line-height: 44px;
-          cursor: pointer;
-          color: #fff;
-          font-weight: 600;
-          font-size: 15px;
-          border-radius: 5px;
-          transition: all 0.5s;
-          margin-right: 10px;
+        .animation1 {
+          position: absolute;
+          right: -50px;
+          bottom: 86px;
+          width: 38px;
+          height: 38px;
+          border: 7px solid #f5828b;
+          border-radius: 50%;
+          animation-name: zoom1;
+          animation-duration: 3s;
+          animation-iteration-count: infinite;
+          animation-direction: alternate;
+          box-shadow: 0 12px 50px 0 rgba(0, 0, 0, 0.14);
+        }
 
-          &:hover {
-            transform: translateY(-4px);
-          }
+        .animation2 {
+          position: absolute;
+          top: -60px;
+          right: 60px;
+          border-radius: 50%;
+          background-color: #1ea59a;
+          box-shadow: 0 20px 30px 0 rgba(48, 61, 114, 0.4);
+          width: 25px;
+          height: 25px;
+          animation: spin 2s infinite alternate;
+          bottom: 60px;
+        }
 
-          &.btn2 {
-            background-color: rgb(76, 119, 79);
-          }
+        .animation3 {
+          border-radius: 50%;
+          background-color: #25233a;
+          box-shadow: 0 20px 30px 0 rgba(245, 130, 139, 0.4);
+          position: absolute;
+          width: 25px;
+          height: 25px;
+          bottom: 50px;
+          left: 0px;
+          animation: spin 3s infinite alternate;
         }
       }
     }
 
-    .picBox {
-      position: relative;
-      .pic {
-        width: 500px;
-        height: 500px;
-        background-image: url("../../../assets/sagejavon.png");
-        background-size: cover;
-      }
+    .card-container {
+      width: 100%;
+      margin-top: 64px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
 
-      .animation1 {
-        width: 38px;
-        height: 38px;
-        border: 7px solid #f5828b;
-        border-radius: 50%;
-        position: absolute;
-        right: -50px;
-        bottom: 86px;
-        animation-name: zoom1;
-        animation-duration: 3s;
-        animation-iteration-count: infinite;
-        animation-direction: alternate;
-        box-shadow: 0 12px 50px 0 rgba(0, 0, 0, 0.14);
-      }
+      .card {
+        background-color: #ffffffee;
+        min-height: 100px;
+        border-radius: 12px;
+        color: #3e3e3e;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        row-gap: 16px;
 
-      .animation2 {
-        border-radius: 50%;
-        background-color: #1ea59a;
-        box-shadow: 0 20px 30px 0 rgba(48, 61, 114, 0.4);
-        position: absolute;
-        width: 25px;
-        height: 25px;
-        top: -60px;
-        right: 60px;
-        animation: spin 2s infinite alternate;
-        bottom: 60px;
-      }
+        .card-title {
+          letter-spacing: 2%;
+          color: #222222;
+          font-size: 20px;
+          font-weight: 600;
+        }
 
-      .animation3 {
-        border-radius: 50%;
-        background-color: #25233a;
-        box-shadow: 0 20px 30px 0 rgba(245, 130, 139, 0.4);
-        position: absolute;
-        width: 25px;
-        height: 25px;
-        bottom: 50px;
-        left: 0px;
-        animation: spin 3s infinite alternate;
+        .card-desc {
+          color: #808080;
+          font-size: 14px;
+          line-height: 24px;
+        }
       }
     }
   }
@@ -648,7 +616,7 @@ function cancel() {
   }
 
   100% {
-    transform: translateY(40px);
+    transform: translateY(32px);
   }
 }
 </style>
