@@ -62,26 +62,26 @@ const getChatList = async () => {
 
       if (transformedData.value.length === 0) {
         loading.value = true; // 设置加载状态为 true
-        newChat()
-          .then((res) => {
-            localStorage.setItem("program-uuid", res.data.data);
-            if (res.status === 200) {
-              message.info("新增成功", { duration: 5000 });
-              chatStore.addHistory({
-                title: "编程导师",
-                uuid: res.data.data,
-                isEdit: false,
-              });
-            } else {
-              // 更新失败
-            }
-          })
-          .catch((err) => {
-            console.error("新增失败:", err);
-          })
-          .finally(() => {
-            loading.value = false; // 无论成功还是失败，清除加载状态
-          });
+        // newChat()
+        //   .then((res) => {
+        //     localStorage.setItem("program-uuid", res.data.data);
+        //     if (res.status === 200) {
+        //       message.info("新增成功", { duration: 5000 });
+        //       chatStore.addHistory({
+        //         title: "编程导师",
+        //         uuid: res.data.data,
+        //         isEdit: false,
+        //       });
+        //     } else {
+        //       // 更新失败
+        //     }
+        //   })
+        //   .catch((err) => {
+        //     console.error("新增失败:", err);
+        //   })
+        //   .finally(() => {
+        //     loading.value = false; // 无论成功还是失败，清除加载状态
+        //   });
       }
       console.log(transformedData.value);
     } else {
@@ -100,22 +100,18 @@ const dataSources = computed(() =>
 );
 
 async function handleSelect({ uuid }: Chat.History) {
-  // 跳转到编程导师
-  if (localStorage.getItem("program-uuid") === String(uuid)) {
-    router.push("/program/tutor");
-    window.location.reload();
-  } else {
-    localStorage.setItem("active-uuid", String(uuid));
-    console.log(localStorage.getItem("active-uuid"));
-    if (isActive(uuid)) return;
 
-    if (chatStore.active)
-      chatStore.updateHistory(chatStore.active, { isEdit: false });
-    await chatStore.setActive(uuid);
+  localStorage.setItem("active-uuid", String(uuid));
+  console.log(localStorage.getItem("active-uuid"));
+  if (isActive(uuid)) return;
 
-    if (isMobile.value) appStore.setSiderCollapsed(true);
-    window.location.reload();
-  }
+  if (chatStore.active)
+    chatStore.updateHistory(chatStore.active, { isEdit: false });
+  await chatStore.setActive(uuid);
+
+  if (isMobile.value) appStore.setSiderCollapsed(true);
+  window.location.reload();
+  
 }
 
 function handleEdit(

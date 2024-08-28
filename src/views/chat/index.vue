@@ -196,6 +196,7 @@ async function onConversation() {
 
       scrollToBottom();
 
+      // 将模型的回复保存到数据库中
       chatMessage({
         chatId: Number(localStorage.getItem("active-uuid")),
         role: 1,

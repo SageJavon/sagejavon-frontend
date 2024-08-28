@@ -18,6 +18,7 @@ import { useScroll } from "./hooks/useScroll";
 import { useChat } from "./hooks/useChat";
 import { useUsingContext } from "./hooks/useUsingContext";
 import { smartQueryStream } from "./api/smart_query_stream";
+import { chatTutor } from "./api/chat_tutor";
 import { HoverButton, SvgIcon } from "@/components/common";
 import { useBasicLayout } from "@/hooks/useBasicLayout";
 import { useChatStore, usePromptStore } from "@/store";
@@ -85,6 +86,24 @@ async function callChatGLM(message: string) {
 
 async function onConversation() {
   const message = prompt.value;
+
+  // 将用户的聊天保存到数据库
+  chatTutor({
+    chatId: Number(localStorage.getItem("active-uuid")),
+    role: 0,
+    content: message,
+  })
+    .then((res) => {
+      console.log(res);
+      if (res.status === 200) {
+        console.log("数据库添加成功-tutor");
+      } else {
+        // 更新失败
+      }
+    })
+    .catch((err) => {
+      console.error("新增失败:", err);
+    });
 
   if (loading.value) return;
 
@@ -163,6 +182,24 @@ async function onConversation() {
           requestOptions: { prompt: message, options: {} },
         }
       );
+
+      // 将模型的回复保存到数据库中
+      chatTutor({
+        chatId: Number(localStorage.getItem("active-uuid")),
+        role: 1,
+        content: finalResponse,
+      })
+        .then((res) => {
+          console.log(res);
+          if (res.status === 200) {
+            console.log("数据库添加成功-tutor");
+          } else {
+            // 更新失败
+          }
+        })
+        .catch((err) => {
+          console.error("新增失败:", err);
+        });
 
       scrollToBottom();
     }
