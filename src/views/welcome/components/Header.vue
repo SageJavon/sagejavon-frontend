@@ -18,7 +18,7 @@
           客户端
         </div>
         <div class="navItem" @click="jumpHelp">使用文档</div>
-        <div class="navItem">
+        <div class="navItem" @click="goToGitHub">
           Github
         </div>
       </div>
@@ -29,6 +29,7 @@
 <script setup>
 import { onMounted, onUnmounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import goToGitHub from './api/goToGitHub';
 
 const router = useRouter()
 const active = ref(false)

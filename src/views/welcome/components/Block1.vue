@@ -9,13 +9,13 @@
           <div class="txtBox">
             <div class="txt1">SageJavon</div>
             <div class="txt2">专注于Java知识的一款课程小助手</div>
-            <div class="txt3">我是一段简短的描述</div>
+            <div class="txt3">Java学习，一聊即通</div>
           </div>
           <!-- 按钮盒子 -->
           <div class="btnBox">
             <button class="btn main" @click="useOnline">开始使用SageJavon</button>
             <button class="btn" @click="jumpDoc">使用文档</button>
-            <button class="btn" @click="">GitHub</button>
+            <button class="btn" @click="goToGitHub">GitHub</button>
           </div>
         </div>
         <div class="picBox">
@@ -24,40 +24,54 @@
           <div class="animation3"></div>
           <div class="pic" v-if="!isClickOnline"></div>
           <div class="sign-in-container" v-if="isLogin">
-            <NTabs class="custom-tabs" :bar-width="24" type="line" animated="true" default-value="signin" size="large"
-              justify-content="space-evenly">
-              <!-- 登录 -->
-              <NTabPane name="signin" tab="登录">
-                <NForm>
-                  <NFormItemRow label="1.输入账号">
-                    <NInput v-model:value="account" type="text" maxlength="40" />
-                  </NFormItemRow>
-                  <NFormItemRow label="2.验证您的身份">
-                    <div class="password-container">
-                      <div style="display: flex; flex-direction: row">
-                        <NInput v-model:value="verifyCode" type="text" maxlength="6" />
-                        <!-- 在按钮旁边显示倒计时信息 -->
-                        <NButton :disabled="countdown > 0" @click="verifyCode_signIn()">
-                          {{
-                            countdown > 0
-                              ? `${countdown} 秒后重新获取`
-                              : "获取验证码"
-                          }}
-                        </NButton>
-                      </div>
-                    </div>
-                  </NFormItemRow>
-                </NForm>
-                <div class="button-container">
-                  <button ghost class="cancel-button button" @click="cancel">
-                    取消
-                  </button>
-                  <button class="login-button button" @click="signIn(signInType)">
-                    登录
-                  </button>
-                </div>
-              </NTabPane>
-            </NTabs>
+            <div class="header">Welcome to SageJavon.</div>
+            <div class="notice">登录即为同意<a>用户协议</a>与<a>隐私政策</a></div>
+            <!-- 登录 -->
+            <NInput round size="large" v-model:value="account" type="text" maxlength="40" placeholder="输入邮箱">
+              <template #prefix>
+                <svg t="1724903266291" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                  xmlns="http://www.w3.org/2000/svg" p-id="4519" width="24" height="24">
+                  <path
+                    d="M846.367347 820.244898H177.632653c-45.97551 0-83.591837-37.616327-83.591837-83.591837V287.346939c0-45.97551 37.616327-83.591837 83.591837-83.591837h668.734694c45.97551 0 83.591837 37.616327 83.591837 83.591837v449.306122c0 45.97551-37.616327 83.591837-83.591837 83.591837zM177.632653 245.55102c-22.987755 0-41.795918 18.808163-41.795918 41.795919v449.306122c0 22.987755 18.808163 41.795918 41.795918 41.795919h668.734694c22.987755 0 41.795918-18.808163 41.795918-41.795919V287.346939c0-22.987755-18.808163-41.795918-41.795918-41.795919H177.632653z"
+                    fill="#8a8a8a" p-id="4520"></path>
+                  <path
+                    d="M512 610.742857c-21.420408 0-42.840816-8.359184-59.036735-24.555102L121.730612 254.955102c-8.359184-8.359184-8.359184-21.420408 0-29.779592 8.359184-8.359184 21.420408-8.359184 29.779592 0l331.232653 331.232653c16.195918 16.195918 42.840816 16.195918 59.036735 0l328.620408-328.620408c8.359184-8.359184 21.420408-8.359184 29.779592 0 8.359184 8.359184 8.359184 21.420408 0 29.779592l-328.620408 328.620408c-16.718367 16.718367-38.138776 24.555102-59.559184 24.555102z"
+                    fill="#8a8a8a" p-id="4521"></path>
+                </svg>
+                <div style="width: 4px;"></div>
+              </template>
+            </NInput>
+            <NInput round size="large" v-model:value="verifyCode" type="text" maxlength="6" placeholder="输入验证码">
+              <template #prefix>
+                <svg t="1724903385096" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                  xmlns="http://www.w3.org/2000/svg" p-id="6457" width="24" height="24">
+                  <path
+                    d="M753.845117 371.674021l-17.46272 0 0-83.669608c0-59.275012-22.62837-115.203812-63.715137-157.482731-42.170448-43.394323-99.369172-67.291592-161.058163-67.291592-126.040624 0-224.772276 98.731652-224.772276 224.7733l0 83.669608-16.680914 0c-62.788022 0-113.688295 50.900274-113.688295 113.688295L156.467611 842.961784c0 62.788022 50.900274 113.688295 113.688295 113.688295l483.690234 0c62.788022 0 113.688295-50.900274 113.688295-113.688295L867.534436 485.362316C867.532389 422.574295 816.633139 371.674021 753.845117 371.674021zM328.176344 288.005436c0-102.858646 80.573083-183.432753 183.431729-183.432753 50.423413 0 97.093339 19.447934 131.410935 54.762231 33.547047 34.519188 52.021817 80.214926 52.021817 128.670521l0 83.669608L328.176344 371.675044 328.176344 288.005436zM826.191842 842.961784c0 39.956014-32.390711 72.346725-72.346725 72.346725L270.154883 915.308509c-39.956014 0-72.346725-32.390711-72.346725-72.346725L197.808158 485.362316c0-39.956014 32.390711-72.346725 72.346725-72.346725l483.690234 0c39.956014 0 72.346725 32.390711 72.346725 72.346725L826.191842 842.961784z"
+                    fill="#8a8a8a" p-id="6458"></path>
+                  <path
+                    d="M509.932921 580.446905c-11.416004 0-20.670785 9.254781-20.670785 20.670785l0 109.554138c0 11.414981 9.254781 20.670785 20.670785 20.670785 11.416004 0 20.670785-9.254781 20.670785-20.670785L530.603707 601.116667C530.602683 589.701686 521.348925 580.446905 509.932921 580.446905z"
+                    fill="#8a8a8a" p-id="6459"></path>
+                </svg>
+                <div style="width: 4px;"></div>
+              </template>
+              <template #suffix>
+                <button class="get-code-btn" :disabled="countdown > 0" @click="verifyCode_signIn()">
+                  {{
+                    countdown > 0
+                      ? `${countdown} 秒`
+                      : "获取验证码"
+                  }}
+                </button>
+              </template>
+            </NInput>
+            <div class="button-container">
+              <button ghost class="cancel-button button" @click="cancel">
+                取消
+              </button>
+              <button class="login-button button" @click="signIn(signInType)">
+                登录
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -75,6 +89,9 @@
 <script setup>
 import { onMounted, onUnmounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
+import goToGitHub from "./api/goToGitHub";
+
+
 const isLogin = ref(false);
 const isClickOnline = ref(false);
 const router = useRouter();
@@ -82,23 +99,23 @@ const height = ref(0);
 const cardContent = [
   {
     id: 1,
-    title: "😍启发式辅导",
-    desc: "我是描述我是描述我是描述我是描述我是描述我是描述我是描述我是描述我是描述我是描述",
+    title: "😁智能聊天对话",
+    desc: "基于先进的人工智能技术，为您提供实时互动交流，解答Java学习中的疑惑，让学习更轻松。",
   },
   {
     id: 2,
-    title: "🙌课程知识询问",
-    desc: "我是描述我是描述我是描述我是描述我是描述我是描述",
+    title: "😉知识图谱导航",
+    desc: "内置完整Java课程知识图谱，帮助您构建系统化学习体系，快速掌握Java编程要点。",
   },
   {
     id: 3,
-    title: "👌代码解释与修复",
-    desc: "我是描述我是描述我是描述我是描述我是描述我是描述",
+    title: "🥰个性化学习计划",
+    desc: "根据您的做题情况，智能调整学习计划，实现量身定制的学习路径，提高学习效率。",
   },
   {
     id: 4,
-    title: "😜自适应学习",
-    desc: "我是描述我是描述我是描述我是描述我是描述我是描述",
+    title: "😮代码解释与修复",
+    desc: "轻松解析复杂代码，提供专业建议，助您快速定位问题，提升编程技能。",
   },
 ];
 import {
@@ -275,16 +292,7 @@ async function signIn(type) {
   }
 
   let res = null;
-  if (type === "password") {
-    const validateResult = __validatePassword(password.value);
-    if (validateResult !== "合法") {
-      password.value = "";
-      //   alert(validateResult)
-      warning(validateResult);
-      return;
-    }
-    res = signInByPassword(account.value, password.value);
-  } else if (type === "verifyCode") {
+  if (type === "verifyCode") {
     const validateResult = __validateVerifyCode(verifyCode.value);
     if (validateResult !== "合法") {
       verifyCode.value = "";
@@ -297,7 +305,7 @@ async function signIn(type) {
 
   res
     .then((res) => {
-      console.log(res);
+      // console.log(res);
       if (res.userId) {
         user.value = res;
         localStorage.setItem("user-token", res.accessToken);
@@ -380,18 +388,68 @@ function cancel() {
 </script>
 
 <style lang="less" scoped>
+:root {
+  --theme-orange: #e3672e;
+}
+
 .sign-in-container {
   width: 360px;
+  height: 100%;
   background-color: rgba(255, 255, 255, 0.5);
   padding: 20px;
   border-radius: 12px;
   box-shadow: 4px 4px 24px rgba(0, 0, 0, 0.08);
-}
-
-.password-container {
-  width: 100%;
   display: flex;
   flex-direction: column;
+  justify-content: space-evenly;
+  position: relative;
+
+  .header {
+    width: 100%;
+    text-align: center;
+    color: #808080;
+    letter-spacing: 0.36px;
+    font-weight: 400;
+    font-size: 16px;
+  }
+
+  .notice {
+    position: absolute;
+    bottom: 6px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    color: #B3B3B3;
+    font-size: 11px;
+    letter-spacing: 0.2px;
+
+    a {
+      font-size: 11px;
+      color: #5390e5;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  }
+
+  .get-code-btn {
+    position: relative;
+    border: 0px;
+    font-size: 14px;
+    color: #808080;
+  }
+
+  .get-code-btn::before {
+    content: "|";
+    position: absolute;
+    left: -25%;
+    font-size: 18px;
+    color: #D9D9D9;
+    pointer-events: none;
+  }
+
+  .get-code-btn:hover {
+    color: #36AD6A;
+  }
 }
 
 .button-container {
@@ -399,23 +457,33 @@ function cancel() {
   bottom: 0px;
   width: 100%;
   display: flex;
-  justify-content: space-between;
+  column-gap: 12px;
+
 
   .cancel-button {
-    width: 36%;
+    flex: 2;
     border: 1px solid #00000080;
   }
 
+  .cancel-button:hover {
+    background-color: #f4f4f4;
+  }
+
   .login-button {
-    width: 60%;
+    flex: 3;
     background-color: #fa6e2d;
     border: 0px;
     color: white;
   }
 
+  .login-button:hover {
+    background-color: #e3672e;
+  }
+
   .button {
-    border-radius: 8px;
+    border-radius: 18px;
     padding: 4px 0;
+    height: 36px;
   }
 }
 
