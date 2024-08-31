@@ -22,6 +22,9 @@
           Github
         </div>
       </div>
+      <div class="simple-nav">
+        
+      </div>
     </div>
   </div>
 </template>
@@ -38,7 +41,7 @@ const clientEl = ref(null)
 
 onMounted(() => {
   window.addEventListener('scroll', onScroll)
-  clientEl.value = document.querySelector('.block3Container')
+  clientEl.value = document.querySelector('.placeholder')
 })
 
 onUnmounted(() => {
@@ -84,8 +87,10 @@ const jumpClient = () => {
   width: 100%;
   height: 76px;
   transition: all 0.2s;
-  background-color: transparent;
-  z-index: 999;
+  background-color: rgba(255, 255, 255, 0.48);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.9);
+  z-index: 99;
 
   &.active {
     background-color: #fff;
@@ -99,6 +104,7 @@ const jumpClient = () => {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding: 0 12px;
 
     .logoBox {
       display: flex;
@@ -151,6 +157,20 @@ const jumpClient = () => {
         }
       }
     }
+  }
+}
+
+.simple-nav {
+  display: none;
+}
+
+@media screen and (max-width: 646px) {
+  .indexHeaderContainer .headerContent .nav {
+    display: none;
+  }
+
+  .simple-nav {
+    display: block;
   }
 }
 </style>
