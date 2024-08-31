@@ -396,10 +396,6 @@ function cancel() {
 </script>
 
 <style lang="less" scoped>
-:root {
-  --theme-orange: #e3672e;
-}
-
 .overlay {
   position: fixed;
   top: 0;
@@ -590,7 +586,7 @@ function cancel() {
             cursor: pointer;
             letter-spacing: 2%;
             color: #fff;
-            background-color: #fa6e2d;
+            background-color: var(--theme-orange);
             border: none;
             font-weight: 600;
             font-size: 16px;
@@ -604,7 +600,7 @@ function cancel() {
           }
 
           .btn:hover {
-            background-color: #e3672e;
+            background-color: var(--theme-orange-hover);
           }
 
           .btn:not(.main):hover {

@@ -1,6 +1,6 @@
 <template>
   <div class="person-study-container">
-    <QuestionHover :index="1"/>
+    <QuestionHover :index="1" />
     <div class="card choice-question">
       <MainCard :image="iconSelect" title="选择题" :description="choiceDescription" @click="navigateChoice"></MainCard>
     </div>
@@ -114,8 +114,8 @@ function padNumber(num) {
 
 </script>
 
-<style>
-:root {
+<style scoped>
+* {
   --theme-blue: #052350;
   --card-radius: 16px;
   --card-background-color: linear-gradient(108.33deg, #0A368D 0%, #052B75 101.33%);
