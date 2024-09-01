@@ -46,6 +46,9 @@ const props = defineProps<{
 }>();
 
 const show = ref(true);
+if (sessionStorage.getItem('questionnaire-show') !== null) {
+  show.value = false;
+}
 const isModalOpen = ref(false);
 
 // 计算 iframe 的 src
@@ -64,6 +67,7 @@ const iframeSrc = computed(() => {
 
 const handleClose = () => {
   show.value = false;
+  sessionStorage.setItem('questionnaire-show', 'false');
 };
 
 const openModal = () => {
@@ -88,6 +92,7 @@ const closeModal = () => {
   flex-direction: column;
   align-items: flex-end;
   row-gap: 16px;
+  z-index: 100;
 }
 
 .questionnaire-icon {
@@ -146,8 +151,8 @@ const closeModal = () => {
   .close-forever {
     position: absolute;
     bottom: 4px;
-    left: 0px;
-    right: 0px;
+    left: 50%;
+    transform: translateX(-50%);
     text-align: center;
     font-size: 11px;
     color: var(--third-text-color);

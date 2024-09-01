@@ -33,5 +33,6 @@ const themeOverrides = {
   --second-text-color: #808080;
   --third-text-color: #B3B3B3;
   --fourth-text-color: #D9D9D9;
+  --fifth-text-color: #E6E6E6;
 }
 </style>

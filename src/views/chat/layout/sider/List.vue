@@ -7,7 +7,6 @@ import { useBasicLayout } from "@/hooks/useBasicLayout";
 import { debounce } from "@/utils/functions/debounce";
 import { chatList } from "@/views/chat/api/chat_list";
 import { deleteChat } from "@/views/chat/api/delete_chat";
-import { newChat } from "@/views/chat/api/new_chat";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
