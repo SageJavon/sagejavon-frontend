@@ -30,10 +30,6 @@ const icons = function () {
   let dataInit = reactive([icon.mindmap, icon.chat, icon.code, icon.study]);
   let data = ref([...dataInit]); // 使用 ref 创建响应式对象
   let activeIndex = ref(-1); // 当前激活的 icon 索引
-  function init(index: number) {
-    activeIndex.value = index;
-    data.value[index] = `${dataInit[index].slice(0, -4)}Active.svg`;
-  }
   function reset() {
     data.value = dataInit.slice();
   }
@@ -43,13 +39,26 @@ const icons = function () {
       return data;
     }
     activeIndex.value = index;
-    data.value[index] = `${dataInit[index].slice(0, -4)}Active.svg`;
+    switch (index) {
+      case 0:
+        data.value[0] = icon.mindmapActive;
+        break;
+      case 1:
+        data.value[1] = icon.chatActive;
+        break;
+      case 2:
+        data.value[2] = icon.codeActive;
+        break;
+      case 3:
+        data.value[3] = icon.studyActive;
+        break;
+    }
     return data.value;
   }
   function get() {
     return data.value;
   }
-  return { activate, reset, get, activeIndex, init };
+  return { activate, reset, get, activeIndex };
 };
 const myIcons = icons();
 // 根据当前路由初始化侧边栏图标
@@ -58,19 +67,19 @@ const myIcons = icons();
   switch (router.currentRoute.value.path) {
     case "/chat/:uuid":
       show.value = true;
-      myIcons.init(1);
+      myIcons.activate(1);
       break;
     case "/knowledge/skills":
-      myIcons.init(0);
+      myIcons.activate(0);
       break;
     case "/program/tutor":
-      myIcons.init(2);
+      myIcons.activate(2);
       break;
     case "/person/study":
-      myIcons.init(3);
+      myIcons.activate(3);
       break;
     default:
-      myIcons.init(1); // 默认值
+      myIcons.activate(1); // 默认值
       break;
   }
 }
