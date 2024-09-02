@@ -25,8 +25,9 @@ const themeOverrides = {
 
 <style>
 * {
-  font-family: "PingFang", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: var(--sj-font-family);
   font-size: 16px;
+  --sj-font-family: "Microsoft YaHei UI", "Punctuation SC", "Inter", ui-sans-serif, system-ui, "PingFang SC", "Noto Sans CJK SC", "Noto Sans SC", "Heiti SC", "Microsoft YaHei", "DengXian", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --theme-orange: #FF6100;
   --theme-orange-hover: #DD5A09;
   --first-text-color: #1A1A1A;

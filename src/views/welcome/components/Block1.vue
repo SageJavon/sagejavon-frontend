@@ -1,6 +1,6 @@
 <template>
-  <div class="overlay" v-if="isLogin" @click="cancel"></div>
-  <div class="sign-in-container" v-if="isLogin">
+  <div ref="overlay" class="overlay" v-show="isLogin" @click="cancel"></div>
+  <div ref="signInContainer" class="sign-in-container" v-show="isLogin">
     <div class="close-btn" @click="cancel">
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path fill-rule="evenodd" clip-rule="evenodd"
@@ -96,7 +96,6 @@ import { onMounted, onUnmounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import goToGitHub from "./api/goToGitHub";
 
-
 const isLogin = ref(false);
 const router = useRouter();
 const height = ref(0);
@@ -154,6 +153,9 @@ console.log(localStorage.getItem("userInfo"));
 // 在setup中定义一个ref用于存储倒计时剩余时间
 const countdown = ref(0);
 
+const overlay = ref(null)
+const signInContainer = ref(null)
+
 onMounted(() => {
   window.addEventListener("resize", onResize);
   onResize();
@@ -173,8 +175,8 @@ const useOnline = () => {
   } else {
     isLogin.value = true;
     setTimeout(() => {
-      document.querySelector(".overlay").classList.add("overlay-blur");
-      document.querySelector(".sign-in-container").classList.add("sign-in-appear");
+      overlay.value.classList.add("overlay-blur");
+      signInContainer.value.classList.add("sign-in-appear");
     }, 0);
   }
 };
@@ -389,8 +391,8 @@ function cancel() {
   verifyCode.value = "";
 
   user.value = null;
-  document.querySelector(".overlay").classList.remove("overlay-blur");
-  document.querySelector(".sign-in-container").classList.remove("sign-in-appear");
+  overlay.value.classList.remove("overlay-blur");
+  signInContainer.value.classList.remove("sign-in-appear");
   isLogin.value = false;
 }
 </script>
@@ -407,7 +409,7 @@ function cancel() {
   backdrop-filter: blur(0px);
   opacity: 0;
   transition: backdrop-filter 0.5s cubic-bezier(0.165, 0.840, 0.440, 1.000),
-    opacity 0.2s;
+    opacity 280ms;
 }
 
 .overlay.overlay-blur {
@@ -588,7 +590,7 @@ function cancel() {
             color: #fff;
             background-color: var(--theme-orange);
             border: none;
-            font-weight: 600;
+            font-weight: 500;
             font-size: 16px;
             border-radius: 22px;
             transition: all 0.2s;
