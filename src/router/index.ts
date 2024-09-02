@@ -2,6 +2,8 @@ import type { App } from 'vue'
 import type { RouteRecordRaw } from 'vue-router'
 import { createRouter, createWebHashHistory } from 'vue-router'
 import { ChatLayout } from '@/views/chat/layout'
+import { reportEvent } from './report_event'
+import { usePageStore, useEventStore } from '@/store/page_store'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -107,6 +109,26 @@ export const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
+  const pageStore = usePageStore()
+  const eventStore = useEventStore()
+  const currentPage = to.name as string
+  pageStore.updatePage(currentPage)
+  const previousPage = pageStore.previousPage.substring(0, pageStore.previousPage.lastIndexOf('.'))
+
+  // 页面切换埋点事件
+  const tags=JSON.stringify(
+    {
+      previous_page:previousPage,
+      current_page:to.name,
+      client_name:new Date().toISOString(),
+      from_page:from.name||"",
+      nickname:JSON.parse(localStorage.getItem('userInfo')!!).nickname
+    }
+  )
+
+  // 界面切换事件保存到pinias
+  eventStore.addEvent('page_load',tags)
+
   // 检查路由是否需要身份验证
   if (to.meta.requiresAuth) {
     // 如果需要验证身份，则检查用户是否已登录
@@ -125,12 +147,38 @@ router.beforeEach((to, from, next) => {
   }
 })
 
+function startEventReporting() {
+  const eventStore = useEventStore();
+  let isReporting = false;  
+
+  setInterval(async () => {
+    if (isReporting) return;  
+    isReporting = true; 
+
+    const events = eventStore.getEvents();
+    if (events.length > 0) {
+      try {
+        console.log(events)
+        const response = await reportEvent({ data: events });
+        console.log('Report event response:', response.data);  
+        eventStore.clearEvents();  
+      } catch (error) {
+        console.error('Error reporting events:', error);
+      } finally {
+        isReporting = false;  
+      }
+    } else {
+      isReporting = false;  
+    }
+  }, 5000);  // 每 5 秒检查一次
+}
+
 export async function setupRouter(app: App) {
   app.use(router)
   await router.isReady()
+  startEventReporting()
 }
 
-// 假设你有一个用于检查用户是否已登录的工具函数
 export function isLoggedIn(): boolean {
-  return localStorage.getItem('user-token') !== null // 假设你将用户登录的 token 存储在 localStorage 中
+  return localStorage.getItem('user-token') !== null 
 }
