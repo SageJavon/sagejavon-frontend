@@ -49,7 +49,7 @@
  * 
  * @Desc: 导航器工具栏
  */
-import { ref, onMounted, defineProps, computed } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useStore } from 'vuex'
 import Scale from './Scale'
 import Fullscreen from './Fullscreen'

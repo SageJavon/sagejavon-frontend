@@ -14,7 +14,7 @@
  * 
  * @Desc: 全屏
  */
-import { defineProps, onMounted, watch } from 'vue'
+import { onMounted, watch } from 'vue'
 import { fullscrrenEvent, fullScreen } from '@/utils'
 
 const props = defineProps({

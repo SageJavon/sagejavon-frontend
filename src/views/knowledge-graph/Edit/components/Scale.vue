@@ -19,7 +19,7 @@
  * 
  * @Desc: 放大缩小
  */
-import { ref, defineProps, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { Plus, Minus } from '@element-plus/icons-vue'
 
 const props = defineProps({

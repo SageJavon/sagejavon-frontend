@@ -27,7 +27,7 @@
 							<span :class="statusClass(question.done)"></span>
 						</td>
 						<td :class="[difficultyClass(question.difficulty), 'difficulty', 'text-ellipsis']">
-    						{{ difficultyKind(question.difficulty) }}
+							{{ difficultyKind(question.difficulty) }}
 						</td>
 						<td>
 							{{ question.type === 0 ? '代码题' : '选择题' }}
@@ -40,10 +40,9 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps } from 'vue';
 import { useRouter } from 'vue-router';
 
-const router=useRouter()
+const router = useRouter()
 
 interface Question {
 	id: string;
@@ -99,9 +98,9 @@ function exerciseDetail(id: number, type: number) {
 			path: '/program/detail',
 			query: { id: id } // 使用 query 参数传递 id
 		});
-	}else{
+	} else {
 		router.push({
-			path:'/choice/detail',
+			path: '/choice/detail',
 			query: { id: id }
 		})
 	}

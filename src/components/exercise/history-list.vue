@@ -63,10 +63,10 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps,ref } from 'vue';
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import {codeRecordDetail} from './api/code_record_detail';
-import { NModal,NDivider,NH3,NTabs,NTabPane } from 'naive-ui';
+import { NModal,NTabs,NTabPane } from 'naive-ui';
 import monacoEditor from '../../views/program-detail/components/monacoEditor.vue';
 const language = ref('java')
 const editorMounted = (editor: monaco.editor.IStandaloneCodeEditor) => {

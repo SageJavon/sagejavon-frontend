@@ -38,7 +38,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, defineProps } from 'vue';
+import { ref, computed } from 'vue';
 
 // 定义 props 接收 index 参数
 const props = defineProps<{

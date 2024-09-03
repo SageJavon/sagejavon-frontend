@@ -25,7 +25,7 @@
  * 寅
  * @Desc: 主题
  */
-import { ref, defineProps, onMounted, computed, watch, onBeforeMount } from 'vue'
+import { ref, onMounted, computed, watch, onBeforeMount } from 'vue'
 import Sidebar from './Sidebar'
 import { themeList } from 'simple-mind-map/src/constants/constant'
 import { storeConfig } from '@/api'

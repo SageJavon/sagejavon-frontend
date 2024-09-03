@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, onMounted, onUnmounted, getCurrentInstance } from 'vue'
+import { ref, onMounted, onUnmounted, getCurrentInstance } from 'vue'
 const props = defineProps({
   mindMap: {
     type: Object,
