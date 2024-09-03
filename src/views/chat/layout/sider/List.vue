@@ -2,14 +2,12 @@
 import { computed, ref } from "vue";
 import { NInput, NPopconfirm, NScrollbar, useMessage, NSpin } from "naive-ui";
 import { SvgIcon } from "@/components/common";
-import { useAppStore, useChatStore } from "@/store";
+import { useAppStore } from "@/store/modules/app";
+import { useChatStore } from "@/store/modules/chat";
 import { useBasicLayout } from "@/hooks/useBasicLayout";
 import { debounce } from "@/utils/functions/debounce";
 import { chatList } from "@/views/chat/api/chat_list";
 import { deleteChat } from "@/views/chat/api/delete_chat";
-import { useRouter } from "vue-router";
-
-const router = useRouter();
 
 const { isMobile } = useBasicLayout();
 const message = useMessage();
@@ -94,6 +92,7 @@ const getChatList = async () => {
 getChatList();
 const programUuid = localStorage.getItem("program-uuid");
 
+// 过滤掉编程导师的聊天记录
 const dataSources = computed(() =>
   chatStore.history.filter((item) => item.uuid !== Number(programUuid))
 );
@@ -110,7 +109,7 @@ async function handleSelect({ uuid }: Chat.History) {
 
   if (isMobile.value) appStore.setSiderCollapsed(true);
   window.location.reload();
-  
+
 }
 
 function handleEdit(
@@ -163,46 +162,32 @@ function isActive(uuid: number) {
       <NSpin v-if="loading" />
       <template v-else>
         <template v-if="!dataSources.length">
-          <div
-            class="flex flex-col items-center mt-4 text-center text-neutral-300"
-          >
+          <!-- 如果聊天记录为空 -->
+          <div class="flex flex-col items-center mt-4 text-center text-neutral-300">
             <SvgIcon icon="ri:inbox-line" class="mb-2 text-3xl" />
             <span>{{ $t("common.noData") }}</span>
           </div>
         </template>
         <template v-else>
+          <!-- 如果聊天记录不为空 -->
           <div v-for="(item, index) of dataSources" :key="index">
-            <a
-              class="relative flex items-center gap-3 px-3 py-3 break-all rounded-md cursor-pointer hover:bg-neutral-100 group dark:border-neutral-800 dark:hover:bg-[#E44446FF]"
-              :class="
-                isActive(item.uuid) && [
-                  'bg-neutral-100',
-                  'text-[rgba(3, 34, 81, 1)]',
-                  'dark:bg-[#E44446FF]',
-                  'pr-14',
-                ]
-              "
-              @click="handleSelect(item)"
-              style="border-radius: 20px"
-            >
+            <a class="relative flex items-center gap-2 px-3 py-2 break-all rounded-md cursor-pointer hover:bg-neutral-100 group dark:border-neutral-800 dark:hover:bg-[#E44446FF] transition-all"
+              :class="isActive(item.uuid) && [
+                'bg-neutral-100',
+                'text-[rgba(3, 34, 81, 1)]',
+                'dark:bg-[#E44446FF]',
+                'pr-14',
+              ]
+                " @click="handleSelect(item)" style="border-radius: 20px">
               <span>
                 <SvgIcon icon="ri:message-3-line" />
               </span>
-              <div
-                class="relative flex-1 overflow-hidden break-all text-ellipsis whitespace-nowrap"
-              >
-                <NInput
-                  v-if="item.isEdit"
-                  v-model:value="item.title"
-                  size="tiny"
-                  @keypress="handleEnter(item, false, $event)"
-                />
-                <span v-else>{{ item.title }}</span>
+              <div class="relative flex-1 overflow-hidden break-all text-ellipsis whitespace-nowrap">
+                <NInput style="font-size: 12px;" v-if="item.isEdit" v-model:value="item.title" size="tiny"
+                  @keypress="handleEnter(item, false, $event)" />
+                <span style="font-size: 12px;" v-else>{{ item.title }}</span>
               </div>
-              <div
-                v-if="isActive(item.uuid)"
-                class="absolute z-10 flex visible right-1"
-              >
+              <div v-if="isActive(item.uuid)" class="absolute z-10 flex visible right-1">
                 <template v-if="item.isEdit">
                   <button class="p-1" @click="handleEdit(item, false, $event)">
                     <SvgIcon icon="ri:save-line" />
@@ -210,15 +195,9 @@ function isActive(uuid: number) {
                 </template>
                 <template v-else>
                   <button class="p-1">
-                    <SvgIcon
-                      icon="ri:edit-line"
-                      @click="handleEdit(item, true, $event)"
-                    />
+                    <SvgIcon icon="ri:edit-line" @click="handleEdit(item, true, $event)" />
                   </button>
-                  <NPopconfirm
-                    placement="bottom"
-                    @positive-click="handleDeleteDebounce(index, $event)"
-                  >
+                  <NPopconfirm placement="bottom" @positive-click="handleDeleteDebounce(index, $event)">
                     <template #trigger>
                       <button class="p-1">
                         <SvgIcon icon="ri:delete-bin-line" />

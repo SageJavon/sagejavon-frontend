@@ -64,10 +64,11 @@ const myIcons = icons();
 // 根据当前路由初始化侧边栏图标
 {
   show.value = false;
-  switch (router.currentRoute.value.path) {
+  const path = router.currentRoute.value.path;
+  switch (path) {
     case "/chat/:uuid":
-      show.value = true;
       myIcons.activate(1);
+      show.value = true;
       break;
     case "/knowledge/skills":
       myIcons.activate(0);
@@ -80,6 +81,7 @@ const myIcons = icons();
       break;
     default:
       myIcons.activate(1); // 默认值
+      show.value = true;
       break;
   }
 }
@@ -220,30 +222,13 @@ watch(
       <NSpin size="large" />
     </div>
 
-    <NLayoutSider v-if="show" :collapsed="newSidebarCollapsed" :collapsed-width="0" :width="200"
-      collapse-mode="transform" :show-trigger="isMobile ? false : 'arrow-circle'"
-      style="height: 100%; background-color: rgba(3, 34, 81, 0.2)" bordered :style="getMobileClass"
-      @update-collapsed="handleNewSidebarCollapsed">
-      <div class="flex flex-col h-full w-full" :style="mobileSafeArea">
-        <main class="flex flex-1 h-full w-full">
-          <div class="flex flex-col h-full w-full">
-            <div class="p-4">
-              <button style="
-                  border-radius: 20px;
-                  background-color: rgba(3, 34, 81, 0.9);
-                  color: #ffffff;
-                  width: 100%;
-                  padding-top: 8px;
-                  padding-bottom: 8px;
-                " block @click="handleAdd">
-                新增提问
-              </button>
-            </div>
-            <div class="flex-1 min-h-0 pb-4 overflow-hidden h-full">
-              <List />
-            </div>
-          </div>
-        </main>
+    <NLayoutSider v-if="show" :collapsed-width="0" :width="200" collapse-mode="transform"
+      :show-trigger="isMobile ? false : 'arrow-circle'" bordered :style="getMobileClass">
+      <div class="chat-history-container" :style="mobileSafeArea">
+        <button class="add-chat-btn" @click="handleAdd">新增提问</button>
+        <div>
+          <List />
+        </div>
       </div>
       <!-- 在这里添加侧边栏的内容 -->
     </NLayoutSider>
@@ -253,6 +238,10 @@ watch(
 </template>
 
 <style lang="less" scoped>
+* {
+  --background-transition-animation: background-color 200ms ease-out;
+}
+
 .side-container {
   height: 100%;
   overflow-y: auto;
@@ -277,7 +266,7 @@ watch(
     display: flex;
     flex-direction: column;
     align-items: center;
-    row-gap: 24px;
+    row-gap: 20px;
 
     .side-item {
       display: flex;
@@ -287,7 +276,7 @@ watch(
       cursor: pointer;
       border-radius: 6px;
       padding: 4px 6px;
-      transition: background-color 200ms ease-out;
+      transition: var(--background-transition-animation);
 
       &:hover {
         background-color: #00000012;
@@ -307,6 +296,30 @@ watch(
       text.activeText {
         color: #e95900;
       }
+    }
+  }
+}
+
+/* 以下是第二个侧边栏：聊天记录侧边栏的样式 */
+.chat-history-container {
+  height: 100vh;
+  width: 100%;
+  padding: 20px 0;
+
+  .add-chat-btn {
+    display: block;
+    background-color: var(--theme-orange);
+    color: white;
+    height: 32px;
+    width: 72%;
+    margin: 0px auto 20px;
+    border-radius: 16px;
+    font-size: 0.92rem;
+    letter-spacing: 1px;
+    transition: var(--background-transition-animation);
+
+    &:hover {
+      background-color: var(--theme-orange-hover);
     }
   }
 }

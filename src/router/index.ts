@@ -115,6 +115,7 @@ router.beforeEach((to, from, next) => {
   pageStore.updatePage(currentPage)
   const previousPage = pageStore.previousPage.substring(0, pageStore.previousPage.lastIndexOf('.'))
 
+  // TODO: 用户首次使用无LocalStorage，导致报错，待修复
   // 页面切换埋点事件
   const tags=JSON.stringify(
     {
