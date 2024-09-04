@@ -408,7 +408,7 @@ function cancel() {
   z-index: 999;
   backdrop-filter: blur(0px);
   opacity: 0;
-  transition: backdrop-filter 0.5s cubic-bezier(0.165, 0.840, 0.440, 1.000),
+  transition: backdrop-filter 320ms ease-out,
     opacity 280ms;
 }
 
@@ -418,7 +418,7 @@ function cancel() {
 }
 
 .sign-in-container {
-  transition: all 280ms cubic-bezier(0.000, 0.700, 0.300, 1.010);
+  transition: all 280ms cubic-bezier(0.430, 0.010, 0.000, 1);
   position: fixed;
   top: 50%;
   left: 50%;
