@@ -127,6 +127,7 @@ router.beforeEach((to, from, next) => {
     }
   )
 
+
   // 界面切换事件保存到pinias
   eventStore.addEvent('page_load',tags)
 
@@ -161,7 +162,7 @@ function startEventReporting() {
       try {
         console.log(events)
         const response = await reportEvent({ data: events });
-        console.log('Report event response:', response.data);  
+        console.log('Report event response:', response);  
         eventStore.clearEvents();  
       } catch (error) {
         console.error('Error reporting events:', error);
@@ -177,7 +178,9 @@ function startEventReporting() {
 export async function setupRouter(app: App) {
   app.use(router)
   await router.isReady()
-  startEventReporting()
+  if(isLoggedIn()){
+    startEventReporting()
+  }
 }
 
 export function isLoggedIn(): boolean {

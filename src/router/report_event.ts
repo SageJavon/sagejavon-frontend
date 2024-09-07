@@ -29,7 +29,7 @@ function reportEvent(params: ReportEventParams): Promise<AxiosResponse> {
     url: `https://api.xhpolaris.com/platform/report_event`,
     headers: {
       'Content-Type': 'application/json',
-      'token': localStorage.getItem('user-token') || '',
+      'Authentication': localStorage.getItem('user-token') || '',
     },
     data: {
         'data':data 
