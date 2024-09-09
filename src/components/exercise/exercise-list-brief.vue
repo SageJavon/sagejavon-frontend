@@ -37,8 +37,8 @@ interface Question {
 
 const props = defineProps<{ questions: Question[] }>();
 
-const statusClass = (status: string) => {
-	return status === '完成' ? 'status-complete' : 'status-pending';
+const statusClass = (status: number) => {
+	return status === 1 ? 'status-complete' : 'status-pending';
 };
 
 const difficultyClass = (difficulty: number) => {
@@ -107,7 +107,7 @@ function exerciseDetail(id: number, type: number) {
 	border-radius: 10px;
 	overflow: hidden;
 	color:#ffffff;
-	box-shadow: 4px 4px 16px 0px #00000014;
+	/* box-shadow: 4px 4px 16px 0px #00000014; */
 }
 
 .question-list th,
@@ -125,7 +125,7 @@ function exerciseDetail(id: number, type: number) {
 
 .question-list tbody tr:hover {
 	background: #FFFFFF4D;
-	border-radius: 20px;
+	cursor: pointer;
 }
 
 .first-row td {
