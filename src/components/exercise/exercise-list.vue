@@ -55,8 +55,8 @@ interface Question {
 
 const props = defineProps<{ questions: Question[] }>();
 
-const statusClass = (status: string) => {
-	return status === '1' ? 'status-complete' : 'status-pending';
+const statusClass = (status: number) => {
+	return status === 1 ? 'status-complete' : 'status-pending';
 };
 
 const difficultyClass = (difficulty: number) => {
@@ -143,6 +143,7 @@ function exerciseDetail(id: number, type: number) {
 
 .question-list tbody tr:hover {
 	background-color: #f5f5f5;
+	cursor: pointer;
 }
 
 .first-row td {
