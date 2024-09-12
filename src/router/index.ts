@@ -117,26 +117,26 @@ router.beforeEach((to, from, next) => {
 
   // TODO: 用户首次使用无LocalStorage，导致报错，待修复
   // 页面切换埋点事件
-  const tags = JSON.stringify(
-    {
-      previous_page: previousPage,
-      current_page: to.name,
-      client_name: new Date().toISOString(),
-      from_page: from.name || "",
-      nickname: JSON.parse(localStorage.getItem('userInfo')!!).nickname
-    }
-  )
-
-
-  // 界面切换事件保存到pinias
-  eventStore.addEvent('page_load', tags)
 
   // 检查路由是否需要身份验证
   if (to.meta.requiresAuth) {
     // 如果需要验证身份，则检查用户是否已登录
     if (isLoggedIn()) {
+      const tags = JSON.stringify(
+        {
+          previous_page: previousPage,
+          current_page: to.name,
+          client_name: new Date().toISOString(),
+          from_page: from.name || "",
+          nickname: JSON.parse(localStorage.getItem('userInfo')!!).nickname
+        }
+      )
+
+
+      // 界面切换事件保存到pinias
+      eventStore.addEvent('page_load', tags)
       // 用户已登录，继续导航
-      // startEventReporting()
+      startEventReporting()
       next()
     }
     else {
