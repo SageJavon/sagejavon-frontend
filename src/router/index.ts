@@ -136,7 +136,7 @@ router.beforeEach((to, from, next) => {
     // 如果需要验证身份，则检查用户是否已登录
     if (isLoggedIn()) {
       // 用户已登录，继续导航
-      startEventReporting()
+      // startEventReporting()
       next()
     }
     else {
