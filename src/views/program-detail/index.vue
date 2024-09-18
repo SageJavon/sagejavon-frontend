@@ -33,6 +33,7 @@
               </div>
             </div>
           </div>
+
           <div class="content">
             <div v-if="activeTab === 'content'">
               <div class="program-content">
@@ -41,21 +42,24 @@
                   <span
                     class="knowledge-point"
                     v-for="(knowledge, index) in programDetail.knowledgeConcept"
+                    :key="index"
                   >
-                    <i class="icon-tag"> </i> {{ knowledge.knowledge }}
+                    <i class="icon-tag"></i> {{ knowledge.knowledge }}
                   </span>
                 </div>
                 <pre class="code-block">
-              <v-md-preview :text="programDetail.questionText"></v-md-preview>
-            </pre>
+                  <v-md-preview :text="programDetail.questionText"></v-md-preview>
+                </pre>
               </div>
             </div>
+
             <div v-if="activeTab === 'history'">
-              <div v-if="records.length != 0">
+              <div v-if="records.length !== 0">
                 <history-list :records="records"></history-list>
               </div>
               <div v-else>还没有答题记录</div>
             </div>
+
             <div v-if="activeTab === 'solution'">
               <monaco-editor
                 v-model="correct"
@@ -66,8 +70,22 @@
               ></monaco-editor>
             </div>
           </div>
-        </div>
+
+          <!-- 赞/踩按钮 -->
+          <div class="feedback-buttons">
+            <button @click="toggleLike" :class="{ liked: isLiked }" class="feedback-button">
+              <span class="icon">👍</span>
+              <span>推荐的题目很有用~</span>
+            </button>
+            <button @click="toggleDislike" :class="{ disliked: isDisliked }" class="feedback-button">
+              <span class="icon">👎</span>
+              <span>不喜欢本道推荐题目</span>
+            </button>
+          </div>
+
+        </div> <!-- 关闭的 .sidebar -->
       </template>
+
       <template #code>
         <div class="main">
           <div class="tabs-two">
@@ -95,19 +113,21 @@
             style="width: 100%; margin-top: 5px"
             type="primary"
             @click="submitCode"
-            >提交代码(大模型评分)
+          >
+            提交代码(大模型评分)
           </NButton>
           <NButton
             v-if="isLoading"
             style="width: 100%; margin-top: 5px"
             type="info"
             disabled
-            >正在评分中...
+          >
+            正在评分中...
           </NButton>
         </div>
-        <!-- <DragBall /> -->
       </template>
     </PanelBox>
+
     <NModal
       v-model:show="showModal"
       class="custom-card"
@@ -139,6 +159,7 @@ import { questionCode } from "./api/question_code";
 import ModalDialog from "./components/ModalDialog.vue";
 import historyList from "@/components/exercise/history-list.vue";
 import { recordList } from "./api/record_list";
+import { reviewQuestion } from './api/question_review';
 import { codeRecordDetail } from "@/components/exercise/api/code_record_detail";
 const bodyStyle = ref({
   width: "700px",
@@ -182,21 +203,31 @@ const correct = ref("");
 // records.value = response.data.data
 // console.log(records.value)
 
-onMounted(() => {
-  recordList(questionId.value).then((res) => {
+onMounted(async () => {
+  try {
+    const res = await recordList(questionId.value);
     console.log(res);
     records.value = res.data.data;
-  });
+  } catch (error) {
+    console.error("获取记录失败:", error);
+  }
 
-  // 获取正确答案
-  codeRecordDetail(questionId.value)
-    .then((response) => {
-      correct.value = response.data.data.correctAnswer;
-    })
-    .catch((error) => {
-      console.error("提交失败:", error);
-      // Handle error
-    });
+  try {
+    const response = await codeRecordDetail(questionId.value);
+    correct.value = response.data.data.correctAnswer;
+  } catch (error) {
+    console.error("获取正确答案失败:", error);
+  }
+
+  try {
+    const programRes = await programDetails(questionId.value);
+    if (programRes.status === 200) {
+      programDetail.value = programRes.data.data;
+      exerciseId.value = programDetail.value.id; // 只有在数据加载完成后才赋值
+    }
+  } catch (err) {
+    console.error("获取程序详情失败:", err);
+  }
 });
 
 export interface Program {
@@ -279,6 +310,65 @@ function submitCode(choice: string) {
       // Handle error
     });
 }
+
+
+const isLiked = ref(false);
+const isDisliked = ref(false);
+async function toggleLike() {
+  if (isDisliked.value) {
+    await submitReview(0); // 先取消踩
+    isDisliked.value = false;
+  }
+  await submitReview(isLiked.value ? 0 : 1); // 点赞或取消点赞
+}
+
+async function toggleDislike() {
+  if (isLiked.value) {
+    await submitReview(0); // 先取消点赞
+    isLiked.value = false;
+  }
+  await submitReview(isDisliked.value ? 0 : -1); // 踩或取消踩
+}
+
+
+const exerciseId = ref<number>(programDetail.value.id); // 从题目中获取ID
+
+
+// 提交评价
+async function submitReview(reviewType: number) {
+  // 检查 exerciseId 是否定义
+  if (typeof exerciseId.value === 'undefined' || exerciseId.value === null) {
+    console.error("exerciseId is undefined");
+    return;
+  }
+  if (typeof reviewType !== "number") {
+    console.error("Invalid reviewType", reviewType);
+    return;
+  }
+
+  try {
+    const response = await reviewQuestion(exerciseId.value.toString(), reviewType);
+    if (response && response.status === 200) {
+      console.log("评价成功:", response.data);
+      if (reviewType === 1) {
+        isLiked.value = true;
+        isDisliked.value = false;
+      } else if (reviewType === -1) {
+        isLiked.value = false;
+        isDisliked.value = true;
+      } else {
+        isLiked.value = false;
+        isDisliked.value = false;
+      }
+    } else {
+      console.error("评价失败:", response?.data || '未知错误');
+    }
+  } catch (error) {
+    console.error("提交评价失败:", error.message);
+  }
+}
+
+
 </script>
 
 <style scoped>
@@ -437,5 +527,45 @@ function submitCode(choice: string) {
   background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%23666" d="M21.41 11.58l-9-9A2 2 0 0010.34 2H4a2 2 0 00-2 2v6.34a2 2 0 00.58 1.42l9 9a2 2 0 002.83 0l6.34-6.34a2 2 0 000-2.83zM6.5 8.5A1.5 1.5 0 118 7a1.5 1.5 0 01-1.5 1.5z"/></svg>')
     no-repeat center center;
   background-size: contain;
+}
+
+.feedback-buttons {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 1000; 
+}
+
+.feedback-button {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.feedback-button:hover {
+  background-color: #f0f0f0;
+  border-color: #ccc;
+}
+
+.feedback-button .icon {
+  margin-right: 8px;
+}
+
+.liked {
+  border-color: #4caf50;
+  color: #4caf50;
+}
+
+.disliked {
+  border-color: #f44336;
+  color: #f44336;
 }
 </style>

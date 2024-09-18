@@ -117,25 +117,26 @@ router.beforeEach((to, from, next) => {
 
   // TODO: 用户首次使用无LocalStorage，导致报错，待修复
   // 页面切换埋点事件
-  const tags=JSON.stringify(
-    {
-      previous_page:previousPage,
-      current_page:to.name,
-      client_name:new Date().toISOString(),
-      from_page:from.name||"",
-      nickname:JSON.parse(localStorage.getItem('userInfo')!!).nickname
-    }
-  )
-
-
-  // 界面切换事件保存到pinias
-  eventStore.addEvent('page_load',tags)
 
   // 检查路由是否需要身份验证
   if (to.meta.requiresAuth) {
     // 如果需要验证身份，则检查用户是否已登录
     if (isLoggedIn()) {
+      const tags = JSON.stringify(
+        {
+          previous_page: previousPage,
+          current_page: to.name,
+          client_name: new Date().toISOString(),
+          from_page: from.name || "",
+          nickname: JSON.parse(localStorage.getItem('userInfo')!!).nickname
+        }
+      )
+
+
+      // 界面切换事件保存到pinias
+      eventStore.addEvent('page_load', tags)
       // 用户已登录，继续导航
+      startEventReporting()
       next()
     }
     else {
@@ -151,26 +152,26 @@ router.beforeEach((to, from, next) => {
 
 function startEventReporting() {
   const eventStore = useEventStore();
-  let isReporting = false;  
+  let isReporting = false;
 
   setInterval(async () => {
-    if (isReporting) return;  
-    isReporting = true; 
+    if (isReporting) return;
+    isReporting = true;
 
     const events = eventStore.getEvents();
     if (events.length > 0) {
       try {
         console.log(events)
         const response = await reportEvent({ data: events });
-        console.log('Report event response:', response);  
-        eventStore.clearEvents();  
+        console.log('Report event response:', response);
+        eventStore.clearEvents();
       } catch (error) {
         console.error('Error reporting events:', error);
       } finally {
-        isReporting = false;  
+        isReporting = false;
       }
     } else {
-      isReporting = false;  
+      isReporting = false;
     }
   }, 5000);  // 每 5 秒检查一次
 }
@@ -178,11 +179,8 @@ function startEventReporting() {
 export async function setupRouter(app: App) {
   app.use(router)
   await router.isReady()
-  if(isLoggedIn()){
-    startEventReporting()
-  }
 }
 
 export function isLoggedIn(): boolean {
-  return localStorage.getItem('user-token') !== null 
+  return localStorage.getItem('user-token') !== null
 }

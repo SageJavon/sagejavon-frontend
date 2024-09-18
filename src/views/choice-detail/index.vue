@@ -1,3 +1,4 @@
+
 <template>
   <div class="full-height">
     <div class="container">
@@ -143,7 +144,19 @@
         </div>
       </div>
     </div>
-  </div>
+
+​    <!-- 点赞和踩按钮 -->
+    <div class="feedback-buttons">
+        <button @click="toggleLike" :class="{ liked: isLiked }" class="feedback-button">
+          <span class="icon">👍</span>
+          <span>推荐的题目很有用~</span>
+        </button>
+        <button @click="toggleDislike" :class="{ disliked: isDisliked }" class="feedback-button">
+          <span class="icon">👎</span>
+          <span>不喜欢本道推荐题目</span>
+        </button>
+      </div>
+​    </div>
 </template>
 
 <script setup lang="ts">
@@ -153,6 +166,7 @@ import { choiceDetails } from "./api/choice_detail";
 import { questionSelect } from "./api/question_select";
 import iconLeftArrow from "./images/left-arrow.png";
 import iconRightArrow from "./images/right-arrow.png";
+import { reviewQuestion } from './api/question_review';
 
 const route = useRoute();
 const router = useRouter();
@@ -162,21 +176,23 @@ const choiceDetail = ref<Choice>({});
 const isLoading = ref(false); // Track loading state
 
 const getChoiceDetail = async (id) => {
-  isLoading.value = true; // Start loading
+  isLoading.value = true;
   try {
     const res = await choiceDetails(id);
+    console.log('API Response:', res);
     if (res.status === 200) {
-      console.log(res);
       choiceDetail.value = res.data.data;
+      exerciseId.value = choiceDetail.value.id; // 题目数据获取后赋值
     } else {
-      // Handle error
+      console.error('Error response status:', res.status);
     }
   } catch (err) {
-    console.error("获取选择题详情失败:", err);
+    console.error('获取选择题详情失败:', err);
   } finally {
-    isLoading.value = false; // Stop loading
+    isLoading.value = false;
   }
 };
+
 
 getChoiceDetail(questionId.value);
 
@@ -250,6 +266,56 @@ function getPreviousQuestionId(currentId) {
 function getNextQuestionId(currentId) {
   return Number(currentId) + 1; // Example logic
 }
+
+
+const isLiked = ref(false);
+const isDisliked = ref(false);
+async function toggleLike() {
+  if (isDisliked.value) {
+    await submitReview(0); // 先取消踩
+    isDisliked.value = false;
+  }
+  await submitReview(isLiked.value ? 0 : 1); // 点赞或取消点赞
+}
+
+async function toggleDislike() {
+  if (isLiked.value) {
+    await submitReview(0); // 先取消点赞
+    isLiked.value = false;
+  }
+  await submitReview(isDisliked.value ? 0 : -1); // 踩或取消踩
+}
+
+
+const exerciseId = ref<number>(choiceDetail.value.id); // 确保从题目数据中获取 ID
+
+
+// 提交评价
+async function submitReview(reviewType: number) {
+  try {
+    const response = await reviewQuestion(exerciseId.value, reviewType); // 确保 exerciseId 正确
+    if (response && response.status === 200) {
+      console.log("评价成功:", response.data);
+      if (reviewType === 1) {
+        isLiked.value = true;
+        isDisliked.value = false;
+      } else if (reviewType === -1) {
+        isLiked.value = false;
+        isDisliked.value = true;
+      } else {
+        isLiked.value = false;
+        isDisliked.value = false;
+      }
+    } else {
+      console.error("评价失败:", response?.data || '未知错误');
+    }
+  } catch (error) {
+    console.error("提交评价失败:", error.message);
+  }
+}
+
+
+
 </script>
 
 <style scoped>
@@ -478,5 +544,45 @@ function getNextQuestionId(currentId) {
 
 .nav-button:hover {
   background-color: #b0aeae;
+}
+
+.feedback-buttons {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 1000; /* 确保按钮在最上层 */
+}
+
+.feedback-button {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.feedback-button:hover {
+  background-color: #f0f0f0;
+  border-color: #ccc;
+}
+
+.feedback-button .icon {
+  margin-right: 8px;
+}
+
+.liked {
+  border-color: #4caf50;
+  color: #4caf50;
+}
+
+.disliked {
+  border-color: #f44336;
+  color: #f44336;
 }
 </style>
