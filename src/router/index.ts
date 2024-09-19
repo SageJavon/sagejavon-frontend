@@ -132,8 +132,6 @@ router.beforeEach((to, from, next) => {
           nickname: userInfo.nickname || localStorage.getItem('user-id')
         }
       )
-
-
       // 界面切换事件保存到pinias
       eventStore.addEvent('page_load', tags)
       // 用户已登录，继续导航
