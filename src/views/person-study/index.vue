@@ -199,7 +199,7 @@ function padNumber(num) {
 }
 
 .statistics-number {
-  font-family: "SJ";
+  font-family: "Legend";
   font-weight: bold;
   font-size: 36px;
   background: linear-gradient(78.09deg, #1E7AFF -10.56%, #15FFAC 134.74%);
