@@ -30,7 +30,7 @@ const initChart = () => {
 				legendHoverLink: true,
 				draggable: true,
 				edgeSymbol: ['none', 'arrow'],
-				edgeSymbolSize: [0, 5],
+				edgeSymbolSize: [0, 8],
 				cursor: 'pointer',
 				layout: 'none',
 				data: chartData.nodes.map((node: RawNode) => {
