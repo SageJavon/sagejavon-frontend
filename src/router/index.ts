@@ -122,17 +122,16 @@ router.beforeEach((to, from, next) => {
   if (to.meta.requiresAuth) {
     // 如果需要验证身份，则检查用户是否已登录
     if (isLoggedIn()) {
+      const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}')
       const tags = JSON.stringify(
         {
           previous_page: previousPage,
           current_page: to.name,
           client_name: new Date().toISOString(),
           from_page: from.name || "",
-          nickname: JSON.parse(localStorage.getItem('userInfo')!!).nickname
+          nickname: userInfo.nickname || localStorage.getItem('user-id')
         }
       )
-
-
       // 界面切换事件保存到pinias
       eventStore.addEvent('page_load', tags)
       // 用户已登录，继续导航
