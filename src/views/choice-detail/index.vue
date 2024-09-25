@@ -17,7 +17,7 @@
         </div>
         <div @click="activeTab = 'history'" :class="{ active: activeTab === 'history' }" class="circle-flex">
           <div class="circle">
-            <svg t="1727007113440" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
+            <!-- <svg t="1727007113440" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
               p-id="6521" width="200" height="200">
               <path
                 d="M511.998 64C264.574 64 64 264.574 64 511.998S264.574 960 511.998 960 960 759.422 960 511.998 759.422 64 511.998 64z m353.851 597.438c-82.215 194.648-306.657 285.794-501.306 203.579S78.749 558.36 160.964 363.711 467.621 77.917 662.27 160.132c168.009 70.963 262.57 250.652 225.926 429.313a383.995 383.995 0 0 1-22.347 71.993z"
@@ -25,14 +25,14 @@
               <path
                 d="M543.311 498.639V256.121c0-17.657-14.314-31.97-31.97-31.97s-31.97 14.314-31.97 31.97v269.005l201.481 201.481c12.485 12.485 32.728 12.485 45.213 0s12.485-32.728 0-45.213L543.311 498.639z"
                 fill="#cdcdcd" p-id="6523"></path>
-            </svg>
+            </svg> -->
           </div>
-          <div class="title">
+          <!-- <div class="title">
             历史记录
-          </div>
+          </div> -->
         </div>
         <div @click="activeTab = 'solution'" :class="{ active: activeTab === 'solution' }" class="circle-flex">
-          <div class="circle">
+          <!-- <div class="circle">
             <svg t="1727007243618" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
               p-id="8443" width="200" height="200">
               <path
@@ -42,7 +42,7 @@
           </div>
           <div class="title">
             正确题解
-          </div>
+          </div> -->
         </div>
       </div>
       <div class="content">
@@ -123,12 +123,12 @@
           </div>
           <!-- <div v-else>没有更多题目了~</div> -->
         </div>
-        <div v-if="activeTab === 'history'">
+        <!-- <div v-if="activeTab === 'history'">
           <p>这里显示历史记录...</p>
         </div>
         <div v-if="activeTab === 'solution'">
           <p>这里显示正确题解...</p>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>

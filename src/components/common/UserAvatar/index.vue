@@ -1,28 +1,22 @@
 <script setup lang='ts'>
 import { NAvatar } from 'naive-ui'
 import { ref } from 'vue'
-import { getUserInfo } from './api/info/get_user_info'
 
-const user = ref<any>(null) // 假设用户信息是任意类型
+let defaultPortrait = ref("https://tse4-mm.cn.bing.net/th/id/OIP-C.IJqR74BwudERFnq5R-h92AAAAA?rs=1&pid=ImgDetMain")
+const user = JSON.parse(localStorage.getItem('userInfo') || '{}')
 
-function getUserInfoF() {
-  getUserInfo().then((userInfoRes) => {
-    if (userInfoRes.status === 200)
-      user.value = userInfoRes.data.data
-  }).catch((err) => {
-    // 在这里处理获取用户信息失败的情况
-    console.log(err)
-  })
+if (user.portrait) {
+  defaultPortrait.value = user.portrait
 }
-const defaultPortrait = ref("https://tse4-mm.cn.bing.net/th/id/OIP-C.IJqR74BwudERFnq5R-h92AAAAA?rs=1&pid=ImgDetMain")
-getUserInfoF() // 页面onShow时调用接口获取用户信息
+
+console.log(defaultPortrait.value)
+
 </script>
 
 <template>
   <div v-if="user" class="items-center">
     <div class="h-10 items-center-item">
-      <NAvatar v-if="user.portrait" size="large" round :src="user.portrait" />
-      <NAvatar v-if="!user.portrait" size="large" round :src="defaultPortrait" />
+      <NAvatar referrerpolicy="no-referrer" size="large" round :src="defaultPortrait" />
     </div>
     <div class="flex-1 min-w-0 items-center-item">
       <h2 style="color:#9cacc0" class="overflow-hidden font-bold text-md text-ellipsis whitespace-nowrap">
@@ -33,10 +27,10 @@ getUserInfoF() // 页面onShow时调用接口获取用户信息
 </template>
 
 <style>
-.items-center-item{
+.items-center-item {
   display: flex;
   align-items: center;
-	justify-content: center;
-	width:100%
+  justify-content: center;
+  width: 100%
 }
 </style>
