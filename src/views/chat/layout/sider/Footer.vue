@@ -9,7 +9,7 @@ const show = ref(false)
 </script>
 
 <template>
-  <footer class="items-center justify-between min-w-0 p-4 overflow-hidden border-t dark:border-neutral-800">
+  <footer class="items-center justify-between min-w-0 p-4 overflow-hidden dark:border-neutral-800">
     <div class="flex-shrink-0 overflow-hidden">
       <UserAvatar />
     </div>
