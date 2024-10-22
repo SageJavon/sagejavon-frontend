@@ -6,6 +6,8 @@
         <!-- You can replace this with a spinner or any loading animation -->
       </div>
       <div v-else>
+        <NTag :bordered="false" type="success" size="large" :strong="true" :round="true">章节：{{ chapter }}
+        </NTag>
         <exercise-list :questions="questions"></exercise-list>
       </div>
     </div>
@@ -18,8 +20,9 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
 import exerciseList from '@/components/exercise/exercise-list.vue';
-import { questionChoice } from './api/question_choice';
-import { NPagination } from 'naive-ui';
+import { questionChapter } from './api/question_chapter';
+import { NPagination, NTag } from 'naive-ui';
+import { useRoute } from 'vue-router';
 
 interface KnowledgeConcept {
   knowledgeId: number;
@@ -34,14 +37,14 @@ interface Question {
   difficulty: string;
   type: number;
 }
+const route = useRoute();
 
 const questions = ref<Question[]>([]);
 const isLoading = ref(false); // Track loading state
-
+const chapter = route.query.chapter
 const currentPage = ref(1);
 const pageSize = 10; // Adjust as per your pagination needs
-const totalPages = ref(1)
-
+const totalPages = ref(1);
 onMounted(async () => {
   await fetchData(currentPage.value); // Fetch initial data based on currentPage
 });
@@ -52,13 +55,13 @@ async function fetchData(pageNum: number) {
     const query = {
       pageNum,
       pageSize,
-      type: 1,
+      chapter,
       difficultyOrder: 0
     };
-    const response = await questionChoice(query);
+    const response = await questionChapter(query);
     console.log(response)
     questions.value = response.data.data.exerciseList; // Update questions with fetched data
-    totalPages.value = response.data.data.pages
+    totalPages.value = response.data.data.pages; // Update total pages
     currentPage.value = pageNum; // Update current page
   } catch (error) {
     console.error('Error fetching questions:', error);
@@ -84,6 +87,7 @@ function handlePaginationChange(pageNum: number) {
   align-items: center;
   /* Center vertically */
   flex-direction: column;
+
   /* Stack children vertically */
 }
 
