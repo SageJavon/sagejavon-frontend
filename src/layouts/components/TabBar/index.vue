@@ -63,14 +63,11 @@
   import { useStore } from 'vuex';
   import { useRouter } from 'vue-router';
 
-  import { useI18n } from 'vue-i18n';
-
   export default {
     name: 'TabBar',
     setup() {
       const store = useStore();
       const router = useRouter();
-      const { t } = useI18n();
 
       const state = reactive({
         affixtabs: [],

@@ -3,6 +3,9 @@ import type { PluginOption } from 'vite'
 import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { VitePWA } from 'vite-plugin-pwa'
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
 function setupPlugins(env: ImportMetaEnv): PluginOption[] {
   return [
@@ -18,6 +21,13 @@ function setupPlugins(env: ImportMetaEnv): PluginOption[] {
         ],
       },
     }),
+    // ...
+    AutoImport({
+      resolvers: [ElementPlusResolver()],
+    }),
+    Components({
+      resolvers: [ElementPlusResolver()],
+    }),
   ]
 }
 
@@ -25,10 +35,21 @@ export default defineConfig((env) => {
   const viteEnv = loadEnv(env.mode, process.cwd()) as unknown as ImportMetaEnv
 
   return {
+    
+   optimizeDeps: {
+    include: [
+      `monaco-editor/esm/vs/language/json/json.worker`,
+      `monaco-editor/esm/vs/language/css/css.worker`,
+      `monaco-editor/esm/vs/language/html/html.worker`,
+      `monaco-editor/esm/vs/language/typescript/ts.worker`,
+      `monaco-editor/esm/vs/editor/editor.worker`
+    ], 
+  },
     resolve: {
       alias: {
         '@': path.resolve(process.cwd(), 'src'),
       },
+      extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue']
     },
     plugins: setupPlugins(viteEnv),
     transpileDependencies: false,
