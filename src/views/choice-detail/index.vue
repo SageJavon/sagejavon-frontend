@@ -311,7 +311,7 @@ async function submitReview(reviewType: number) {
 
 <style scoped lang="less">
 .full-height {
-  overflow-y: hidden;
+  overflow-y: scroll;
   height: 100vh;
   box-sizing: border-box;
   display: flex;
@@ -323,7 +323,7 @@ async function submitReview(reviewType: number) {
   .container {
     background-color: white;
     border-radius: 10px;
-    overflow: hidden;
+    overflow: scroll;
     height: 90%;
     width: 80%;
     min-width: 560px;
