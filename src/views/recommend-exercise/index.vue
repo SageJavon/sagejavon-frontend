@@ -11,10 +11,7 @@
           <!-- You can replace this with a spinner or any loading animation -->
         </div>
         <div v-else>
-          <exercise-list
-            v-if="!error"
-            :questions="filteredQuestions"
-          ></exercise-list>
+          <exercise-list v-if="!error" :questions="filteredQuestions"></exercise-list>
           <p v-if="error" class="error-message">{{ error }}</p>
         </div>
       </div>
@@ -28,6 +25,8 @@ import { questionRecommend } from './api/question_recommend'
 import exerciseList from '@/components/exercise/exercise-list.vue'
 import SearchFilter from '@/components/exercise/SearchFilter.vue'
 import welcom from '@/components/exercise/recommd-welcom.vue'
+import { questionChoice } from './api/question_choice'
+import { questionProgram } from './api/question_program'
 
 interface KnowledgeConcept {
   knowledgeId: number
@@ -62,19 +61,51 @@ async function fetchData() {
   isLoading.value = true // Set loading state while fetching data
   error.value = null // Clear previous error message
   try {
-    const response = await questionRecommend(10)
-    questions.value = response.data.data
-    // 筛选选择题和代码题
-    const choiceQuestions = questions.value.filter((q) => q.type === 1)
-    const codeQuestions = questions.value.filter((q) => q.type === 0)
+    const response = await questionRecommend(10);
+    questions.value = response.data.data;
+    const query = {
+      pageSize: 1,
+      pageNum: 2,
+      type: 1,
+      difficultyOrder: 0
+    };
+    const response2 = await questionChoice(query);
+    console.log(response2)
+    const query2 = {
+      pageNum: 1,
+      pageSize: 1,
+      type: 0,
+      difficultyOrder: 0
+    };
+    const response1 = await questionProgram(query2);
+    console.log(response1)
 
-    // 随机选择两道选择题和一道代码题
-    const randomChoiceQuestions = getRandomItems(choiceQuestions, 2)
-    const randomCodeQuestion = getRandomItems(codeQuestions, 1)
+    if (questions.value === null) {
+      filteredQuestions.value = response2.data.data.exerciseList;
+      filteredQuestions.value = filteredQuestions.value.concat(response1.data.data.exerciseList);
+    } else {
+      // 筛选选择题和代码题
+      const choiceQuestions = questions.value.filter((q) => q.type === 1);
+      const codeQuestions = questions.value.filter((q) => q.type === 0);
 
-    // 合并并赋值给 filteredQuestions
-    filteredQuestions.value = [...randomChoiceQuestions, ...randomCodeQuestion]
-    console.log(response)
+      // 随机选择两道选择题和一道代码题
+      const randomChoiceQuestions = getRandomItems(choiceQuestions, 2);
+      const randomCodeQuestion = getRandomItems(codeQuestions, 1);
+
+      // 处理没有选择题或代码题的情况
+      if (randomChoiceQuestions.length === 0 && randomCodeQuestion.length === 0) {
+        filteredQuestions.value = [];
+      } else if (randomChoiceQuestions.length === 0) {
+        filteredQuestions.value = randomCodeQuestion.concat(response2.data.data.exerciseList);
+      } else if (randomCodeQuestion.length === 0) {
+        filteredQuestions.value = randomChoiceQuestions.concat(response1.data.data.exerciseList);
+      } else {
+        // 合并并赋值给 filteredQuestions
+        filteredQuestions.value = [...randomChoiceQuestions, ...randomCodeQuestion];
+      }
+    }
+
+    console.log(response);
   } catch (err) {
     console.error('Error fetching data:', err)
     error.value = 'Failed to fetch data' // Update error message
@@ -92,22 +123,29 @@ onMounted(() => {
 <style lang="scss" scoped>
 .full-height {
   display: flex;
-  justify-content: center; /* Center horizontally */
-  align-items: center; /* Center vertically */
-  flex-direction: column; /* Stack children vertically */
+  justify-content: center;
+  /* Center horizontally */
+  align-items: center;
+  /* Center vertically */
+  flex-direction: column;
+  /* Stack children vertically */
 }
+
 .error-message {
   color: red;
   font-size: 1.2rem;
   text-align: center;
 }
-.container-table {
-}
+
+.container-table {}
 
 .container {
-  flex: 1; /* Take remaining space */
-  justify-content: center; /* Center content horizontally */
-  align-items: center; /* Center content vertically */
+  flex: 1;
+  /* Take remaining space */
+  justify-content: center;
+  /* Center content horizontally */
+  align-items: center;
+  /* Center content vertically */
 }
 
 .sticky-pagination {
@@ -126,8 +164,10 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 200px; /* Adjust height based on your design */
+  height: 200px;
+  /* Adjust height based on your design */
   font-size: 1.5rem;
-  color: #555; /* Placeholder text color */
+  color: #555;
+  /* Placeholder text color */
 }
 </style>
