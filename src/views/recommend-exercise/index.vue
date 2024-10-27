@@ -102,8 +102,6 @@ onMounted(() => {
   text-align: center;
 }
 .container-table {
-  justify-content: center;
-  justify-items: center;
 }
 
 .container {
