@@ -1,32 +1,31 @@
-<script setup lang='ts'>
-import { NAvatar } from 'naive-ui'
+<script setup lang="ts">
 import { ref } from 'vue'
 
-let defaultPortrait = ref("https://c-ssl.duitang.com/uploads/item/202003/08/20200308234634_mhyfj.jpg")
 const user = JSON.parse(localStorage.getItem('userInfo') || '{}')
+let displayName = ref('无')
 
-// 如果用户有头像信息，优先使用用户头像
-if (user.portrait) {
-  defaultPortrait.value = user.portrait
+// 根据用户昵称设置显示内容
+if (user.nickname) {
+  const firstChar = user.nickname[0]
+  const isChinese = /[\u4e00-\u9fa5]/.test(firstChar)
+  displayName.value = isChinese
+    ? firstChar
+    : user.nickname.slice(0, 2).toUpperCase()
 }
 
-function handleAvatarError() {
-  // 当头像加载失败时使用默认头像
-  defaultPortrait.value = "https://c-ssl.duitang.com/uploads/item/202003/08/20200308234634_mhyfj.jpg"; // 替换为你自己的默认头像 URL
-  console.log("头像加载失败，使用默认头像。");
-}
-
-console.log(defaultPortrait.value)
-
+console.log(displayName.value)
 </script>
 
 <template>
   <div v-if="user" class="items-center">
     <div class="h-10 items-center-item">
-      <NAvatar referrerpolicy="no-referrer" size="large" round :src="defaultPortrait" @error="handleAvatarError" />
+      <div class="avatar-placeholder">{{ displayName }}</div>
     </div>
     <div class="flex-1 min-w-0 items-center-item">
-      <h2 style="color:#9cacc0" class="overflow-hidden font-bold text-md text-ellipsis whitespace-nowrap">
+      <h2
+        style="color: #9cacc0"
+        class="overflow-hidden font-bold text-md text-ellipsis whitespace-nowrap"
+      >
         {{ user.nickname }}
       </h2>
     </div>
@@ -38,6 +37,18 @@ console.log(defaultPortrait.value)
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%
+  width: 100%;
+}
+
+.avatar-placeholder {
+  width: 40px; /* 你可以根据需要调整宽度和高度 */
+  height: 40px; /* 你可以根据需要调整宽度和高度 */
+  border-radius: 50%;
+  background-color: #e0e0e0; /* 默认背景颜色 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px; /* 字体大小 */
+  color: #9cacc0; /* 字体颜色 */
 }
 </style>
