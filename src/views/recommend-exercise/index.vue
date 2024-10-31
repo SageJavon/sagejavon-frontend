@@ -63,26 +63,30 @@ async function fetchData() {
   try {
     const response = await questionRecommend(10);
     questions.value = response.data.data;
+
     const query = {
-      pageSize: 1,
-      pageNum: 2,
+      pageSize: 102,
+      pageNum: 1,
       type: 1,
       difficultyOrder: 0
     };
+    // 选择题
     const response2 = await questionChoice(query);
     console.log(response2)
     const query2 = {
       pageNum: 1,
-      pageSize: 1,
+      pageSize: 520,
       type: 0,
       difficultyOrder: 0
     };
+    // 代码题
     const response1 = await questionProgram(query2);
-    console.log(response1)
-
     if (questions.value === null) {
-      filteredQuestions.value = response2.data.data.exerciseList;
-      filteredQuestions.value = filteredQuestions.value.concat(response1.data.data.exerciseList);
+      console.log('questions is null')
+      const randomResponse2 = response2.data.data.exerciseList.sort(() => 0.5 - Math.random()).slice(0, 2);
+
+      const randomResponse1 = response1.data.data.exerciseList.sort(() => 0.5 - Math.random()).slice(0, 1);
+      filteredQuestions.value = randomResponse1.concat(randomResponse2)
     } else {
       // 筛选选择题和代码题
       const choiceQuestions = questions.value.filter((q) => q.type === 1);
@@ -92,12 +96,18 @@ async function fetchData() {
       const randomChoiceQuestions = getRandomItems(choiceQuestions, 2);
       const randomCodeQuestion = getRandomItems(codeQuestions, 1);
 
+      console.log(randomChoiceQuestions)
+      console.log(randomCodeQuestion)
+
       // 处理没有选择题或代码题的情况
       if (randomChoiceQuestions.length === 0 && randomCodeQuestion.length === 0) {
+        console.log('没有选择题和代码题')
         filteredQuestions.value = [];
       } else if (randomChoiceQuestions.length === 0) {
+        console.log('没有选择题')
         filteredQuestions.value = randomCodeQuestion.concat(response2.data.data.exerciseList);
       } else if (randomCodeQuestion.length === 0) {
+        console.log('没有代码题')
         filteredQuestions.value = randomChoiceQuestions.concat(response1.data.data.exerciseList);
       } else {
         // 合并并赋值给 filteredQuestions
