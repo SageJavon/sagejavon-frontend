@@ -61,8 +61,8 @@ async function fetchData() {
   isLoading.value = true // Set loading state while fetching data
   error.value = null // Clear previous error message
   try {
-    const response = await questionRecommend(10);
-    questions.value = response.data.data;
+    // const response = await questionRecommend(10);
+    // questions.value = response.data.data;
 
     const query = {
       pageSize: 102,
@@ -81,41 +81,39 @@ async function fetchData() {
     };
     // 代码题
     const response1 = await questionProgram(query2);
-    if (questions.value === null) {
-      console.log('questions is null')
-      const randomResponse2 = response2.data.data.exerciseList.sort(() => 0.5 - Math.random()).slice(0, 2);
+    // 随机两道选择题
+    const randomResponse2 = response2.data.data.exerciseList.sort(() => 0.5 - Math.random()).slice(0, 2);
 
-      const randomResponse1 = response1.data.data.exerciseList.sort(() => 0.5 - Math.random()).slice(0, 1);
-      filteredQuestions.value = randomResponse1.concat(randomResponse2)
-    } else {
-      // 筛选选择题和代码题
-      const choiceQuestions = questions.value.filter((q) => q.type === 1);
-      const codeQuestions = questions.value.filter((q) => q.type === 0);
+    // 随机一道代码题
+    const randomResponse1 = response1.data.data.exerciseList.sort(() => 0.5 - Math.random()).slice(0, 1);
+    filteredQuestions.value = randomResponse1.concat(randomResponse2)
+  
+    // // 筛选选择题和代码题
+    // const choiceQuestions = questions.value.filter((q) => q.type === 1);
+    // const codeQuestions = questions.value.filter((q) => q.type === 0);
 
-      // 随机选择两道选择题和一道代码题
-      const randomChoiceQuestions = getRandomItems(choiceQuestions, 2);
-      const randomCodeQuestion = getRandomItems(codeQuestions, 1);
+    // // 随机选择两道选择题和一道代码题
+    // const randomChoiceQuestions = getRandomItems(choiceQuestions, 2);
+    // const randomCodeQuestion = getRandomItems(codeQuestions, 1);
 
-      console.log(randomChoiceQuestions)
-      console.log(randomCodeQuestion)
+    // console.log(randomChoiceQuestions)
+    // console.log(randomCodeQuestion)
+    filteredQuestions.value=randomResponse1.concat(randomResponse2)
 
-      // 处理没有选择题或代码题的情况
-      if (randomChoiceQuestions.length === 0 && randomCodeQuestion.length === 0) {
-        console.log('没有选择题和代码题')
-        filteredQuestions.value = [];
-      } else if (randomChoiceQuestions.length === 0) {
-        console.log('没有选择题')
-        filteredQuestions.value = randomCodeQuestion.concat(response2.data.data.exerciseList);
-      } else if (randomCodeQuestion.length === 0) {
-        console.log('没有代码题')
-        filteredQuestions.value = randomChoiceQuestions.concat(response1.data.data.exerciseList);
-      } else {
-        // 合并并赋值给 filteredQuestions
-        filteredQuestions.value = [...randomChoiceQuestions, ...randomCodeQuestion];
-      }
-    }
-
-    console.log(response);
+    // // 处理没有选择题或代码题的情况
+    // if (randomChoiceQuestions.length === 0 && randomCodeQuestion.length === 0) {
+    //   console.log('没有选择题和代码题')
+    //   filteredQuestions.value = [];
+    // } else if (randomChoiceQuestions.length === 0) {
+    //   console.log('没有选择题')
+    //   filteredQuestions.value = randomCodeQuestion.concat(response2.data.data.exerciseList);
+    // } else if (randomCodeQuestion.length === 0) {
+    //   console.log('没有代码题')
+    //   filteredQuestions.value = randomChoiceQuestions.concat(response1.data.data.exerciseList);
+    // } else {
+    //   // 合并并赋值给 filteredQuestions
+    //   filteredQuestions.value = [...randomChoiceQuestions, ...randomCodeQuestion];
+    // }
   } catch (err) {
     console.error('Error fetching data:', err)
     error.value = 'Failed to fetch data' // Update error message
