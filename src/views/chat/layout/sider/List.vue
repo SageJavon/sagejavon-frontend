@@ -8,6 +8,7 @@ import { useBasicLayout } from "@/hooks/useBasicLayout";
 import { debounce } from "@/utils/functions/debounce";
 import { chatList } from "@/views/chat/api/chat_list";
 import { deleteChat } from "@/views/chat/api/delete_chat";
+import { newChat } from "@/views/chat/api/new_chat";
 
 const { isMobile } = useBasicLayout();
 const message = useMessage();
@@ -59,26 +60,26 @@ const getChatList = async () => {
 
       if (transformedData.value.length === 0) {
         loading.value = true; // 设置加载状态为 true
-        // newChat()
-        //   .then((res) => {
-        //     localStorage.setItem("program-uuid", res.data.data);
-        //     if (res.status === 200) {
-        //       message.info("新增成功", { duration: 5000 });
-        //       chatStore.addHistory({
-        //         title: "编程导师",
-        //         uuid: res.data.data,
-        //         isEdit: false,
-        //       });
-        //     } else {
-        //       // 更新失败
-        //     }
-        //   })
-        //   .catch((err) => {
-        //     console.error("新增失败:", err);
-        //   })
-        //   .finally(() => {
-        //     loading.value = false; // 无论成功还是失败，清除加载状态
-        //   });
+        newChat()
+          .then((res) => {
+            localStorage.setItem("program-uuid", res.data.data);
+            if (res.status === 200) {
+              message.info("新增成功", { duration: 5000 });
+              chatStore.addHistory({
+                title: "开始你的第一段聊天吧~",
+                uuid: res.data.data,
+                isEdit: false,
+              });
+            } else {
+              // 更新失败
+            }
+          })
+          .catch((err) => {
+            console.error("新增失败:", err);
+          })
+          .finally(() => {
+            loading.value = false; // 无论成功还是失败，清除加载状态
+          });
       }
       console.log(transformedData.value);
     } else {

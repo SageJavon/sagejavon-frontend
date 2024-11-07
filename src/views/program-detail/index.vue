@@ -23,7 +23,7 @@
                 历史记录
               </div>
             </div>
-            <div class="circle-flex">
+            <!-- <div class="circle-flex">
               <div class="circle"></div>
               <div
                 @click="activeTab = 'solution'"
@@ -31,7 +31,7 @@
               >
                 正确题解
               </div>
-            </div>
+            </div> -->
           </div>
 
           <div class="content">
@@ -214,6 +214,7 @@ onMounted(async () => {
 
   try {
     const response = await codeRecordDetail(questionId.value);
+    console.log(response);
     correct.value = response.data.data.correctAnswer;
   } catch (error) {
     console.error("获取正确答案失败:", error);
