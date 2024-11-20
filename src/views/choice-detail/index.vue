@@ -286,8 +286,21 @@ const exerciseId = ref<number>(choiceDetail.value.id); // 确保从题目数据�
 
 // 提交评价
 async function submitReview(reviewType: number) {
+  // 检查 exerciseId 是否定义
+  if (typeof exerciseId.value === 'undefined' || exerciseId.value === null) {
+    console.error("exerciseId is undefined");
+    return;
+  }
+  if (typeof reviewType !== "number") {
+    console.error("Invalid reviewType", reviewType);
+    return;
+  }
+
   try {
-    const response = await reviewQuestion(exerciseId.value, reviewType); // 确保 exerciseId 正确
+    const response = await reviewQuestion(exerciseId.value.toString(), reviewType);
+    console.log(reviewType)
+    console.log(exerciseId.value.toString())
+    console.log(response)
     if (response && response.status === 200) {
       console.log("评价成功:", response.data);
       if (reviewType === 1) {
@@ -304,7 +317,7 @@ async function submitReview(reviewType: number) {
       console.error("评价失败:", response?.data || '未知错误');
     }
   } catch (error) {
-    console.error("提交评价失败:", error);
+    console.error("提交评价失败:", error.message);
   }
 }
 </script>
