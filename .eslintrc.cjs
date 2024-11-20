@@ -1,4 +1,4 @@
 module.exports = {
-  root: true,
-  extends: ['@antfu'],
+  parse: "babel-eslint",
+  root: true
 }

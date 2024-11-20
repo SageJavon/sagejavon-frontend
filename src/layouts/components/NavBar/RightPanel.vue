@@ -59,8 +59,6 @@
   import FullScreen from '@/components/FullScreen/index.vue';
   import Cell from '@/components/Cell/index.vue';
   import LangChange from '@/components/LangChange/index.vue';
-
-  import { useI18n } from 'vue-i18n';
   import { useStore } from 'vuex';
 
   import { computed, nextTick, ref } from 'vue';
@@ -70,8 +68,6 @@
       default: '#666',
     },
   });
-
-  const { t } = useI18n();
   const store = useStore();
 
   let activeName = ref('first');
